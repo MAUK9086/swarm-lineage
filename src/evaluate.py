@@ -5,6 +5,8 @@ File structure:
     time_summary           parse rate and span of t (for profiling)
     pairwise_order_truth   for doc-id pairs, whether the first doc is truly earlier
     pairwise_accuracy      accuracy of 'first is earlier' predictions, bootstrap 95% CI
+    component_accuracy     macro accuracy over components, component bootstrap 95% CI
+    spearman_with_truth    Spearman rho between a per-document value and t
 """
 
 from __future__ import annotations
@@ -94,3 +96,47 @@ def pairwise_accuracy(pred_a_first: np.ndarray, a_earlier: np.ndarray, n_boot: i
     boots = np.array([correct[rng.integers(0, n, n)].mean() for _ in range(n_boot)])
     return {"n": int(n), "accuracy": float(correct.mean()),
             "ci_low": float(np.percentile(boots, 2.5)), "ci_high": float(np.percentile(boots, 97.5))}
+
+
+def component_accuracy(correct: np.ndarray, comp: np.ndarray, n_boot: int = 1000, seed: int = 42) -> dict[str, Any]:
+    """Macro accuracy over components with a component bootstrap 95% CI.
+
+    Args:
+        correct: 1.0 / 0.0 per pair.
+        comp: Component id per pair.
+        n_boot: Bootstrap resamples (over components).
+        seed: Random seed.
+
+    Returns:
+        Dict with n_components, n_pairs, macro, ci_low, ci_high, micro.
+    """
+    per = pd.Series(correct).groupby(comp).mean().to_numpy()
+    if per.size == 0:
+        return {"n_components": 0, "n_pairs": 0, "macro": None, "ci_low": None, "ci_high": None, "micro": None}
+    rng = np.random.default_rng(seed)
+    boots = np.array([per[rng.integers(0, per.size, per.size)].mean() for _ in range(n_boot)])
+    return {"n_components": int(per.size), "n_pairs": int(len(correct)), "macro": float(per.mean()),
+            "ci_low": float(np.percentile(boots, 2.5)), "ci_high": float(np.percentile(boots, 97.5)),
+            "micro": float(np.mean(correct))}
+
+
+def spearman_with_truth(values: np.ndarray, doc_ids: np.ndarray, truth: pd.Series) -> dict[str, Any]:
+    """Spearman rho between a per-document value and the hidden time.
+
+    Args:
+        values: Numeric value per document.
+        doc_ids: Doc id per value.
+        truth: t indexed by doc_id.
+
+    Returns:
+        Dict with n, rho, p.
+    """
+    from scipy.stats import spearmanr
+
+    t = truth.reindex(doc_ids)
+    ok = t.notna().to_numpy()
+    if ok.sum() < 3:
+        return {"n": int(ok.sum()), "rho": None, "p": None}
+    ns = pd.to_datetime(t[ok], utc=True).dt.tz_convert(None).to_numpy(dtype="datetime64[ns]").astype(np.int64)
+    r = spearmanr(values[ok], ns)
+    return {"n": int(ok.sum()), "rho": float(r.statistic), "p": float(r.pvalue)}

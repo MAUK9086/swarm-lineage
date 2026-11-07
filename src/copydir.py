@@ -22,6 +22,10 @@ File structure:
     predict_random        method (a): coin flip
     predict_length        method (b): the shorter post came first (longer is later)
     predict_containment   method (c): the post more fully contained in the other came first
+    tokens                lower-cased word tokens
+    affix_overlap         common prefix + suffix length (tokens)
+    predict_extension     method (i): extension cue
+    predict_insdel        method (ii): insertion vs deletion cue
 """
 
 from __future__ import annotations
@@ -386,4 +390,89 @@ def predict_containment(inter: np.ndarray, size_i: np.ndarray, size_j: np.ndarra
     pred = c_i > c_j
     ties = c_i == c_j
     pred[ties] = np.random.default_rng(seed + 1).random(int(ties.sum())) < 0.5
+    return pred, int(ties.sum())
+
+
+def tokens(text: str) -> list[str]:
+    """Lower-cased word tokens.
+
+    Args:
+        text: Document text.
+
+    Returns:
+        Token list.
+    """
+    return TOKEN_RE.findall(text.lower())
+
+
+def affix_overlap(a: list[str], b: list[str]) -> int:
+    """Longest common prefix plus longest common suffix, without overlap in the shorter list.
+
+    Args:
+        a: Tokens of the first post.
+        b: Tokens of the second post.
+
+    Returns:
+        Number of tokens covered by the common prefix and suffix.
+    """
+    n = min(len(a), len(b))
+    p = 0
+    while p < n and a[p] == b[p]:
+        p += 1
+    s = 0
+    while s < n - p and a[-1 - s] == b[-1 - s]:
+        s += 1
+    return p + s
+
+
+def predict_extension(toks_i: list[list[str]], toks_j: list[list[str]], seed: int = 42) -> tuple[np.ndarray, int]:
+    """Method (i): the post whose tokens are more fully kept as prefix + suffix of the other came first.
+
+    kept(i in j) = L / |i|, with L = affix_overlap(i, j). Ties (including L = 0 and empty
+    posts) are broken at random.
+
+    Args:
+        toks_i: Token lists of the first element of each pair.
+        toks_j: Token lists of the second element of each pair.
+        seed: Seed for tie-breaking.
+
+    Returns:
+        (boolean 'i came first' array, number of ties)
+    """
+    ki = np.empty(len(toks_i))
+    kj = np.empty(len(toks_i))
+    for k, (a, b) in enumerate(zip(toks_i, toks_j)):
+        L = affix_overlap(a, b)
+        ki[k] = L / len(a) if a else 0.0
+        kj[k] = L / len(b) if b else 0.0
+    pred = ki > kj
+    ties = ki == kj
+    pred[ties] = np.random.default_rng(seed + 2).random(int(ties.sum())) < 0.5
+    return pred, int(ties.sum())
+
+
+def predict_insdel(toks_i: list[list[str]], toks_j: list[list[str]], seed: int = 42) -> tuple[np.ndarray, int]:
+    """Method (ii): from a word diff i -> j, more inserted than deleted tokens means j is later.
+
+    Args:
+        toks_i: Token lists of the first element of each pair.
+        toks_j: Token lists of the second element of each pair.
+        seed: Seed for tie-breaking.
+
+    Returns:
+        (boolean 'i came first' array, number of ties)
+    """
+    import difflib
+
+    ins = np.zeros(len(toks_i), dtype=np.int64)
+    dele = np.zeros(len(toks_i), dtype=np.int64)
+    for k, (a, b) in enumerate(tqdm(list(zip(toks_i, toks_j)), desc="word diff", unit="pair")):
+        for op, i1, i2, j1, j2 in difflib.SequenceMatcher(None, a, b, autojunk=False).get_opcodes():
+            if op in ("insert", "replace"):
+                ins[k] += j2 - j1
+            if op in ("delete", "replace"):
+                dele[k] += i2 - i1
+    pred = ins > dele
+    ties = ins == dele
+    pred[ties] = np.random.default_rng(seed + 3).random(int(ties.sum())) < 0.5
     return pred, int(ties.sum())

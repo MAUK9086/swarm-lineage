@@ -378,3 +378,53 @@ Global seed: 42.
   template clusters do not dominate: e.g. cap pairs per component or per document, score
   per component, and report component-level CIs as primary. That is a new
   pre-registration, not a change to E31. Stop here for review.
+
+### E32 - Copy direction v2: cluster-level scoring and edit-based cues  (2026-11-07 23:21 IST)
+- Question: Once template clusters cannot dominate the score, does an edit-based cue
+  (extension, or insertion vs deletion) tell which of two near-duplicate posts came first
+  better than "the longer post is later"? Separately: are Moltbook post ids UUID v7
+  (time-ordered), which would make doc_id an order leak?
+- Hypothesis / expected: NO-GO, derived before running. Both cues, as specified, reduce
+  to comparing token counts:
+  (ii) for a word-level diff from A to B with m matched tokens, inserted = |B| - m and
+  deleted = |A| - m, so inserted - deleted = |B| - |A|. "More inserted than deleted means
+  later" is exactly "more tokens means later".
+  (i) the common prefix + suffix length L is the same seen from either post, so
+  kept(A in B) = L/|A| > kept(B in A) = L/|B| exactly when |A| < |B| (if L > 0); when L = 0
+  it is a tie (coin flip).
+  So (ii) is the token-count version of (b), and (i) is (ii) with extra coin flips on
+  pairs that share no prefix or suffix. Expected: (ii) close to (b), (i) at or below
+  (ii), neither 5 points above (b). Ids: expected UUID v4 (random), in which case nothing
+  changes.
+- Go / no-go criterion (pre-registered): GO if (i) or (ii) beats (b) by at least 5
+  percentage points in component-level (macro) accuracy, with that method's component
+  bootstrap 95% CI excluding (b)'s point estimate (CI lower bound above it), on at least
+  200 scored components. Otherwise NO-GO, and the content-only dating claim is dropped.
+- Method:
+  Pairs: reuse the 8,361,829 scored different-author near-duplicate pairs from E31
+  (data/interim/E31_pairs.parquet; Jaccard 0.5-0.95, exact duplicates excluded). Connected
+  components are computed over all of them. Template filter: a component is dropped if
+  every one of its pairs (before capping) has equal shingle-set sizes; the count of
+  dropped components and their pairs is reported. Cap: at most 20 pairs per remaining
+  component, chosen uniformly at random (seed 42).
+  Methods (public table only; ties broken at random, seed 42, counts reported):
+  (a) random; (b) longer-is-later (characters); (i) extension: tokens = lower-cased word
+  tokens; L = longest common prefix + longest common suffix (suffix limited so the two do
+  not overlap in the shorter post); the post with the larger L / own token count came
+  first; (ii) insertion vs deletion: difflib SequenceMatcher on token lists (autojunk off);
+  inserted = tokens only in B (insert + replace opcodes), deleted = tokens only in A
+  (delete + replace); if inserted > deleted predict A first, if fewer predict B first.
+  Scoring (src/evaluate.py, the only reader of t): per-component accuracy = mean over its
+  capped pairs; primary = macro mean over components with a component bootstrap 95% CI
+  (1,000 resamples, seed 42); secondary = micro accuracy over capped pairs. Pairs with
+  equal timestamps are dropped and counted.
+  UUID audit: version nibble and variant of every post id in the full archive (3,602,713
+  ids, raw id column only). If more than 50% are v7, also report Spearman rho between the
+  48-bit embedded timestamp and t on the 300k sample, and add doc_id to the hidden list.
+- Code: experiments/E32_copy_direction_v2.py, src/copydir.py, src/evaluate.py @ (filled after commit)
+- Params: pairs from E31; cap 20 pairs per component; template-filter rule as above;
+  1,000 component bootstrap resamples; GO margin 5 points; minimum 200 components; v7
+  threshold 50%; seed 42.
+- Results:
+- Interpretation:
+- Decision / next step:
