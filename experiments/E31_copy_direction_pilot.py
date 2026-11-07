@@ -26,19 +26,24 @@ from src.copydir import (  # noqa: E402
     NUM_PERM,
     SHINGLE_K,
     assert_public,
-    candidate_pairs,
-    jaccard_and_sizes,
+    band_pair_upper_bound,
+    exact_duplicate_pair_counts,
+    jaccard_csr,
+    TooManyPairs,
+    lsh_pairs_sampled,
+    minhash_signatures,
     norm_text_hash,
     predict_containment,
     predict_length,
     predict_random,
-    shingles,
+    shingle_hashes_csr,
 )
 from src.evaluate import pairwise_accuracy, pairwise_order_truth, split_truth  # noqa: E402
 from src.io_utils import INTERIM_DIR, SEED, append_summary, save_result  # noqa: E402
 
 J_LO, J_HI = 0.5, 0.95
 MAX_PAIRS = 20_000_000
+MEMORY_GUARD_PAIRS = 60_000_000
 N_BOOT = 1000
 GO_MIN_PAIRS = 500
 GO_MIN_MARGIN = 0.05
@@ -100,39 +105,55 @@ def main() -> None:
     del table
     assert_public(public)
 
-    texts = public["text"].tolist()
-    sets = [shingles(t) for t in tqdm(texts, desc="shingles", unit="doc")]
-    hashes = [norm_text_hash(t) for t in tqdm(texts, desc="text hashes", unit="doc")]
-    authors = public["author_id"].astype("string").to_numpy()
+    n_docs = len(public)
+    hashes = np.array([norm_text_hash(t) for t in tqdm(public["text"], desc="text hashes", unit="doc")],
+                      dtype=object)
+    lens = public["text"].str.len().to_numpy()
+    flat, offsets = shingle_hashes_csr(public["text"], n_docs)
+    doc_ids = public["doc_id"].to_numpy()
+    author_codes, _ = pd.factorize(public["author_id"], use_na_sentinel=True)
+    del public
 
-    pairs = candidate_pairs(sets, seed=SEED)
-    n_candidates = len(pairs)
-    diff_author = [(i, j) for i, j in pairs
-                   if not pd.isna(authors[i]) and not pd.isna(authors[j]) and authors[i] != authors[j]]
+    sig = minhash_signatures(flat, offsets, seed=SEED)
+    has_shingles = np.diff(offsets) > 0
+    bound = band_pair_upper_bound(sig, has_shingles)
+    # Exact path first: all different-author pairs, then the pre-registered uniform cap.
+    # Fallback only if the memory guard trips: Bernoulli sampling at MAX_PAIRS / bound.
+    path, rate = "exact", 1.0
+    try:
+        ci, cj = lsh_pairs_sampled(sig, has_shingles, author_codes, 1.0, seed=SEED, max_keep=MEMORY_GUARD_PAIRS)
+    except TooManyPairs:
+        path, rate = "bernoulli_fallback", min(1.0, MAX_PAIRS / bound)
+        ci, cj = lsh_pairs_sampled(sig, has_shingles, author_codes, rate, seed=SEED)
+    del sig
+    n_diff_author = len(ci)
     capped = False
-    if len(diff_author) > MAX_PAIRS:
-        rng = np.random.default_rng(SEED)
-        keep = rng.choice(len(diff_author), MAX_PAIRS, replace=False)
-        diff_author = [diff_author[k] for k in sorted(keep)]
+    if len(ci) > MAX_PAIRS:
+        keep = np.sort(np.random.default_rng(SEED).choice(len(ci), MAX_PAIRS, replace=False))
+        ci, cj = ci[keep], cj[keep]
         capped = True
+    exact_counts = exact_duplicate_pair_counts(hashes, author_codes)
 
-    df = jaccard_and_sizes(sets, diff_author)
-    hi = np.array(hashes, dtype=object)
-    df["exact"] = (hi[df["i"]] == hi[df["j"]]) & (hi[df["i"]] != "")
+    df = jaccard_csr(flat, offsets, ci, cj)
+    df["exact"] = (hashes[df["i"]] == hashes[df["j"]]) & (hashes[df["i"]] != "")
     counts = {
-        "docs": int(len(public)),
-        "docs_with_shingles": int(sum(1 for s in sets if s)),
-        "lsh_candidate_pairs": int(n_candidates),
-        "candidate_pairs_different_authors": int(len(diff_author)),
+        "docs": int(n_docs),
+        "docs_with_shingles": int(has_shingles.sum()),
+        "lsh_band_pair_upper_bound": int(bound),
+        "pair_generation_path": path,
+        "sampling_rate": float(rate),
+        "candidate_pairs_different_authors": int(n_diff_author),
         "capped_to_max_pairs": capped,
-        "exact_duplicate_pairs_excluded": int(df["exact"].sum()),
+        "pairs_after_cap": int(len(ci)),
+        "exact_duplicate_pairs_all_analytic": exact_counts["total_pairs"],
+        "exact_duplicate_pairs_different_authors_analytic": exact_counts["different_known_author_pairs"],
+        "exact_duplicate_pairs_in_sample_excluded": int(df["exact"].sum()),
         "non_exact_jaccard_gt_095": int(((~df["exact"]) & (df["jaccard"] > J_HI)).sum()),
         "non_exact_jaccard_lt_05": int(((~df["exact"]) & (df["jaccard"] < J_LO)).sum()),
     }
     kept = df[(~df["exact"]) & (df["jaccard"] >= J_LO) & (df["jaccard"] <= J_HI)].reset_index(drop=True)
     counts["pairs_in_window"] = int(len(kept))
 
-    doc_ids = public["doc_id"].to_numpy()
     a_ids, b_ids = doc_ids[kept["i"]], doc_ids[kept["j"]]
     a_earlier, valid = pairwise_order_truth(truth, a_ids, b_ids)
     counts["pairs_equal_or_missing_time_excluded"] = int((~valid).sum())
@@ -141,7 +162,6 @@ def main() -> None:
     counts["pairs_scored"] = int(len(kept))
     counts["distinct_docs_in_scored_pairs"] = int(pd.unique(np.concatenate([kept["i"], kept["j"]])).size)
 
-    lens = public["text"].str.len().to_numpy()
     len_i, len_j = lens[kept["i"]], lens[kept["j"]]
     pred_a = predict_random(len(kept), seed=SEED)
     pred_b, ties_b = predict_length(len_i, len_j, seed=SEED)
@@ -172,7 +192,7 @@ def main() -> None:
     res = {"counts": counts, "methods": methods, "go_no_go": go,
            "scored_pair_jaccard": {f"p{p}": float(np.percentile(jac, p)) for p in (5, 25, 50, 75, 95)} if len(jac) else None}
     params = {"shingle_k_words": SHINGLE_K, "num_perm": NUM_PERM, "lsh_threshold": LSH_THRESHOLD,
-              "jaccard_window": [J_LO, J_HI], "max_pairs": MAX_PAIRS, "n_boot": N_BOOT,
+              "jaccard_window": [J_LO, J_HI], "max_pairs": MAX_PAIRS, "memory_guard_pairs": MEMORY_GUARD_PAIRS, "n_boot": N_BOOT,
               "go_min_pairs": GO_MIN_PAIRS, "go_min_margin": GO_MIN_MARGIN, "corpus": "moltbook_slim (300k sample)"}
     save_result("E31_copy_direction_pilot", res, params)
     append_summary("E31", {"pairs_scored": counts["pairs_scored"],

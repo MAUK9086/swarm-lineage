@@ -1,15 +1,27 @@
 """Content-only copy-direction methods. Takes the public table only (no t).
 
+Shingles are stored as 32-bit hashes in one flat array with per-document offsets
+(CSR layout) to keep memory low. MinHash uses datasketch's legacy scheme and its
+seed-42 permutations; LSH banding uses datasketch's optimal (bands, rows) for the
+threshold, so candidate generation matches datasketch's MinHashLSH settings.
+
 File structure:
-    Constants           shingle size, MinHash parameters
-    assert_public       guard: refuse tables that carry the hidden time column
-    shingles            5-gram word shingles of a text, as a set of strings
-    norm_text_hash      hash of normalised text (for exact-duplicate detection)
-    candidate_pairs     MinHash LSH candidate pairs between documents
-    jaccard_and_sizes   exact Jaccard and set sizes for candidate pairs
-    predict_random      method (a): coin flip
-    predict_length      method (b): the shorter post came first (longer is later)
-    predict_containment method (c): the post more fully contained in the other came first
+    Constants             shingle size, MinHash / LSH parameters
+    assert_public         guard: refuse tables that carry the hidden time column
+    shingles              5-gram word shingles of a text, as a set of strings
+    norm_text_hash        hash of normalised text (for exact-duplicate detection)
+    shingle_hashes_csr    all documents' shingle hashes as (flat, offsets)
+    minhash_signatures    MinHash signature matrix from the CSR shingle hashes
+    lsh_candidate_pairs   banded LSH candidate pairs (i < j) from signatures (small inputs)
+    _splitmix64           deterministic 64-bit hash used for pair sampling
+    band_pair_upper_bound sum over bands of C(bucket, 2)
+    TooManyPairs          memory-guard exception
+    lsh_pairs_sampled     different-author LSH pairs, Bernoulli-sampled while generated
+    exact_duplicate_pair_counts  exact-duplicate pair counts from hash groups
+    jaccard_csr          exact Jaccard and set sizes for pairs, from CSR hashes
+    predict_random        method (a): coin flip
+    predict_length        method (b): the shorter post came first (longer is later)
+    predict_containment   method (c): the post more fully contained in the other came first
 """
 
 from __future__ import annotations
@@ -20,12 +32,15 @@ from typing import Iterable
 
 import numpy as np
 import pandas as pd
-from datasketch import MinHash, MinHashLSH
+from datasketch import MinHash
+from datasketch.lsh import _optimal_param
 from tqdm import tqdm
 
 SHINGLE_K = 5
 NUM_PERM = 128
 LSH_THRESHOLD = 0.5
+MERSENNE_PRIME = np.uint64((1 << 61) - 1)
+MAX_HASH = np.uint64((1 << 32) - 1)
 TOKEN_RE = re.compile(r"\w+", re.UNICODE)
 WS_RE = re.compile(r"\s+")
 
@@ -74,45 +89,251 @@ def norm_text_hash(text: str) -> str:
     return hashlib.blake2b(n.encode("utf-8"), digest_size=8).hexdigest() if n else ""
 
 
-def candidate_pairs(sets: list[set[str]], seed: int = 42) -> set[tuple[int, int]]:
-    """MinHash LSH candidate pairs (i < j) over non-empty shingle sets.
+def _h32(s: str) -> int:
+    """32-bit hash of a shingle string.
 
     Args:
-        sets: Shingle set per document (row position = document index).
-        seed: MinHash seed.
+        s: Shingle.
 
     Returns:
-        Set of index pairs.
+        Unsigned 32-bit integer.
     """
-    idx = [i for i, s in enumerate(sets) if s]
-    mhs = MinHash.bulk((([x.encode("utf-8") for x in sets[i]]) for i in idx), num_perm=NUM_PERM, seed=seed)
-    lsh = MinHashLSH(threshold=LSH_THRESHOLD, num_perm=NUM_PERM)
-    for i, m in tqdm(zip(idx, mhs), total=len(idx), desc="LSH insert", unit="doc"):
-        lsh.insert(i, m)
-    pairs: set[tuple[int, int]] = set()
-    for i, m in tqdm(zip(idx, mhs), total=len(idx), desc="LSH query", unit="doc"):
-        for j in lsh.query(m):
-            if j > i:
-                pairs.add((i, j))
-    return pairs
+    return int.from_bytes(hashlib.blake2b(s.encode("utf-8"), digest_size=4).digest(), "little")
 
 
-def jaccard_and_sizes(sets: list[set[str]], pairs: Iterable[tuple[int, int]]) -> pd.DataFrame:
-    """Exact Jaccard, intersection and set sizes for pairs.
+def shingle_hashes_csr(texts: Iterable[str], n: int) -> tuple[np.ndarray, np.ndarray]:
+    """Sorted unique 32-bit shingle hashes for every document, in CSR layout.
 
     Args:
-        sets: Shingle sets.
-        pairs: Index pairs.
+        texts: Document texts.
+        n: Number of documents (for the progress bar and offsets array).
+
+    Returns:
+        (flat uint32 array, offsets int64 array of length n + 1)
+    """
+    chunks: list[np.ndarray] = []
+    offsets = np.zeros(n + 1, dtype=np.int64)
+    for d, text in enumerate(tqdm(texts, total=n, desc="shingle hashes", unit="doc")):
+        arr = np.unique(np.fromiter((_h32(s) for s in shingles(text)), dtype=np.uint32))
+        chunks.append(arr)
+        offsets[d + 1] = offsets[d] + arr.size
+    flat = np.concatenate(chunks) if chunks else np.zeros(0, dtype=np.uint32)
+    return flat, offsets
+
+
+def minhash_signatures(flat: np.ndarray, offsets: np.ndarray, num_perm: int = NUM_PERM,
+                       seed: int = 42) -> np.ndarray:
+    """MinHash signatures (datasketch legacy scheme, same permutations as MinHash(seed)).
+
+    Documents without shingles keep the all-MAX_HASH signature and must be skipped.
+
+    Args:
+        flat: CSR shingle hashes.
+        offsets: CSR offsets.
+        num_perm: Number of permutations.
+        seed: Permutation seed.
+
+    Returns:
+        uint32 array of shape (n_docs, num_perm).
+    """
+    perms = MinHash(num_perm=num_perm, seed=seed).permutations.astype(np.uint64)
+    a, b = perms[0], perms[1]
+    n = len(offsets) - 1
+    sig = np.full((n, num_perm), int(MAX_HASH), dtype=np.uint32)
+    for d in tqdm(range(n), desc="minhash", unit="doc"):
+        s, e = offsets[d], offsets[d + 1]
+        if e > s:
+            hv = flat[s:e].astype(np.uint64)[:, None]
+            phv = np.bitwise_and((hv * a + b) % MERSENNE_PRIME, MAX_HASH)
+            sig[d] = phv.min(axis=0)
+    return sig
+
+
+def lsh_candidate_pairs(sig: np.ndarray, use: np.ndarray, threshold: float = LSH_THRESHOLD) -> tuple[np.ndarray, np.ndarray]:
+    """Banded LSH: documents sharing any band are candidates.
+
+    Args:
+        sig: Signature matrix (n_docs, num_perm).
+        use: Boolean mask of documents to include (non-empty shingle sets).
+        threshold: Jaccard threshold used to choose (bands, rows) as datasketch does.
+
+    Returns:
+        (i, j) int64 arrays of unique candidate pairs with i < j.
+    """
+    bands, rows = _optimal_param(threshold, sig.shape[1], 0.5, 0.5)
+    docs = np.flatnonzero(use)
+    codes = np.zeros(0, dtype=np.int64)
+    n = sig.shape[0]
+    for bnd in tqdm(range(bands), desc="LSH bands", unit="band"):
+        block = np.ascontiguousarray(sig[docs, bnd * rows:(bnd + 1) * rows])
+        keys = block.view(np.dtype((np.void, block.dtype.itemsize * rows))).ravel()
+        _, inv = np.unique(keys, return_inverse=True)
+        order = np.argsort(inv, kind="stable")
+        inv_sorted = inv[order]
+        starts = np.flatnonzero(np.r_[True, inv_sorted[1:] != inv_sorted[:-1]])
+        ends = np.r_[starts[1:], len(inv_sorted)]
+        band_codes = []
+        for s, e in zip(starts, ends):
+            if e - s < 2:
+                continue
+            members = np.sort(docs[order[s:e]])
+            ii, jj = np.triu_indices(len(members), k=1)
+            band_codes.append(members[ii].astype(np.int64) * n + members[jj])
+        if band_codes:
+            codes = np.unique(np.concatenate([codes] + band_codes))
+    return codes // n, codes % n
+
+
+def _splitmix64(x: np.ndarray) -> np.ndarray:
+    """SplitMix64 finaliser on uint64 values (deterministic pseudo-random hash).
+
+    Args:
+        x: uint64 array.
+
+    Returns:
+        uint64 array.
+    """
+    with np.errstate(over="ignore"):
+        z = x + np.uint64(0x9E3779B97F4A7C15)
+        z = (z ^ (z >> np.uint64(30))) * np.uint64(0xBF58476D1CE4E5B9)
+        z = (z ^ (z >> np.uint64(27))) * np.uint64(0x94D049BB133111EB)
+        return z ^ (z >> np.uint64(31))
+
+
+def band_pair_upper_bound(sig: np.ndarray, use: np.ndarray, threshold: float = LSH_THRESHOLD) -> int:
+    """Sum over bands of C(bucket size, 2): an upper bound on unique candidate pairs.
+
+    Args:
+        sig: Signature matrix.
+        use: Documents to include.
+        threshold: LSH threshold (selects bands and rows).
+
+    Returns:
+        The bound.
+    """
+    bands, rows = _optimal_param(threshold, sig.shape[1], 0.5, 0.5)
+    docs = np.flatnonzero(use)
+    total = 0
+    for bnd in range(bands):
+        block = np.ascontiguousarray(sig[docs, bnd * rows:(bnd + 1) * rows])
+        _, c = np.unique(block.view(np.dtype((np.void, block.dtype.itemsize * rows))).ravel(), return_counts=True)
+        total += int((c.astype(np.int64) * (c - 1) // 2).sum())
+    return total
+
+
+class TooManyPairs(RuntimeError):
+    """Raised when kept pairs exceed the memory guard in lsh_pairs_sampled."""
+
+
+def lsh_pairs_sampled(sig: np.ndarray, use: np.ndarray, author_codes: np.ndarray, rate: float,
+                      seed: int = 42, threshold: float = LSH_THRESHOLD,
+                      max_keep: int | None = None) -> tuple[np.ndarray, np.ndarray]:
+    """Banded LSH candidate pairs with different known authors, Bernoulli-sampled on the fly.
+
+    A pair (i, j) is kept iff its authors differ (both known) and a seeded hash of the
+    pair falls below `rate`. The decision depends only on the pair, so the same pair
+    found in several bands gets the same decision and the result is a uniform Bernoulli
+    sample of the unique qualifying candidate pairs.
+
+    Args:
+        sig: Signature matrix (n_docs, num_perm).
+        use: Documents to include.
+        author_codes: Integer author code per document (-1 = unknown).
+        rate: Keep probability in (0, 1].
+        seed: Seed mixed into the pair hash.
+        threshold: LSH threshold (selects bands and rows).
+        max_keep: Raise TooManyPairs once more unique pairs than this are held.
+
+    Returns:
+        (i, j) int64 arrays with i < j, unique.
+
+    Raises:
+        TooManyPairs: If max_keep is exceeded.
+    """
+    bands, rows = _optimal_param(threshold, sig.shape[1], 0.5, 0.5)
+    docs = np.flatnonzero(use)
+    n = np.uint64(sig.shape[0])
+    cut = np.uint64(min(int(rate * 2**64), 2**64 - 1))
+    salt = _splitmix64(np.array([seed], dtype=np.uint64))[0]
+    kept: list[np.ndarray] = []
+
+    def keep(ii: np.ndarray, jj: np.ndarray) -> None:
+        ok = (author_codes[ii] >= 0) & (author_codes[jj] >= 0) & (author_codes[ii] != author_codes[jj])
+        ii, jj = ii[ok], jj[ok]
+        codes = ii.astype(np.uint64) * n + jj.astype(np.uint64)
+        sel = _splitmix64(codes ^ salt) < cut
+        if sel.any():
+            kept.append(codes[sel])
+
+    for bnd in tqdm(range(bands), desc="LSH bands (sampled)", unit="band"):
+        block = np.ascontiguousarray(sig[docs, bnd * rows:(bnd + 1) * rows])
+        keys = block.view(np.dtype((np.void, block.dtype.itemsize * rows))).ravel()
+        _, inv = np.unique(keys, return_inverse=True)
+        order = np.argsort(inv, kind="stable")
+        inv_sorted = inv[order]
+        starts = np.flatnonzero(np.r_[True, inv_sorted[1:] != inv_sorted[:-1]])
+        ends = np.r_[starts[1:], len(inv_sorted)]
+        for s, e in zip(starts, ends):
+            m = e - s
+            if m < 2:
+                continue
+            members = np.sort(docs[order[s:e]])
+            if m <= 300:
+                ii, jj = np.triu_indices(m, k=1)
+                keep(members[ii], members[jj])
+            else:
+                for r in range(m - 1):
+                    keep(np.full(m - r - 1, members[r]), members[r + 1:])
+        if len(kept) > 1:
+            kept = [np.unique(np.concatenate(kept))]
+        if max_keep is not None and kept and len(kept[0]) > max_keep:
+            raise TooManyPairs(f"more than {max_keep} pairs after band {bnd}")
+    codes = np.unique(np.concatenate(kept)) if kept else np.zeros(0, dtype=np.uint64)
+    return (codes // n).astype(np.int64), (codes % n).astype(np.int64)
+
+
+def exact_duplicate_pair_counts(text_hashes: np.ndarray, author_codes: np.ndarray) -> dict[str, int]:
+    """Count exact-duplicate pairs analytically (all pairs, and different-author pairs).
+
+    Args:
+        text_hashes: Normalised-text hash per document ('' = empty).
+        author_codes: Integer author code per document (-1 = unknown).
+
+    Returns:
+        Dict with total_pairs and different_known_author_pairs.
+    """
+    df = pd.DataFrame({"h": text_hashes, "a": author_codes})
+    df = df[df["h"] != ""]
+    g = df.groupby("h").size()
+    total = int((g * (g - 1) // 2).sum())
+    known = df[df["a"] >= 0]
+    gk = known.groupby("h").size()
+    same = known.groupby(["h", "a"]).size()
+    diff = int((gk * (gk - 1) // 2).sum() - (same * (same - 1) // 2).sum())
+    return {"total_pairs": total, "different_known_author_pairs": diff}
+
+
+def jaccard_csr(flat: np.ndarray, offsets: np.ndarray, i: np.ndarray, j: np.ndarray) -> pd.DataFrame:
+    """Exact Jaccard over 32-bit shingle hashes, plus intersection and set sizes.
+
+    Args:
+        flat: CSR shingle hashes.
+        offsets: CSR offsets.
+        i: First document index per pair.
+        j: Second document index per pair.
 
     Returns:
         Frame with columns i, j, inter, size_i, size_j, jaccard.
     """
-    rows = []
-    for i, j in tqdm(pairs, desc="exact Jaccard", unit="pair"):
-        a, b = sets[i], sets[j]
-        inter = len(a & b)
-        rows.append((i, j, inter, len(a), len(b), inter / (len(a) + len(b) - inter)))
-    return pd.DataFrame(rows, columns=["i", "j", "inter", "size_i", "size_j", "jaccard"])
+    inter = np.zeros(len(i), dtype=np.int64)
+    for k in tqdm(range(len(i)), desc="exact Jaccard", unit="pair"):
+        a = flat[offsets[i[k]]:offsets[i[k] + 1]]
+        b = flat[offsets[j[k]]:offsets[j[k] + 1]]
+        inter[k] = np.intersect1d(a, b, assume_unique=True).size
+    size_i = offsets[i + 1] - offsets[i]
+    size_j = offsets[j + 1] - offsets[j]
+    jac = inter / (size_i + size_j - inter)
+    return pd.DataFrame({"i": i, "j": j, "inter": inter, "size_i": size_i, "size_j": size_j, "jaccard": jac})
 
 
 def predict_random(n: int, seed: int = 42) -> np.ndarray:

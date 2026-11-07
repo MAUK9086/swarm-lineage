@@ -315,10 +315,28 @@ Global seed: 42.
   used for GO). Secondary, not used for GO: a bootstrap over connected components of the
   pair graph, since pairs sharing documents are not independent; and the agreement rate
   between (b) and (c).
-- Code: experiments/E31_copy_direction_pilot.py, src/copydir.py @ (filled after commit)
+- Code: experiments/E31_copy_direction_pilot.py, src/copydir.py @ (filled after commit; see implementation note)
 - Params: shingle k = 5 words; num_perm 128; LSH threshold 0.5; Jaccard window
   [0.5, 0.95]; cap of 20,000,000 different-author candidate pairs (uniform subsample, seed
   42, only if exceeded); 1,000 bootstrap resamples; seed 42.
+- Implementation note (written 2026-11-07 23:03 IST, before any E31 result exists): the first launch
+  at 5349d4f was stopped by the environment's low-memory guard while computing MinHash; it
+  wrote no results. Diagnostics using text only (no times) showed the cause: shingles held
+  as Python strings, plus large templated clusters (largest LSH bucket 8,882 posts; band
+  sum of C(n,2) = 381,518,142). Changes, none to the method, window, cap or GO rule:
+  (1) shingles stored as sorted 32-bit blake2b hashes in a flat array, so Jaccard is
+  computed on hashed shingles (collisions negligible at these set sizes); (2) MinHash
+  computed with datasketch's legacy arithmetic and its seed-42 permutations, but with
+  blake2b-32 shingle hashes instead of sha1-32; LSH uses datasketch's (bands, rows) =
+  (25, 5) for threshold 0.5, with banding done in numpy; (3) the different-author filter
+  is applied while pairs are generated, so same-author pairs are never stored; (4) the
+  20,000,000 cap is applied exactly as pre-registered (uniform subsample, seed 42) if the
+  different-author pairs exceed it; only if more than 60,000,000 pairs accumulate does the
+  run fall back to a seeded per-pair Bernoulli sample at rate 20,000,000 / band-sum bound,
+  and the results record which path ran; (5) exact-duplicate pairs are counted
+  analytically from text-hash groups (all pairs and different-author pairs) as well as
+  within the generated pairs. Verified on 3,000 texts: the sampled generator at rate 1.0
+  reproduces the unsampled different-author pair set exactly (7,811 pairs).
 - Results:
 - Interpretation:
 - Decision / next step:
