@@ -485,9 +485,42 @@ Global seed: 42.
   chars; the salt is 32 random bytes in data/interim/owner_salt.bin (untracked, not
   seeded, so the keys cannot be rebuilt from public handles). Before saving, the script
   checks that no result string equals any raw handle or agent name.
-- Code: experiments/E33_agents_fields.py @ (filled after commit)
+- Code: experiments/E33_agents_fields.py, src/hf_download.py @ b9a761e (first run at 8da3bf9
+  crashed while writing owner keys because missing handles arrived as NaN; nothing was
+  saved or printed; fixed and re-run)
 - Params: example allow-list as above; truncation 80 chars; GO thresholds 10% and 100
   owners; seed 42 (no sampling).
-- Results:
-- Interpretation:
-- Decision / next step:
+- Results: (results/E33_agents_fields.json)
+
+  | field | rows non-null rate | dedup non-null | type | shown |
+  |---|---|---|---|---|
+  | id | 100% | 182,860 | str (UUID) | examples |
+  | name | 100% | 182,860 | str | counts only |
+  | description | 99.7% | 182,356 | str | counts only |
+  | karma | ~100% | 182,859 | double in 74 files, int64 in 133 | median 0, p95 20, p99 205, min -286,181, max 235,871 |
+  | follower_count | 100% | 182,860 | int64 | median 0, p99 20, max 8,096 |
+  | following_count | 100% | 182,860 | int64 | median 1, p99 5, max 5,977 |
+  | is_claimed | 100% | 182,860 | int64 | counts: 1 = 129,268; 0 = 53,592 |
+  | owner_x_handle | 30.4% | 55,551 | str | counts only |
+  | first_seen_at | 60.2% | 110,144 | UTC timestamp | 2026-01-30 to 2026-09-11 |
+  | last_seen_at | 60.3% | 110,262 | UTC timestamp | 2026-02-08 to 2026-09-11 |
+  | created_at | 70.7% | 129,295 | UTC timestamp | 2026-01-27 to 2026-08-06 |
+  | avatar_url | 0.5% | 960 | str | counts only |
+  | dump_date | 100% | 182,860 | str | examples |
+
+  Files 207; rows 182,906; unique agents 182,860 (46 repeat rows dropped); no fields outside
+  the inspected schema.
+  Owner linkage: 55,551 agents with a handle (30.4%), 55,541 distinct owners; agents per
+  owner: 1 for 55,531 owners, 2 for 10 owners (max 2; 20 agents under multi-agent owners).
+  Cross-tab: every agent with a handle is claimed (55,551); 73,717 claimed agents have no
+  handle; 53,592 unclaimed agents have none. Leak check: 0 hits. Owner keys (HMAC, salted)
+  written to data/interim/moltbook_agent_owner.parquet for 55,551 agents (untracked).
+  GO: no (share 30.4% >= 10%, but only 10 owners have >= 2 agents, below 100).
+- Interpretation: Owner handles are almost one-to-one with agents, so in this export an
+  owner key identifies a single agent and adds nothing beyond author_id for grouping. This
+  is consistent with one agent per X account on the platform, but that was not verified.
+  The handle is missing for 73,717 claimed agents, so absence of a handle does not mean
+  unclaimed. Timestamps on agents are incomplete (60-71%), unlike post created_at (100%).
+  karma changes type across files (double vs int64) and has extreme negative values.
+- Decision / next step: NO-GO for owner linkage as a grouping signal. The salted owner keys
+  stay available in data/interim but are not planned for use. Stop here for review.

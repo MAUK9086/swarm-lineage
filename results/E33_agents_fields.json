@@ -1,0 +1,381 @@
+{
+  "experiment": "E33_agents_fields",
+  "run_at": "2026-11-07 23:33 IST",
+  "git_hash": "b9a761e",
+  "seed": 42,
+  "params": {
+    "example_allow_list": [
+      "created_at",
+      "dump_date",
+      "first_seen_at",
+      "follower_count",
+      "following_count",
+      "id",
+      "karma",
+      "last_seen_at"
+    ],
+    "example_trunc": 80,
+    "go_min_owner_share": 0.1,
+    "go_min_multi_owners": 100,
+    "dedup": "latest dump_date per id",
+    "salt": "32 random bytes, untracked, not seeded"
+  },
+  "results": {
+    "rows": {
+      "files": 207,
+      "rows": 182906,
+      "fields": {
+        "id": {
+          "files_with_field": 207,
+          "arrow_types": {
+            "string": 207
+          },
+          "null_rows": 0,
+          "present_rate_rows": 1.0
+        },
+        "name": {
+          "files_with_field": 207,
+          "arrow_types": {
+            "string": 207
+          },
+          "null_rows": 0,
+          "present_rate_rows": 1.0
+        },
+        "description": {
+          "files_with_field": 207,
+          "arrow_types": {
+            "string": 207
+          },
+          "null_rows": 504,
+          "present_rate_rows": 0.9972444862388331
+        },
+        "karma": {
+          "files_with_field": 207,
+          "arrow_types": {
+            "double": 74,
+            "int64": 133
+          },
+          "null_rows": 1,
+          "present_rate_rows": 0.9999945327107913
+        },
+        "follower_count": {
+          "files_with_field": 207,
+          "arrow_types": {
+            "int64": 207
+          },
+          "null_rows": 0,
+          "present_rate_rows": 1.0
+        },
+        "following_count": {
+          "files_with_field": 207,
+          "arrow_types": {
+            "int64": 207
+          },
+          "null_rows": 0,
+          "present_rate_rows": 1.0
+        },
+        "is_claimed": {
+          "files_with_field": 207,
+          "arrow_types": {
+            "int64": 207
+          },
+          "null_rows": 0,
+          "present_rate_rows": 1.0
+        },
+        "owner_x_handle": {
+          "files_with_field": 207,
+          "arrow_types": {
+            "string": 207
+          },
+          "null_rows": 127355,
+          "present_rate_rows": 0.30371338283052496
+        },
+        "first_seen_at": {
+          "files_with_field": 207,
+          "arrow_types": {
+            "timestamp[ns, tz=UTC]": 207
+          },
+          "null_rows": 72747,
+          "present_rate_rows": 0.6022711119372792
+        },
+        "last_seen_at": {
+          "files_with_field": 207,
+          "arrow_types": {
+            "timestamp[ns, tz=UTC]": 207
+          },
+          "null_rows": 72598,
+          "present_rate_rows": 0.6030857380293703
+        },
+        "created_at": {
+          "files_with_field": 207,
+          "arrow_types": {
+            "timestamp[ns, tz=UTC]": 207
+          },
+          "null_rows": 53580,
+          "present_rate_rows": 0.7070626441997528
+        },
+        "avatar_url": {
+          "files_with_field": 207,
+          "arrow_types": {
+            "string": 207
+          },
+          "null_rows": 181946,
+          "present_rate_rows": 0.005248597640317977
+        },
+        "dump_date": {
+          "files_with_field": 207,
+          "arrow_types": {
+            "string": 207
+          },
+          "null_rows": 0,
+          "present_rate_rows": 1.0
+        }
+      }
+    },
+    "dedup": {
+      "rows": 182906,
+      "unique_agents": 182860,
+      "rows_dropped": 46
+    },
+    "fields_deduplicated": {
+      "id": {
+        "non_null": 182860,
+        "present_rate": 1.0,
+        "python_types": {
+          "str": 182860
+        },
+        "examples": [
+          "7e7d866a-02e5-494e-9a0f-e4193840ad50",
+          "1aec644f-a5ce-4499-8e6c-0b9b9b915f1f",
+          "87130c88-35c1-4283-b1c9-6daafa19cc8f"
+        ]
+      },
+      "name": {
+        "non_null": 182860,
+        "present_rate": 1.0,
+        "python_types": {
+          "str": 182860
+        },
+        "examples": "withheld (counts only)"
+      },
+      "description": {
+        "non_null": 182356,
+        "present_rate": 0.9972437930657333,
+        "python_types": {
+          "str": 182356
+        },
+        "examples": "withheld (counts only)"
+      },
+      "karma": {
+        "non_null": 182859,
+        "present_rate": 0.9999945313354479,
+        "python_types": {
+          "float": 182859
+        },
+        "distinct": 1082,
+        "percentiles": {
+          "p1": 0.0,
+          "p5": 0.0,
+          "p25": 0.0,
+          "p50": 0.0,
+          "p75": 2.0,
+          "p95": 20.0,
+          "p99": 205.0
+        },
+        "min": -286181.0,
+        "max": 235871.0,
+        "examples": [
+          "114.0",
+          "18.0",
+          "126.0"
+        ]
+      },
+      "follower_count": {
+        "non_null": 182860,
+        "present_rate": 1.0,
+        "python_types": {
+          "int": 182860
+        },
+        "distinct": 189,
+        "percentiles": {
+          "p1": 0.0,
+          "p5": 0.0,
+          "p25": 0.0,
+          "p50": 0.0,
+          "p75": 0.0,
+          "p95": 5.0,
+          "p99": 20.0
+        },
+        "min": 0.0,
+        "max": 8096.0,
+        "examples": [
+          "41",
+          "6",
+          "22"
+        ]
+      },
+      "following_count": {
+        "non_null": 182860,
+        "present_rate": 1.0,
+        "python_types": {
+          "int": 182860
+        },
+        "distinct": 223,
+        "percentiles": {
+          "p1": 0.0,
+          "p5": 0.0,
+          "p25": 0.0,
+          "p50": 1.0,
+          "p75": 1.0,
+          "p95": 1.0,
+          "p99": 5.0
+        },
+        "min": 0.0,
+        "max": 5977.0,
+        "examples": [
+          "1",
+          "380",
+          "0"
+        ]
+      },
+      "is_claimed": {
+        "non_null": 182860,
+        "present_rate": 1.0,
+        "python_types": {
+          "int": 182860
+        },
+        "distinct": 2,
+        "value_counts": {
+          "1": 129268,
+          "0": 53592
+        },
+        "examples": "withheld (counts only)"
+      },
+      "owner_x_handle": {
+        "non_null": 55551,
+        "present_rate": 0.30378978453461664,
+        "python_types": {
+          "str": 55551
+        },
+        "examples": "withheld (counts only)"
+      },
+      "first_seen_at": {
+        "non_null": 110144,
+        "present_rate": 0.6023405884283058,
+        "python_types": {
+          "Timestamp": 110144
+        },
+        "distinct": 110144,
+        "min": "2026-01-30T20:37:47.119366+00:00",
+        "max": "2026-09-11T15:28:45.121406+00:00",
+        "examples": [
+          "2026-01-30T20:37:47.478021+00:00",
+          "2026-01-30T20:41:46.846052+00:00",
+          "2026-01-30T20:45:49.940729+00:00"
+        ]
+      },
+      "last_seen_at": {
+        "non_null": 110262,
+        "present_rate": 0.6029858908454555,
+        "python_types": {
+          "Timestamp": 110262
+        },
+        "distinct": 110262,
+        "min": "2026-02-08T19:27:58.263590+00:00",
+        "max": "2026-09-11T16:04:46.464986+00:00",
+        "examples": [
+          "2026-04-06T21:20:35.884232+00:00",
+          "2026-04-07T09:53:28.772486+00:00",
+          "2026-04-06T20:20:38.900792+00:00"
+        ]
+      },
+      "created_at": {
+        "non_null": 129295,
+        "present_rate": 0.7070709832658865,
+        "python_types": {
+          "Timestamp": 129295
+        },
+        "distinct": 128406,
+        "min": "2026-01-27T17:55:35.652072+00:00",
+        "max": "2026-08-06T21:20:50.248000+00:00",
+        "examples": [
+          "2026-01-29T17:09:00.412000+00:00",
+          "2026-01-30T19:40:58.462000+00:00",
+          "2026-01-29T23:53:59.533000+00:00"
+        ]
+      },
+      "avatar_url": {
+        "non_null": 960,
+        "present_rate": 0.005249917970031718,
+        "python_types": {
+          "str": 960
+        },
+        "examples": "withheld (counts only)"
+      },
+      "dump_date": {
+        "non_null": 182860,
+        "present_rate": 1.0,
+        "python_types": {
+          "str": 182860
+        },
+        "examples": [
+          "2026-01-30",
+          "2026-01-31",
+          "2026-02-01"
+        ]
+      }
+    },
+    "owner_linkage": {
+      "agents": 182860,
+      "agents_with_owner": 55551,
+      "share_with_owner": 0.30378978453461664,
+      "distinct_owners": 55541,
+      "normalisation": "strip, lower-case, leading @ removed; empty and 'none' treated as missing",
+      "agents_per_owner": {
+        "p1": 1.0,
+        "p5": 1.0,
+        "p25": 1.0,
+        "p50": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "p99": 1.0,
+        "mean": 1.0001800471723592,
+        "max": 2,
+        "owners_ge_2": 10,
+        "owners_ge_5": 0,
+        "owners_ge_10": 0,
+        "owners_ge_100": 0,
+        "agents_under_owners_ge_2": 20
+      },
+      "owners_by_agent_count": {
+        "1": 55531,
+        "2": 10
+      },
+      "claim_crosstab": {
+        "is_claimed=0": {
+          "with_owner": 0,
+          "without_owner": 53592
+        },
+        "is_claimed=1": {
+          "with_owner": 55551,
+          "without_owner": 73717
+        }
+      }
+    },
+    "owner_keys_file": {
+      "path": "data/interim/moltbook_agent_owner.parquet",
+      "rows": 182860,
+      "rows_with_key": 55551,
+      "key": "HMAC-SHA256(salt, handle)[:16]"
+    },
+    "leak_check_hits": 0,
+    "fields_not_in_inspected_schema": [],
+    "go_no_go": {
+      "share_with_owner": 0.30378978453461664,
+      "share_ge_10pct": true,
+      "owners_with_ge_2_agents": 10,
+      "multi_owners_ge_100": false,
+      "go": false
+    }
+  }
+}
