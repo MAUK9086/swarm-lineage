@@ -5,7 +5,6 @@ data/
 docs/*.pdf
 docs/*.docx
 
-
 # Python
 __pycache__/
 *.pyc
