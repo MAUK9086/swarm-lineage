@@ -688,12 +688,47 @@ Global seed: 42.
   timeline; their timeline features are recomputed and scored by the fold model in which
   they were test; pooled recall at the fixed J = 0 pooled organic threshold, with a
   group-bootstrap CI.
-- Code: experiments/E38_monitor_matched.py, src/monitor_data.py @ (filled after commit)
+- Code: experiments/E38_monitor_matched.py, src/monitor_data.py @ 01d35b4
 - Params: >= 20 posts both classes; <= 5,000 per class; top 1% components held out; 5 folds;
   1,000 bootstrap resamples; jitter {0, 1, 5, 30, 120} min; seed 42.
-- Results:
-- Interpretation:
-- Decision / next step:
+- Results: (results/E38_monitor_matched.json)
+
+  | item | value |
+  |---|---|
+  | population | coordinated >= 20 posts 6,987; organic 16,526; sampled 5,000 + 5,000 |
+  | components with sampled authors | 4,866 |
+  | held out (top 1% = 49 components) | 5,177 authors, 4,987 coordinated; component sizes 2 to 4,262 |
+  | cross-validation | 4,823 authors, **13 coordinated**, 4,817 components |
+
+  | feature set (GBT) | fold AUROC mean +/- sd | fold recall mean +/- sd | pooled AUROC [95% CI] | pooled recall at 1% FPR [CI] | held-out AUROC | held-out recall |
+  |---|---|---|---|---|---|---|
+  | (a) full | 0.703 +/- 0.132 | 0.067 +/- 0.149 | 0.691 [0.563, 0.821] | 0.077 [0.000, 0.250] | 0.529 | 0.073 |
+  | (b) synchrony | 0.520 +/- 0.246 | 0.000 +/- 0.000 | 0.485 [0.273, 0.714] | 0.000 [0.000, 0.000] | 0.537 | 0.011 |
+  | (c) activity | 0.656 +/- 0.212 | 0.067 +/- 0.149 | 0.634 [0.437, 0.811] | 0.077 [0.000, 0.250] | 0.583 | 0.018 |
+  | (d) creation | 0.570 +/- 0.079 | 0.000 +/- 0.000 | 0.524 [0.391, 0.666] | 0.000 [0.000, 0.000] | 0.411 | 0.004 |
+  | (e) karma | 0.583 +/- 0.153 | 0.000 +/- 0.000 | 0.549 [0.358, 0.720] | 0.000 [0.000, 0.000] | 0.518 | 0.000 |
+  | (a) logistic (secondary) | 0.665 +/- 0.197 | 0.067 +/- 0.149 | 0.659 [0.515, 0.793] | 0.077 [0.000, 0.250] | - | - |
+
+  Held-out AUROC is against the 190 held-out organic authors. Jitter (pooled recall at
+  the fixed threshold, 0 / 1 / 5 / 30 / 120 min): (a) 0.077 / 0.154 / 0.077 / 0.077 / 0.077;
+  (b) 0 at every level.
+  GO: no (pooled AUROC 0.691 < 0.75; recall 0.077 < 0.30).
+- Interpretation: NO-GO, but the cross-validation part is uninformative. The
+  pre-registered hold-out rule (top 1% of components by sampled authors) removed almost
+  every coordinated author, because activity-matched coordinated authors sit mostly in one
+  duplicate-sharing component of 4,262 sampled authors. Cross-validation therefore had 13
+  positives; its CIs are very wide and the jitter results move in steps of one author.
+  The held-out set is the substantive test: 4,987 coordinated vs 190 organic authors,
+  scored by models trained on those 13 positives. There, no feature set exceeds AUROC
+  0.583 and recall at 1% FPR stays at or below 0.073. Synchrony alone (b) is at chance
+  in both parts. Together with E37's matched diagnostic (0.722, trained on 121
+  activity-matched positives), the evidence does not support a metadata-only monitor for
+  this kind of coordination on Moltbook. The large drop from E37's headline 0.960 is the
+  evaluation lesson: E37's number came from activity differences and an unbalanced split.
+- Decision / next step: NO-GO for "a metadata monitor works". No re-run with a changed
+  hold-out rule within this scope (that would be a new pre-registration). The degenerate
+  split is itself reported as a cluster-structure finding: on Moltbook, activity-matched
+  coordinated accounts collapse into one dominant component.
 
 ### E34 - Inflation curve: pair-level vs component-level scoring  (2026-11-08 00:50 IST)
 - Question: How much does pair-level scoring inflate the "longer is later" estimate and
@@ -784,5 +819,8 @@ Global seed: 42.
   confounded, unbalanced split) vs proper = E38 feature set (a), pooled out-of-fold. Each
   point has its CI; chance lines at 0.5; E35 false-positive rates are noted in the dating
   panel.
+- Change after E38 results, presentation only: the monitor panel note also states the
+  number of coordinated authors in E38's cross-validation (13) and the held-out AUROC,
+  so the cluster-aware point is not read without that context.
 - Code: experiments/FIG1_naive_vs_proper.py @ (filled after commit); output
   figures/FIG1_naive_vs_proper.png.

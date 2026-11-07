@@ -1,0 +1,478 @@
+{
+  "experiment": "E34_inflation_curve",
+  "run_at": "2026-11-08 00:56 IST",
+  "git_hash": "01d35b4",
+  "seed": 42,
+  "params": {
+    "windows": [
+      "0.5-0.95",
+      "0.7-0.95",
+      "0.9-0.95"
+    ],
+    "caps": [
+      "1",
+      "5",
+      "20",
+      "100",
+      "None"
+    ],
+    "n_boot": 1000,
+    "pair_ci": "Wald",
+    "pairs": "E31_pairs.parquet"
+  },
+  "results": {
+    "pairs_total": 8361829,
+    "pairs_invalid_time": 0,
+    "length_rule_ties": 1396762,
+    "reproduces_E31_pair_accuracy": 0.6960841940202317,
+    "pair_bootstrap_check_full_none": {
+      "ci": [
+        0.6957821428780713,
+        0.6963967303086441
+      ],
+      "wald": [
+        0.6957724450817803,
+        0.6963959429586831
+      ]
+    },
+    "grid": {
+      "0.5-0.95": [
+        {
+          "cap": 1,
+          "pairs": 1198,
+          "components": 1198,
+          "pair_level": {
+            "accuracy": 0.5008347245409015,
+            "ci": [
+              0.47252151620889715,
+              0.5291479328729058
+            ]
+          },
+          "component_level": {
+            "macro": 0.5008347245409015,
+            "ci": [
+              0.4724540901502504,
+              0.5267111853088481
+            ]
+          },
+          "inflation_points": 0.0,
+          "ci_width_ratio_comp_over_pair": 0.9581587244082681
+        },
+        {
+          "cap": 5,
+          "pairs": 2060,
+          "components": 1198,
+          "pair_level": {
+            "accuracy": 0.5111650485436893,
+            "ci": [
+              0.48957884913007804,
+              0.5327512479573004
+            ]
+          },
+          "component_level": {
+            "macro": 0.5060100166944909,
+            "ci": [
+              0.4801551196438509,
+              0.5294845575959932
+            ]
+          },
+          "inflation_points": 0.515503184919841,
+          "ci_width_ratio_comp_over_pair": 1.1426151729386325
+        },
+        {
+          "cap": 20,
+          "pairs": 3029,
+          "components": 1198,
+          "pair_level": {
+            "accuracy": 0.5061076262793001,
+            "ci": [
+              0.4883028689572775,
+              0.5239123836013226
+            ]
+          },
+          "component_level": {
+            "macro": 0.5039607339641711,
+            "ci": [
+              0.47760675288927035,
+              0.5282917060979763
+            ]
+          },
+          "inflation_points": 0.21468923151289898,
+          "ci_width_ratio_comp_over_pair": 1.4233542275247428
+        },
+        {
+          "cap": 100,
+          "pairs": 6063,
+          "components": 1198,
+          "pair_level": {
+            "accuracy": 0.5032162295893122,
+            "ci": [
+              0.49063087866639027,
+              0.5158015805122341
+            ]
+          },
+          "component_level": {
+            "macro": 0.5034704676015074,
+            "ci": [
+              0.4771005727700044,
+              0.5276159085266467
+            ]
+          },
+          "inflation_points": -0.025423801219515152,
+          "ci_width_ratio_comp_over_pair": 2.0069100999256944
+        },
+        {
+          "cap": "none",
+          "pairs": 8361829,
+          "components": 1198,
+          "pair_level": {
+            "accuracy": 0.6960841940202317,
+            "ci": [
+              0.6957724450817803,
+              0.6963959429586831
+            ]
+          },
+          "component_level": {
+            "macro": 0.5037584218859626,
+            "ci": [
+              0.47741215929114134,
+              0.5279073918385768
+            ]
+          },
+          "inflation_points": 19.232577213426904,
+          "ci_width_ratio_comp_over_pair": 80.98701602363731
+        }
+      ],
+      "0.7-0.95": [
+        {
+          "cap": 1,
+          "pairs": 482,
+          "components": 482,
+          "pair_level": {
+            "accuracy": 0.4605809128630705,
+            "ci": [
+              0.41608289169381035,
+              0.5050789340323306
+            ]
+          },
+          "component_level": {
+            "macro": 0.4605809128630705,
+            "ci": [
+              0.4190871369294606,
+              0.504149377593361
+            ]
+          },
+          "inflation_points": 0.0,
+          "ci_width_ratio_comp_over_pair": 0.9557980156054962
+        },
+        {
+          "cap": 5,
+          "pairs": 831,
+          "components": 482,
+          "pair_level": {
+            "accuracy": 0.44404332129963897,
+            "ci": [
+              0.41026168128787627,
+              0.4778249613114017
+            ]
+          },
+          "component_level": {
+            "macro": 0.454253112033195,
+            "ci": [
+              0.4174265214384509,
+              0.4952282157676348
+            ]
+          },
+          "inflation_points": -1.0209790733556046,
+          "ci_width_ratio_comp_over_pair": 1.1515381476756832
+        },
+        {
+          "cap": 20,
+          "pairs": 1206,
+          "components": 482,
+          "pair_level": {
+            "accuracy": 0.4527363184079602,
+            "ci": [
+              0.42464349288813497,
+              0.4808291439277854
+            ]
+          },
+          "component_level": {
+            "macro": 0.4494130696412854,
+            "ci": [
+              0.4118342696376928,
+              0.49011850312550514
+            ]
+          },
+          "inflation_points": 0.332324876667478,
+          "ci_width_ratio_comp_over_pair": 1.3933136314922614
+        },
+        {
+          "cap": 100,
+          "pairs": 2504,
+          "components": 482,
+          "pair_level": {
+            "accuracy": 0.5071884984025559,
+            "ci": [
+              0.48760654341357057,
+              0.5267704533915412
+            ]
+          },
+          "component_level": {
+            "macro": 0.4496301187318161,
+            "ci": [
+              0.4118630164164216,
+              0.4898978742101107
+            ]
+          },
+          "inflation_points": 5.755837967073979,
+          "ci_width_ratio_comp_over_pair": 1.9925195885084803
+        },
+        {
+          "cap": "none",
+          "pairs": 328847,
+          "components": 482,
+          "pair_level": {
+            "accuracy": 0.6982487296523915,
+            "ci": [
+              0.6966798819608824,
+              0.6998175773439006
+            ]
+          },
+          "component_level": {
+            "macro": 0.44984802885267805,
+            "ci": [
+              0.41230615115642866,
+              0.4899590674902919
+            ]
+          },
+          "inflation_points": 24.840070079971344,
+          "ci_width_ratio_comp_over_pair": 24.748392324549695
+        }
+      ],
+      "0.9-0.95": [
+        {
+          "cap": 1,
+          "pairs": 80,
+          "components": 80,
+          "pair_level": {
+            "accuracy": 0.6,
+            "ci": [
+              0.4926483505301944,
+              0.7073516494698056
+            ]
+          },
+          "component_level": {
+            "macro": 0.6,
+            "ci": [
+              0.5,
+              0.7
+            ]
+          },
+          "inflation_points": 0.0,
+          "ci_width_ratio_comp_over_pair": 0.9315180576533817
+        },
+        {
+          "cap": 5,
+          "pairs": 180,
+          "components": 80,
+          "pair_level": {
+            "accuracy": 0.5944444444444444,
+            "ci": [
+              0.5227157946743558,
+              0.6661730942145331
+            ]
+          },
+          "component_level": {
+            "macro": 0.5979166666666667,
+            "ci": [
+              0.5041666666666667,
+              0.6883854166666665
+            ]
+          },
+          "inflation_points": -0.347222222222221,
+          "ci_width_ratio_comp_over_pair": 1.2841364684158632
+        },
+        {
+          "cap": 20,
+          "pairs": 352,
+          "components": 80,
+          "pair_level": {
+            "accuracy": 0.6107954545454546,
+            "ci": [
+              0.5598607709400772,
+              0.6617301381508319
+            ]
+          },
+          "component_level": {
+            "macro": 0.6099553571428571,
+            "ci": [
+              0.5178340773809523,
+              0.6950509672619046
+            ]
+          },
+          "inflation_points": 0.0840097402597495,
+          "ci_width_ratio_comp_over_pair": 1.7396484805320647
+        },
+        {
+          "cap": 100,
+          "pairs": 1016,
+          "components": 80,
+          "pair_level": {
+            "accuracy": 0.5984251968503937,
+            "ci": [
+              0.5682819934766816,
+              0.6285684002241059
+            ]
+          },
+          "component_level": {
+            "macro": 0.6112232142857144,
+            "ci": [
+              0.5178923363095238,
+              0.6975628720238095
+            ]
+          },
+          "inflation_points": -1.2798017435320608,
+          "ci_width_ratio_comp_over_pair": 2.9802827106122423
+        },
+        {
+          "cap": "none",
+          "pairs": 9431,
+          "components": 80,
+          "pair_level": {
+            "accuracy": 0.8579153854310253,
+            "ci": [
+              0.8508690230082253,
+              0.8649617478538253
+            ]
+          },
+          "component_level": {
+            "macro": 0.6122424804953999,
+            "ci": [
+              0.5194219314661446,
+              0.6987795724731848
+            ]
+          },
+          "inflation_points": 24.567290493562545,
+          "ci_width_ratio_comp_over_pair": 12.726966784073637
+        }
+      ]
+    },
+    "secondary_template_filter_0.5-0.95": {
+      "components_dropped": 651,
+      "pairs_dropped": 9167,
+      "grid": [
+        {
+          "cap": 1,
+          "pairs": 547,
+          "components": 547,
+          "pair_level": {
+            "accuracy": 0.49177330895795246,
+            "ci": [
+              0.44987797632470367,
+              0.5336686415912012
+            ]
+          },
+          "component_level": {
+            "macro": 0.49177330895795246,
+            "ci": [
+              0.4515539305301645,
+              0.5320383912248628
+            ]
+          },
+          "inflation_points": 0.0,
+          "ci_width_ratio_comp_over_pair": 0.9605420894883248
+        },
+        {
+          "cap": 5,
+          "pairs": 1107,
+          "components": 547,
+          "pair_level": {
+            "accuracy": 0.4950316169828365,
+            "ci": [
+              0.46557907075535176,
+              0.5244841632103212
+            ]
+          },
+          "component_level": {
+            "macro": 0.4940889701401584,
+            "ci": [
+              0.4567489335770871,
+              0.5313566422912858
+            ]
+          },
+          "inflation_points": 0.09426468426780854,
+          "ci_width_ratio_comp_over_pair": 1.2665748512530255
+        },
+        {
+          "cap": 20,
+          "pairs": 1767,
+          "components": 547,
+          "pair_level": {
+            "accuracy": 0.5053763440860215,
+            "ci": [
+              0.4820646027302344,
+              0.5286880854418087
+            ]
+          },
+          "component_level": {
+            "macro": 0.4970677447798644,
+            "ci": [
+              0.46022362228110164,
+              0.5336334194819651
+            ]
+          },
+          "inflation_points": 0.8308599306157127,
+          "ci_width_ratio_comp_over_pair": 1.574524100977112
+        },
+        {
+          "cap": 100,
+          "pairs": 4066,
+          "components": 547,
+          "pair_level": {
+            "accuracy": 0.5068863748155436,
+            "ci": [
+              0.4915192288180714,
+              0.5222535208130157
+            ]
+          },
+          "component_level": {
+            "macro": 0.496339814084666,
+            "ci": [
+              0.45981096010709216,
+              0.532624272349608
+            ]
+          },
+          "inflation_points": 1.0546560730877563,
+          "ci_width_ratio_comp_over_pair": 2.3691228109140585
+        },
+        {
+          "cap": "none",
+          "pairs": 8352662,
+          "components": 547,
+          "pair_level": {
+            "accuracy": 0.6962988565800938,
+            "ci": [
+              0.6959869987195226,
+              0.696610714440665
+            ]
+          },
+          "component_level": {
+            "macro": 0.4968912107354099,
+            "ci": [
+              0.46025232052060655,
+              0.5332362850086422
+            ]
+          },
+          "inflation_points": 19.94076458446839,
+          "ci_width_ratio_comp_over_pair": 117.01479057535825
+        }
+      ]
+    },
+    "figure": "figures/E34_inflation_curve.png",
+    "criterion": {
+      "inflation_points_full_window_cap_none": 19.232577213426904,
+      "material_ge_5_points": true
+    }
+  }
+}

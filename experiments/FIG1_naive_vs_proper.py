@@ -89,7 +89,10 @@ def main() -> None:
     panel(axes[1], "Coordination monitor (metadata only)", "AUROC",
           [("Naive", "E37: unmatched activity, unbalanced split", m37["auroc"], m37["auroc_ci"], C_NAIVE),
            ("Cluster-aware", "E38: matched activity, grouped 5-fold CV", m38["auroc"], m38["auroc_ci"], C_PROPER)],
-          f"Recall at 1% FPR: naive {m37['recall_at_1pct_fpr']:.2f}, cluster-aware {m38['recall_at_1pct_fpr']:.2f}.")
+          f"Recall at 1% FPR: naive {m37['recall_at_1pct_fpr']:.2f}, cluster-aware {m38['recall_at_1pct_fpr']:.2f}. "
+          f"Cluster-aware CV had only {e38['counts']['cv_coordinated']} coordinated authors;\n"
+          f"on the held-out large components ({e38['counts']['held_out_coordinated']:,} coordinated) "
+          f"AUROC was {e38['feature_sets']['a_full']['held_out']['auroc']:.3f}.")
     fig.suptitle("Naive evaluation of clustered agent text overstates both results (95% CIs)",
                  x=0.01, ha="left", fontsize=11, color=C_TEXT)
     fig.tight_layout(rect=(0, 0.04, 1, 0.97))

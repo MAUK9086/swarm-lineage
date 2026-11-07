@@ -1,0 +1,558 @@
+{
+  "experiment": "E38_monitor_matched",
+  "run_at": "2026-11-08 00:58 IST",
+  "git_hash": "01d35b4",
+  "seed": 42,
+  "params": {
+    "min_posts": 20,
+    "max_per_class": 5000,
+    "holdout_share": 0.01,
+    "n_folds": 5,
+    "n_boot": 1000,
+    "jitter_minutes": [
+      0,
+      1,
+      5,
+      30,
+      120
+    ],
+    "feature_sets": {
+      "a_full": [
+        "sync_share_any",
+        "sync_mean_log1p",
+        "sync_ratio_to_expected",
+        "n_posts_log1p",
+        "iv_median_log",
+        "iv_mean_log",
+        "iv_share_lt_60s",
+        "iv_min_log",
+        "iv_cv",
+        "burstiness",
+        "hour_entropy",
+        "created_missing",
+        "created_within_60s_log1p",
+        "created_within_1h_log1p",
+        "karma_slog1p",
+        "followers_log1p",
+        "following_log1p"
+      ],
+      "b_synchrony": [
+        "sync_share_any",
+        "sync_mean_log1p",
+        "sync_ratio_to_expected"
+      ],
+      "c_activity": [
+        "n_posts_log1p",
+        "iv_median_log",
+        "iv_mean_log",
+        "iv_share_lt_60s",
+        "iv_min_log",
+        "iv_cv",
+        "burstiness"
+      ],
+      "d_creation": [
+        "created_missing",
+        "created_within_60s_log1p",
+        "created_within_1h_log1p"
+      ],
+      "e_karma": [
+        "karma_slog1p"
+      ]
+    }
+  },
+  "results": {
+    "counts": {
+      "posts": 3602697,
+      "authors": 181589,
+      "marked_posts": 210886,
+      "coordinated_ge_20": 6987,
+      "organic_ge_20": 16526,
+      "sampled_coordinated": 5000,
+      "sampled_organic": 5000,
+      "components_with_sampled_authors": 4866,
+      "held_out_components": 49,
+      "held_out_component_sizes": {
+        "min": 2,
+        "max": 4262
+      },
+      "held_out_authors": 5177,
+      "held_out_coordinated": 4987,
+      "cv_authors": 4823,
+      "cv_coordinated": 13,
+      "cv_components": 4817
+    },
+    "feature_sets": {
+      "a_full": {
+        "features": [
+          "sync_share_any",
+          "sync_mean_log1p",
+          "sync_ratio_to_expected",
+          "n_posts_log1p",
+          "iv_median_log",
+          "iv_mean_log",
+          "iv_share_lt_60s",
+          "iv_min_log",
+          "iv_cv",
+          "burstiness",
+          "hour_entropy",
+          "created_missing",
+          "created_within_60s_log1p",
+          "created_within_1h_log1p",
+          "karma_slog1p",
+          "followers_log1p",
+          "following_log1p"
+        ],
+        "per_fold": [
+          {
+            "auroc": 0.7649705780546902,
+            "recall_at_1pct_fpr": 0.3333333333333333,
+            "test_authors": 966,
+            "test_coordinated": 3
+          },
+          {
+            "auroc": 0.8581081081081081,
+            "recall_at_1pct_fpr": 0.0,
+            "test_authors": 964,
+            "test_coordinated": 2
+          },
+          {
+            "auroc": 0.5192307692307693,
+            "recall_at_1pct_fpr": 0.0,
+            "test_authors": 964,
+            "test_coordinated": 2
+          },
+          {
+            "auroc": 0.6271656271656271,
+            "recall_at_1pct_fpr": 0.0,
+            "test_authors": 965,
+            "test_coordinated": 3
+          },
+          {
+            "auroc": 0.7460978147762747,
+            "recall_at_1pct_fpr": 0.0,
+            "test_authors": 964,
+            "test_coordinated": 3
+          }
+        ],
+        "auroc_mean_sd": [
+          0.7031145794670939,
+          0.13160377656266664
+        ],
+        "recall_mean_sd": [
+          0.06666666666666667,
+          0.14907119849998599
+        ],
+        "pooled": {
+          "auroc": 0.6910762833839756,
+          "auroc_ci": [
+            0.5632615946468673,
+            0.8210175335654871
+          ],
+          "recall_at_1pct_fpr": 0.07692307692307693,
+          "recall_ci": [
+            0.0,
+            0.25
+          ],
+          "threshold": 0.0000738606044508378,
+          "n": 4823,
+          "n_pos": 13,
+          "n_groups": 4817,
+          "boot_used": 1000
+        },
+        "held_out": {
+          "recall_at_pooled_threshold": 0.07319029476639262,
+          "auroc": 0.5288265279199603,
+          "auroc_reference": "held-out organic authors"
+        }
+      },
+      "b_synchrony": {
+        "features": [
+          "sync_share_any",
+          "sync_mean_log1p",
+          "sync_ratio_to_expected"
+        ],
+        "per_fold": [
+          {
+            "auroc": 0.6247836621668397,
+            "recall_at_1pct_fpr": 0.0,
+            "test_authors": 966,
+            "test_coordinated": 3
+          },
+          {
+            "auroc": 0.502079002079002,
+            "recall_at_1pct_fpr": 0.0,
+            "test_authors": 964,
+            "test_coordinated": 2
+          },
+          {
+            "auroc": 0.8726611226611226,
+            "recall_at_1pct_fpr": 0.0,
+            "test_authors": 964,
+            "test_coordinated": 2
+          },
+          {
+            "auroc": 0.23146223146223144,
+            "recall_at_1pct_fpr": 0.0,
+            "test_authors": 965,
+            "test_coordinated": 3
+          },
+          {
+            "auroc": 0.36715227193895245,
+            "recall_at_1pct_fpr": 0.0,
+            "test_authors": 964,
+            "test_coordinated": 3
+          }
+        ],
+        "auroc_mean_sd": [
+          0.5196276580616297,
+          0.24611299443231643
+        ],
+        "recall_mean_sd": [
+          0.0,
+          0.0
+        ],
+        "pooled": {
+          "auroc": 0.4851991044298737,
+          "auroc_ci": [
+            0.27322707390344425,
+            0.7138690213495035
+          ],
+          "recall_at_1pct_fpr": 0.0,
+          "recall_ci": [
+            0.0,
+            0.0
+          ],
+          "threshold": 0.001102108771152561,
+          "n": 4823,
+          "n_pos": 13,
+          "n_groups": 4817,
+          "boot_used": 1000
+        },
+        "held_out": {
+          "recall_at_pooled_threshold": 0.010828153198315621,
+          "auroc": 0.5365017466465443,
+          "auroc_reference": "held-out organic authors"
+        }
+      },
+      "c_activity": {
+        "features": [
+          "n_posts_log1p",
+          "iv_median_log",
+          "iv_mean_log",
+          "iv_share_lt_60s",
+          "iv_min_log",
+          "iv_cv",
+          "burstiness"
+        ],
+        "per_fold": [
+          {
+            "auroc": 0.8352371062651436,
+            "recall_at_1pct_fpr": 0.3333333333333333,
+            "test_authors": 966,
+            "test_coordinated": 3
+          },
+          {
+            "auroc": 0.8851351351351351,
+            "recall_at_1pct_fpr": 0.0,
+            "test_authors": 964,
+            "test_coordinated": 2
+          },
+          {
+            "auroc": 0.670997920997921,
+            "recall_at_1pct_fpr": 0.0,
+            "test_authors": 964,
+            "test_coordinated": 2
+          },
+          {
+            "auroc": 0.39587664587664584,
+            "recall_at_1pct_fpr": 0.0,
+            "test_authors": 965,
+            "test_coordinated": 3
+          },
+          {
+            "auroc": 0.49271592091571276,
+            "recall_at_1pct_fpr": 0.0,
+            "test_authors": 964,
+            "test_coordinated": 3
+          }
+        ],
+        "auroc_mean_sd": [
+          0.6559925458381116,
+          0.2116480791401873
+        ],
+        "recall_mean_sd": [
+          0.06666666666666667,
+          0.14907119849998599
+        ],
+        "pooled": {
+          "auroc": 0.6335039181193027,
+          "auroc_ci": [
+            0.4373926724526772,
+            0.8112956033363695
+          ],
+          "recall_at_1pct_fpr": 0.07692307692307693,
+          "recall_ci": [
+            0.0,
+            0.25
+          ],
+          "threshold": 0.00019510344206160926,
+          "n": 4823,
+          "n_pos": 13,
+          "n_groups": 4817,
+          "boot_used": 1000
+        },
+        "held_out": {
+          "recall_at_pooled_threshold": 0.018447964708241428,
+          "auroc": 0.5828907791837725,
+          "auroc_reference": "held-out organic authors"
+        }
+      },
+      "d_creation": {
+        "features": [
+          "created_missing",
+          "created_within_60s_log1p",
+          "created_within_1h_log1p"
+        ],
+        "per_fold": [
+          {
+            "auroc": 0.5190377293181032,
+            "recall_at_1pct_fpr": 0.0,
+            "test_authors": 966,
+            "test_coordinated": 3
+          },
+          {
+            "auroc": 0.5262474012474012,
+            "recall_at_1pct_fpr": 0.0,
+            "test_authors": 964,
+            "test_coordinated": 2
+          },
+          {
+            "auroc": 0.7027027027027027,
+            "recall_at_1pct_fpr": 0.0,
+            "test_authors": 964,
+            "test_coordinated": 2
+          },
+          {
+            "auroc": 0.5178447678447679,
+            "recall_at_1pct_fpr": 0.0,
+            "test_authors": 965,
+            "test_coordinated": 3
+          },
+          {
+            "auroc": 0.585327783558793,
+            "recall_at_1pct_fpr": 0.0,
+            "test_authors": 964,
+            "test_coordinated": 3
+          }
+        ],
+        "auroc_mean_sd": [
+          0.5702320769343536,
+          0.0791774749009098
+        ],
+        "recall_mean_sd": [
+          0.0,
+          0.0
+        ],
+        "pooled": {
+          "auroc": 0.5241164241164241,
+          "auroc_ci": [
+            0.3913593478650944,
+            0.6664202035259303
+          ],
+          "recall_at_1pct_fpr": 0.0,
+          "recall_ci": [
+            0.0,
+            0.0
+          ],
+          "threshold": 0.003164912253286959,
+          "n": 4823,
+          "n_pos": 13,
+          "n_groups": 4817,
+          "boot_used": 1000
+        },
+        "held_out": {
+          "recall_at_pooled_threshold": 0.00360938439943854,
+          "auroc": 0.41120333920825725,
+          "auroc_reference": "held-out organic authors"
+        }
+      },
+      "e_karma": {
+        "features": [
+          "karma_slog1p"
+        ],
+        "per_fold": [
+          {
+            "auroc": 0.5832467982000692,
+            "recall_at_1pct_fpr": 0.0,
+            "test_authors": 966,
+            "test_coordinated": 3
+          },
+          {
+            "auroc": 0.3924116424116424,
+            "recall_at_1pct_fpr": 0.0,
+            "test_authors": 964,
+            "test_coordinated": 2
+          },
+          {
+            "auroc": 0.6751559251559252,
+            "recall_at_1pct_fpr": 0.0,
+            "test_authors": 964,
+            "test_coordinated": 2
+          },
+          {
+            "auroc": 0.7801455301455301,
+            "recall_at_1pct_fpr": 0.0,
+            "test_authors": 965,
+            "test_coordinated": 3
+          },
+          {
+            "auroc": 0.4828303850156087,
+            "recall_at_1pct_fpr": 0.0,
+            "test_authors": 964,
+            "test_coordinated": 3
+          }
+        ],
+        "auroc_mean_sd": [
+          0.582758056185755,
+          0.1530659307597226
+        ],
+        "recall_mean_sd": [
+          0.0,
+          0.0
+        ],
+        "pooled": {
+          "auroc": 0.549088437549976,
+          "auroc_ci": [
+            0.3577228883084271,
+            0.7196918099891941
+          ],
+          "recall_at_1pct_fpr": 0.0,
+          "recall_ci": [
+            0.0,
+            0.0
+          ],
+          "threshold": 0.06646534090647375,
+          "n": 4823,
+          "n_pos": 13,
+          "n_groups": 4817,
+          "boot_used": 1000
+        },
+        "held_out": {
+          "recall_at_pooled_threshold": 0.0,
+          "auroc": 0.5178179055016727,
+          "auroc_reference": "held-out organic authors"
+        }
+      },
+      "a_full_logistic_secondary": {
+        "auroc_mean_sd": [
+          0.6645926887964484,
+          0.19683422140629842
+        ],
+        "recall_mean_sd": [
+          0.06666666666666667,
+          0.14907119849998599
+        ],
+        "pooled": {
+          "auroc": 0.6593315208699824,
+          "auroc_ci": [
+            0.5146766411088084,
+            0.7927252372706348
+          ],
+          "recall_at_1pct_fpr": 0.07692307692307693,
+          "recall_ci": [
+            0.0,
+            0.25
+          ],
+          "threshold": 0.015757243866271076,
+          "n": 4823,
+          "n_pos": 13,
+          "n_groups": 4817,
+          "boot_used": 1000
+        }
+      }
+    },
+    "jitter": {
+      "a_full": {
+        "0": {
+          "recall": 0.07692307692307693,
+          "ci": [
+            0.0,
+            0.23076923076923078
+          ]
+        },
+        "1": {
+          "recall": 0.15384615384615385,
+          "ci": [
+            0.0,
+            0.38461538461538464
+          ]
+        },
+        "5": {
+          "recall": 0.07692307692307693,
+          "ci": [
+            0.0,
+            0.23076923076923078
+          ]
+        },
+        "30": {
+          "recall": 0.07692307692307693,
+          "ci": [
+            0.0,
+            0.23076923076923078
+          ]
+        },
+        "120": {
+          "recall": 0.07692307692307693,
+          "ci": [
+            0.0,
+            0.23076923076923078
+          ]
+        }
+      },
+      "b_synchrony": {
+        "0": {
+          "recall": 0.0,
+          "ci": [
+            0.0,
+            0.0
+          ]
+        },
+        "1": {
+          "recall": 0.0,
+          "ci": [
+            0.0,
+            0.0
+          ]
+        },
+        "5": {
+          "recall": 0.0,
+          "ci": [
+            0.0,
+            0.0
+          ]
+        },
+        "30": {
+          "recall": 0.0,
+          "ci": [
+            0.0,
+            0.0
+          ]
+        },
+        "120": {
+          "recall": 0.0,
+          "ci": [
+            0.0,
+            0.0
+          ]
+        }
+      }
+    },
+    "go_no_go": {
+      "pooled_auroc": 0.6910762833839756,
+      "auroc_ge_075": false,
+      "pooled_recall_at_1pct_fpr": 0.07692307692307693,
+      "recall_ge_030": false,
+      "go": false
+    }
+  }
+}
