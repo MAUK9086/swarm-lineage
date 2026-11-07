@@ -127,3 +127,53 @@ Global seed: 42.
   is unknown whether it follows time, crawl order or chain order.
 - Decision / next step: Leakage stays untested. If a time signal is recovered later
   (e.g. from text), re-run E02 unchanged on it before using id order in any comparison.
+
+---
+
+### Corpus change: Swarm Traces -> collusion.wiki export  (2026-11-07 21:42 IST)
+- What changed: The project corpus moves from the Swarm Traces redacted release
+  (data/raw/redacted.jsonl.gz) to the collusion.wiki export (data/raw/collusion/,
+  expanded from full-wiki-logs.zip). The goal is now content-only recovery of time order
+  and copy/mutation lineage in this agent message board, validated against the true
+  revision timestamps, which are hidden from the method.
+- Change from the original ground truth: source (1) "payloads with time estimates" is
+  replaced by the export's own revision timestamps. Sources (2) version tags and (3)
+  numbered command sequences belonged to the Swarm Traces corpus and are dropped with it.
+- Why: E00-E02 found 0 timestamps across 189,579 Swarm Traces rows, so source (1) did not
+  exist there. The follow-up plan to pull timestamps and version markers out of the
+  payload text (E03/E04, including a narrowed version that left out credentials,
+  embedded encoded blobs and agent names) was stopped by safety classifiers before any
+  code ran. E03/E04 were never run and have no results.
+- What is kept: E00-E02 stay as the motivating result (no usable time signal in the
+  public Swarm Traces release). All hard rules and the experiment protocol are unchanged.
+  Collusion experiments are numbered from E20.
+
+### E20 - collusion.wiki export profile and slim Parquet  (2026-11-07 21:42 IST)
+- Question: What is in the export (manifest, pages, revisions, events, labels), and does it
+  have enough timed revision histories to serve as ground truth for content-only ordering?
+- Hypothesis / expected: From a first look at manifest.json: date cut
+  revision.write_date >= 2026-05-01; 14,591 revisions on 4,579 pages across 4 wikis (dse
+  13,403); 5,217 delete events; all manifest self-checks passing. Revisions carry a
+  `time` field in ISO-8601 UTC ("...Z"), so the parse rate should be close to 100%. Most
+  pages are expected to have only 1-2 revisions, so the 200-page threshold for 5+
+  revisions is the uncertain part. Revisions have `diff_base`; it is expected to point to
+  the previous revision of the same page.
+- Go / no-go criterion (pre-registered): GO if at least 5,000 revisions have a parseable
+  timestamp AND at least 200 pages have 5 or more revisions. Otherwise NO-GO for this
+  corpus as an ordering benchmark.
+- Method: Read manifest.json first; record the cut, counts and every self-check. For each
+  data file record fields, types, presence and non-null rates and distinct counts;
+  examples (truncated to 80 chars) go only to an untracked file. Revisions: parse `time`
+  and report format, parse rate, span, time_grade mix and a daily histogram; revisions per
+  page and per label (distribution only); check whether diff_base points to the same
+  page's previous seq; text length percentiles; distinct exact texts by body_sha256 (and
+  verify the hash). Pages later deleted: share of held pages with a delete event after
+  their first revision, cross-checked against pages.n_deletions. Write
+  data/interim/collusion_slim.parquet.
+- Code: experiments/E20_profile.py @ (filled after commit)
+- Params: example truncation 80 chars; value counts only for low-cardinality categorical
+  fields (<= 30 distinct, excluding names, labels, IPs, free text); GO thresholds 5,000
+  revisions and 200 pages with >= 5 revisions; seed 42 (no sampling).
+- Results:
+- Interpretation:
+- Decision / next step:
