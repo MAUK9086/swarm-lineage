@@ -457,3 +457,37 @@ Global seed: 42.
   dropped. Near-duplicate copy direction on Moltbook cannot be recovered from length or
   edit-direction cues at the cluster level. Any further work needs a cue that does not
   reduce to comparing lengths, and a new pre-registration. Stop here for review.
+
+### E33 - Moltbook agents subset: fields and owner linkage  (2026-11-07 23:26 IST)
+- Question: What fields does the agents subset have, how complete are they, and how are
+  agents linked to owners (how many agents per owner)?
+- Hypothesis / expected: Schema of one file (names and types only, inspected before
+  writing this entry): id, name, description, karma, follower_count, following_count,
+  is_claimed, owner_x_handle, first_seen_at, last_seen_at, created_at, avatar_url,
+  dump_date. Files are daily snapshots, so agents repeat across files and are deduplicated
+  by id (latest dump kept). Expected: an owner handle on a minority of agents (claimed
+  ones), and a heavy-tailed agents-per-owner distribution with some owners running many
+  agents.
+- Go / no-go criterion (pre-registered): GO for using owner linkage in later experiments
+  if at least 10% of deduplicated agents have an owner handle AND at least 100 owners
+  have 2 or more agents.
+- Method: Download the agents subset. Report every field's presence and non-null rate and
+  types, over rows and over deduplicated agents. Privacy rule: example values (truncated
+  to 80 chars) are shown only for an allow-list of non-personal fields (id, karma,
+  follower_count, following_count, first_seen_at, last_seen_at, created_at, dump_date).
+  Every other field, including owner_x_handle, is_claimed, name, description, avatar_url
+  and any field not seen in the inspected schema, gets counts only: agents with a value,
+  distinct values, and length stats for free text. Owner linkage: handles normalised
+  (strip, lower-case, leading @ removed); count agents with a handle, distinct owners,
+  agents-per-owner distribution, and a cross-tab with is_claimed. Raw handles are never
+  written or printed. For later use, data/interim/moltbook_agent_owner.parquet (untracked)
+  holds agent_id and owner_key = HMAC-SHA256(salt, normalised handle), truncated to 16 hex
+  chars; the salt is 32 random bytes in data/interim/owner_salt.bin (untracked, not
+  seeded, so the keys cannot be rebuilt from public handles). Before saving, the script
+  checks that no result string equals any raw handle or agent name.
+- Code: experiments/E33_agents_fields.py @ (filled after commit)
+- Params: example allow-list as above; truncation 80 chars; GO thresholds 10% and 100
+  owners; seed 42 (no sampling).
+- Results:
+- Interpretation:
+- Decision / next step:
