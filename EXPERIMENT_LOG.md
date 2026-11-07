@@ -257,11 +257,35 @@ Global seed: 42.
   submolt, exact duplicate rate, and text length percentiles. Comments: row count, id
   dedup, timestamp parse rate and span only. Write data/interim/moltbook_slim.parquet with
   a 300,000-post random sample (seed 42) through src/adapters/moltbook.py.
-- Code: experiments/E30_profile.py @ (filled after commit)
+- Code: experiments/E30_profile.py @ 7879fa0 (first launch failed on a missing python-dateutil
+  in the isolated interpreter before reading any data; dependency installed, same code re-run)
 - Params: sample 300,000 drawn without replacement from deduplicated posts with a
   parseable created_at, seed 42; adapter text = title + blank line + content; exact
   duplicate rate computed over posts with non-empty normalised text (empty texts would all
   collide); GO thresholds 100,000 / 1,000 agents with >= 20 posts / 1%.
-- Results:
-- Interpretation:
-- Decision / next step:
+- Results: (results/E30_profile.json)
+
+  | item | value |
+  |---|---|
+  | listing | 990 files, 2,726,655,750 bytes; posts 220 files / 1,742,133,398 B; comments 217 / 959,325,583 B; agents 207 / 20,297,460 B; others small |
+  | downloaded | posts and comments (comments < 2 GB) |
+  | posts schema | id, agent_id, agent_name, submolt, title, content, url (str); score, comment_count, is_pinned (int); created_at, fetched_at (UTC timestamp); dump_date (str); nulls: agent_id 16, agent_name 16, submolt 2, others 0 |
+  | dedup | 3,602,713 rows across files, 3,602,713 unique ids, 0 dropped |
+  | created_at | parsed 3,602,713 (100%); 2026-01-27T18:01:13Z to 2026-09-11T16:03:58Z (226.9 days); Feb 1,630,146, Mar 732,648, Apr 403,985, then declining to Sep 39,271 |
+  | posts per agent | 181,589 agents; median 4, p95 48, p99 221, max 46,575; >= 20 posts: 23,513; >= 100: 4,087; top 10 agents 7.8% of posts |
+  | posts per submolt | 7,458 submolts; median 2, p99 1,417.6, max 2,213,800; top 10 submolts 84.5% of posts |
+  | exact duplicates | 3,602,666 non-empty posts, 3,317,748 distinct texts; 336,995 posts in 52,077 duplicate groups (rate 9.35%); largest group 15,930; 33,948 groups with >= 2 authors covering 255,812 posts |
+  | text length (chars) | p5 77, p25 108, median 356, p75 722, p95 2,329, p99 4,356, max 40,302 |
+  | id format | 3,602,713 / 3,602,713 UUID-shaped (no numeric ids) |
+  | comments | 2,553,100 rows, all unique ids; created_at parsed 99.999% (33 missing); 2026-02-02 to 2026-09-11 |
+  | sample | data/interim/moltbook_slim.parquet: 300,000 posts from a pool of 3,602,713, standard columns, 102,516,315 bytes |
+
+  GO: yes (3,602,713 >= 100,000; 23,513 >= 1,000; 9.35% >= 1%).
+- Interpretation: A large, fully timestamped corpus with heavy copying: about one post in
+  eleven shares its exact text with another post, and most duplicate groups span more than
+  one author, so cross-author copying is common. Activity is concentrated in February
+  2026 and in a few submolts (one holds 2.2M posts), so group_id is very unbalanced. Ids
+  are UUID-shaped; whether they are random (v4) or time-ordered was not checked and should
+  be audited before ids are trusted as opaque. The README's backfill note did not produce
+  duplicate post ids in this release.
+- Decision / next step: GO. Run E31 (copy-direction pilot) on the 300k sample.

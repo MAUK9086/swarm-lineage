@@ -1,0 +1,258 @@
+{
+  "experiment": "E30_profile",
+  "run_at": "2026-11-07 22:53 IST",
+  "git_hash": "7879fa0",
+  "seed": 42,
+  "params": {
+    "sample_n": 300000,
+    "sample_pool": "deduplicated posts with parseable created_at",
+    "text": "title + blank line + content",
+    "dup_normalisation": "collapse whitespace, lower-case",
+    "go_min_timed": 100000,
+    "go_min_agents_20": 1000,
+    "go_min_dup_rate": 0.01,
+    "comments_max_bytes": 2147483648
+  },
+  "results": {
+    "listing": {
+      "total_files": 990,
+      "total_bytes": 2726655750,
+      "by_subset": {
+        ".gitattributes": {
+          "files": 1,
+          "bytes": 2622
+        },
+        "README.md": {
+          "files": 1,
+          "bytes": 5115
+        },
+        "agents": {
+          "files": 207,
+          "bytes": 20297460
+        },
+        "comments": {
+          "files": 217,
+          "bytes": 959325583
+        },
+        "lost_and_found": {
+          "files": 1,
+          "bytes": 408648
+        },
+        "lost_and_found_1": {
+          "files": 1,
+          "bytes": 20237
+        },
+        "lost_and_found_2": {
+          "files": 1,
+          "bytes": 16811
+        },
+        "posts": {
+          "files": 220,
+          "bytes": 1742133398
+        },
+        "snapshots": {
+          "files": 208,
+          "bytes": 1551281
+        },
+        "submolts": {
+          "files": 24,
+          "bytes": 1016699
+        },
+        "word_frequency": {
+          "files": 109,
+          "bytes": 1877896
+        }
+      }
+    },
+    "posts_schema": {
+      "rows_across_files": 3602713,
+      "schema": {
+        "id": {
+          "string": 198,
+          "large_string": 22
+        },
+        "agent_id": {
+          "string": 198,
+          "large_string": 22
+        },
+        "agent_name": {
+          "string": 198,
+          "large_string": 22
+        },
+        "submolt": {
+          "string": 198,
+          "large_string": 22
+        },
+        "title": {
+          "string": 198,
+          "large_string": 22
+        },
+        "content": {
+          "string": 198,
+          "large_string": 22
+        },
+        "url": {
+          "string": 198,
+          "large_string": 22
+        },
+        "score": {
+          "int64": 220
+        },
+        "comment_count": {
+          "int64": 220
+        },
+        "created_at": {
+          "timestamp[ns, tz=UTC]": 199,
+          "timestamp[us, tz=UTC]": 21
+        },
+        "fetched_at": {
+          "timestamp[ns, tz=UTC]": 199,
+          "timestamp[us, tz=UTC]": 21
+        },
+        "is_pinned": {
+          "int64": 220
+        },
+        "dump_date": {
+          "string": 198,
+          "large_string": 22
+        }
+      },
+      "null_counts_across_files": {
+        "id": 0,
+        "agent_id": 16,
+        "agent_name": 16,
+        "submolt": 2,
+        "title": 0,
+        "content": 0,
+        "created_at": 0,
+        "dump_date": 0
+      }
+    },
+    "posts_dedup": {
+      "rows_across_files": 3602713,
+      "unique_ids": 3602713,
+      "duplicate_rows_dropped": 0
+    },
+    "posts": {
+      "posts": 3602713,
+      "created_at": {
+        "n": 3602713,
+        "parsed": 3602713,
+        "parse_rate": 1.0,
+        "min": "2026-01-27T18:01:13.220000+00:00",
+        "max": "2026-09-11T16:03:58.694000+00:00",
+        "span_days": 226.918581875
+      },
+      "posts_per_month": {
+        "2026-01": 50281,
+        "2026-02": 1630146,
+        "2026-03": 732648,
+        "2026-04": 403985,
+        "2026-05": 329108,
+        "2026-06": 171951,
+        "2026-07": 160800,
+        "2026-08": 84523,
+        "2026-09": 39271
+      },
+      "posts_per_agent": {
+        "agents": 181589,
+        "posts_without_author": 16,
+        "p1": 1.0,
+        "p5": 1.0,
+        "p25": 1.0,
+        "p50": 4.0,
+        "p75": 9.0,
+        "p95": 48.0,
+        "p99": 221.0,
+        "mean": 19.839841620362467,
+        "max": 46575,
+        "agents_ge_2": 129718,
+        "agents_ge_5": 78555,
+        "agents_ge_20": 23513,
+        "agents_ge_100": 4087,
+        "agents_ge_1000": 394,
+        "share_of_posts_by_top_10_agents": 0.07753052782401629
+      },
+      "posts_per_submolt": {
+        "submolts": 7458,
+        "posts_without_submolt": 2,
+        "p1": 1.0,
+        "p5": 1.0,
+        "p25": 1.0,
+        "p50": 2.0,
+        "p75": 9.0,
+        "p95": 121.14999999999964,
+        "p99": 1417.630000000012,
+        "mean": 483.06663984982566,
+        "max": 2213800,
+        "submolts_ge_20": 1204,
+        "submolts_ge_100": 428,
+        "submolts_ge_1000": 91,
+        "share_of_posts_in_top_10_submolts": 0.8447052788858168
+      },
+      "exact_duplicates": {
+        "normalisation": "whitespace collapsed, lower-cased, blake2b-64",
+        "posts_with_empty_normalised_text": 47,
+        "posts_non_empty": 3602666,
+        "distinct_texts": 3317748,
+        "posts_in_duplicate_groups": 336995,
+        "exact_duplicate_rate": 0.09354045032206705,
+        "duplicate_groups": 52077,
+        "largest_group": 15930,
+        "groups_with_ge_2_authors": 33948,
+        "posts_in_multi_author_groups": 255812
+      },
+      "text_length_chars": {
+        "p1": 61.0,
+        "p5": 77.0,
+        "p25": 108.0,
+        "p50": 356.0,
+        "p75": 722.0,
+        "p95": 2329.0,
+        "p99": 4356.0,
+        "mean": 672.36704172661,
+        "max": 40302,
+        "empty": 15
+      },
+      "id_format": {
+        "uuid": 3602713,
+        "numeric": 0,
+        "other": 0
+      }
+    },
+    "comments": {
+      "rows_across_files": 2553100,
+      "unique_ids": 2553100,
+      "created_at": {
+        "n": 2553100,
+        "parsed": 2553067,
+        "parse_rate": 0.9999870745368376,
+        "min": "2026-02-02T04:39:13.110000+00:00",
+        "max": "2026-09-11T16:00:03.499000+00:00",
+        "span_days": 221.47280542824072
+      }
+    },
+    "sample": {
+      "path": "data/interim/moltbook_slim.parquet",
+      "rows": 300000,
+      "pool": 3602713,
+      "columns": [
+        "doc_id",
+        "text",
+        "group_id",
+        "author_id",
+        "t"
+      ],
+      "size_bytes": 102516315
+    },
+    "go_no_go": {
+      "timed_posts": 3602713,
+      "timed_ge_100k": true,
+      "agents_ge_20_posts": 23513,
+      "agents_ge_1000": true,
+      "exact_duplicate_rate": 0.09354045032206705,
+      "dup_rate_ge_1pct": true,
+      "go": true
+    }
+  }
+}
