@@ -1,0 +1,10 @@
+pandas
+numpy
+scipy
+tqdm
+datasketch
+rapidfuzz
+networkx
+matplotlib
+orjson
+pyarrow

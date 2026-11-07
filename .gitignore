@@ -1,0 +1,13 @@
+# Raw and derived data (decoded payloads must never be committed)
+data/
+
+# Third-party documents (the report PDF quotes decoded payloads)
+docs/*.pdf
+docs/*.docx
+
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.ipynb_checkpoints/
