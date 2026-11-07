@@ -207,7 +207,7 @@ def write_owner_keys(d: pd.DataFrame, norm: pd.Series) -> dict[str, Any]:
     if not salt_path.exists():
         salt_path.write_bytes(os.urandom(32))
     salt = salt_path.read_bytes()
-    keys = [hmac.new(salt, h.encode("utf-8"), hashlib.sha256).hexdigest()[:16] if h else None for h in norm]
+    keys = [hmac.new(salt, h.encode("utf-8"), hashlib.sha256).hexdigest()[:16] if isinstance(h, str) else None for h in norm]
     out = pd.DataFrame({"agent_id": d["id"].astype(str).to_numpy(), "owner_key": keys})
     path = INTERIM_DIR / "moltbook_agent_owner.parquet"
     out.to_parquet(path, index=False)
