@@ -63,3 +63,39 @@ Global seed: 42.
   Ground-truth source (1) in the project goal (rows with time estimates) is not
   available from time_utc; any replacement (e.g. timestamps embedded in the text) is a
   method change that needs a decision before it is tried.
+
+### E01 - Time estimates: coverage, source, span  (2026-11-07 21:20 IST)
+- Question: How many rows have a time estimate, where does it come from, what span does
+  it cover, and what does its distribution look like?
+- Hypothesis / expected: Written after E00, which found time_utc null on all 189,579
+  rows and no other time, date or provenance field. Expected: 0 rows with a time
+  estimate, no source field, no span, no histogram.
+- Go / no-go criterion (pre-registered): GO for using time_utc as ground truth if at
+  least 100 rows have a parseable time estimate. Otherwise NO-GO: time_utc cannot serve
+  as ground-truth source (1).
+- Method: Load the slim Parquet; parse time_utc as UTC; count non-null, parseable and
+  unparseable values overall and per kind. List any column whose name suggests a time
+  source or provenance. If any times parse: report min, max and span, and plot an hourly
+  histogram to figures/E01_time_hist.png.
+- Code: experiments/E01_timestamps.py @ (filled after commit)
+- Params: GO threshold 100 rows; histogram bin 1 hour; seed 42 (no sampling).
+- Results:
+- Interpretation:
+- Decision / next step:
+
+### E02 - Leakage check: row id vs time  (2026-11-07 21:20 IST)
+- Question: Does the row id number track time, i.e. is file order a leak of time order?
+- Hypothesis / expected: Written after E00/E01 pre-registration. With no time estimates
+  expected, the correlation should not be computable.
+- Go / no-go criterion (pre-registered): Computed only if at least 30 rows have both an
+  id number and a parseable time. If computed: |rho| >= 0.5 with p < 0.01 means id order
+  leaks time order, and any later ordering method must be compared against id order as
+  a baseline. If fewer than 30 rows, the result is "not computable" and the leakage
+  question stays open.
+- Method: From the slim Parquet take rows with both id_num and a parsed time_utc;
+  Spearman rho and two-sided p-value overall and per kind (per kind only if n >= 30).
+- Code: experiments/E02_leakage.py @ (filled after commit)
+- Params: minimum n 30; thresholds |rho| >= 0.5, p < 0.01; seed 42 (no sampling).
+- Results:
+- Interpretation:
+- Decision / next step:
