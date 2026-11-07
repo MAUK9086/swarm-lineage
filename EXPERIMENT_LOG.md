@@ -421,10 +421,39 @@ Global seed: 42.
   UUID audit: version nibble and variant of every post id in the full archive (3,602,713
   ids, raw id column only). If more than 50% are v7, also report Spearman rho between the
   48-bit embedded timestamp and t on the 300k sample, and add doc_id to the hidden list.
-- Code: experiments/E32_copy_direction_v2.py, src/copydir.py, src/evaluate.py @ (filled after commit)
+- Code: experiments/E32_copy_direction_v2.py, src/copydir.py, src/evaluate.py @ 150a817
 - Params: pairs from E31; cap 20 pairs per component; template-filter rule as above;
   1,000 component bootstrap resamples; GO margin 5 points; minimum 200 components; v7
   threshold 50%; seed 42.
-- Results:
-- Interpretation:
-- Decision / next step:
+- Results: (results/E32_copy_direction_v2.json)
+
+  | item | value |
+  |---|---|
+  | UUID audit | 3,602,713 ids, all version 4 (random); variant chars 8/9/a/b in near-equal shares; v7 share 0 |
+  | input | 8,361,829 pairs over 62,111 posts in 1,198 components |
+  | template filter | 651 components dropped (all pairs equal shingle-set size), holding 9,167 pairs |
+  | after cap (20 per component) | 547 components, 1,767 pairs; 0 dropped for equal time; pairs per component min 1, median 1, max 20 |
+
+  | method | macro accuracy | component bootstrap 95% CI | micro | ties (random) |
+  |---|---|---|---|---|
+  | (a) random | 0.5105 | 0.4763 - 0.5439 | 0.4946 | - |
+  | (b) longer is later | 0.4964 | 0.4607 - 0.5332 | 0.5020 | 266 |
+  | (i) extension | 0.5081 | 0.4717 - 0.5457 | 0.4935 | 870 |
+  | (ii) insertion vs deletion | 0.5055 | 0.4699 - 0.5406 | 0.4782 | 551 |
+
+  Diagnostics: (ii) agrees with the token-count rule on 100% of pairs without a token-count
+  tie (551 ties); agreement (i) vs (ii) 75.0%, (b) vs (ii) 72.3%.
+  GO: no. Margins over (b): (i) +1.2 points, (ii) +0.9 points; neither CI lower bound is
+  above (b)'s point estimate.
+- Interpretation: NO-GO. Once each cluster counts once, every rule, the length baseline
+  included, is indistinguishable from chance: all four CIs cover 50%. E31's 69.6% for
+  "longer is later" came almost entirely from a few very large components; capped at 20
+  pairs each they no longer dominate, and most remaining components contribute a single
+  pair. The 100% agreement between (ii) and the token-count rule confirms the derivation
+  in the hypothesis: the insertion/deletion cue is a length rule. The extension cue adds
+  coin flips on the 870 pairs with no shared prefix or suffix. Post ids are random UUID
+  v4, so doc_id does not leak order and nothing is added to the hidden list.
+- Decision / next step: Per the pre-registered rule, the content-only dating claim is
+  dropped. Near-duplicate copy direction on Moltbook cannot be recovered from length or
+  edit-direction cues at the cluster level. Any further work needs a cue that does not
+  reduce to comparing lengths, and a new pre-registration. Stop here for review.

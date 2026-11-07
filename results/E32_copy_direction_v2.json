@@ -1,0 +1,111 @@
+{
+  "experiment": "E32_copy_direction_v2",
+  "run_at": "2026-11-07 23:23 IST",
+  "git_hash": "150a817",
+  "seed": 42,
+  "params": {
+    "pairs_source": "data/interim/E31_pairs.parquet",
+    "cap_per_component": 20,
+    "template_filter": "drop components where all pairs have equal shingle-set size (pre-cap)",
+    "n_boot": 1000,
+    "go_margin": 0.05,
+    "go_min_components": 200,
+    "v7_threshold": 0.5,
+    "tokens": "lower-cased \\w+",
+    "diff": "difflib.SequenceMatcher autojunk=False"
+  },
+  "results": {
+    "uuid_audit": {
+      "ids": 3602713,
+      "version_counts": {
+        "4": 3602713
+      },
+      "variant_char_counts": {
+        "9": 900852,
+        "8": 899664,
+        "b": 902579,
+        "a": 899618
+      },
+      "share_v7": 0.0,
+      "v7_dominant": false
+    },
+    "diagnostics": {
+      "agreement_ii_vs_token_count_rule_on_non_ties": 1.0,
+      "token_count_ties": 551,
+      "agreement_i_vs_ii": 0.7504244482173175,
+      "agreement_b_vs_ii": 0.722693831352575
+    },
+    "counts": {
+      "input_pairs": 8361829,
+      "input_docs": 62111,
+      "components": 1198,
+      "components_dropped_all_equal_size": 651,
+      "pairs_in_dropped_components": 9167,
+      "components_kept": 547,
+      "pairs_after_cap": 1767,
+      "pairs_equal_time_dropped": 0,
+      "pairs_scored": 1767,
+      "components_scored": 547,
+      "pairs_per_component": {
+        "min": 1,
+        "median": 1.0,
+        "max": 20
+      }
+    },
+    "methods": {
+      "a_random": {
+        "n_components": 547,
+        "n_pairs": 1767,
+        "macro": 0.5105006222881802,
+        "ci_low": 0.47626748065609104,
+        "ci_high": 0.5439499159716388,
+        "micro": 0.4946236559139785,
+        "ties_broken_randomly": null
+      },
+      "b_longer_is_later": {
+        "n_components": 547,
+        "n_pairs": 1767,
+        "macro": 0.4963589268864029,
+        "ci_low": 0.4607426160038,
+        "ci_high": 0.5332352130370734,
+        "micro": 0.5019807583474816,
+        "ties_broken_randomly": 266
+      },
+      "i_extension": {
+        "n_components": 547,
+        "n_pairs": 1767,
+        "macro": 0.5080754629402333,
+        "ci_low": 0.471733410989245,
+        "ci_high": 0.5457112993671024,
+        "micro": 0.49349179400113186,
+        "ties_broken_randomly": 870
+      },
+      "ii_insertion_vs_deletion": {
+        "n_components": 547,
+        "n_pairs": 1767,
+        "macro": 0.5054842622457419,
+        "ci_low": 0.46988937845649587,
+        "ci_high": 0.5406187147559876,
+        "micro": 0.47821165817770234,
+        "ties_broken_randomly": 551
+      }
+    },
+    "go_no_go": {
+      "components_scored": 547,
+      "components_ge_200": true,
+      "i_extension": {
+        "margin_vs_b": 0.01171653605383044,
+        "margin_ge_5pp": false,
+        "ci_low_above_b_point": false,
+        "passes": false
+      },
+      "ii_insertion_vs_deletion": {
+        "margin_vs_b": 0.00912533535933907,
+        "margin_ge_5pp": false,
+        "ci_low_above_b_point": false,
+        "passes": false
+      },
+      "go": false
+    }
+  }
+}
