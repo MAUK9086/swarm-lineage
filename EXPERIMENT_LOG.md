@@ -289,3 +289,36 @@ Global seed: 42.
   be audited before ids are trusted as opaque. The README's backfill note did not produce
   duplicate post ids in this release.
 - Decision / next step: GO. Run E31 (copy-direction pilot) on the 300k sample.
+
+### E31 - Copy-direction pilot on near-duplicate posts  (2026-11-07 22:54 IST)
+- Question: For near-duplicate Moltbook posts written by different authors, can content
+  alone tell which post came first, better than a length heuristic?
+- Hypothesis / expected: Rule (c) is expected to land close to rule (b), so a NO-GO is
+  the likely outcome. Reason, noted before running: for a pair with shingle sets A and B,
+  containment(A in B) = |A∩B|/|A| and containment(B in A) = |A∩B|/|B| share the same
+  numerator, so "A is more fully contained" holds exactly when |A| < |B|. Rule (c) is
+  therefore "the post with fewer distinct shingles came first", which differs from (b)
+  (character length) only where distinct-shingle count and character length disagree.
+  Both are expected to be above 50% if copies tend to add text; (a) is expected near 50%.
+  The rule is run as specified; this is recorded so the outcome is not read as a surprise.
+- Go / no-go criterion (pre-registered): GO if (c) beats (b) by at least 5 percentage
+  points in pairwise accuracy, with non-overlapping bootstrap 95% CIs, on at least 500
+  scored pairs.
+- Method: Public table only (doc_id, text, group_id, author_id) from the 300k sample;
+  t read only by src/evaluate.py for scoring. 5-word shingles (lower-cased word tokens);
+  MinHash (128 permutations, seed 42) + LSH (threshold 0.5) for candidate pairs; keep
+  pairs with different, non-null authors; compute exact Jaccard; exact duplicates (same
+  normalised text) are counted and excluded; keep 0.5 <= Jaccard <= 0.95. Pairs with equal
+  timestamps are excluded and counted. Predict which post came first with (a) random,
+  (b) the longer post is later, (c) containment rule; ties in (b)/(c) broken at random
+  (seed 42). Score pairwise accuracy with a pair-level bootstrap 95% CI (1,000 resamples,
+  used for GO). Secondary, not used for GO: a bootstrap over connected components of the
+  pair graph, since pairs sharing documents are not independent; and the agreement rate
+  between (b) and (c).
+- Code: experiments/E31_copy_direction_pilot.py, src/copydir.py @ (filled after commit)
+- Params: shingle k = 5 words; num_perm 128; LSH threshold 0.5; Jaccard window
+  [0.5, 0.95]; cap of 20,000,000 different-author candidate pairs (uniform subsample, seed
+  42, only if exceeded); 1,000 bootstrap resamples; seed 42.
+- Results:
+- Interpretation:
+- Decision / next step:
