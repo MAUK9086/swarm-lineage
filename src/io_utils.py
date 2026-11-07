@@ -50,7 +50,9 @@ def iter_rows(path: Path = RAW_PATH) -> Iterator[dict[str, Any]]:
 
 
 def git_short_hash() -> str:
-    """Return the short hash of HEAD, suffixed with '-dirty' if tracked files changed.
+    """Return the short hash of HEAD, suffixed with '-dirty' if code has uncommitted changes.
+
+    Only src/ and experiments/ count; results and the log change during normal runs.
 
     Returns:
         For example 'a1b2c3d' or 'a1b2c3d-dirty'; 'nogit' if git is unavailable.
@@ -60,7 +62,7 @@ def git_short_hash() -> str:
             ["git", "rev-parse", "--short", "HEAD"], cwd=REPO_ROOT, text=True
         ).strip()
         dirty = subprocess.check_output(
-            ["git", "status", "--porcelain", "--untracked-files=no"],
+            ["git", "status", "--porcelain", "--untracked-files=no", "--", "src", "experiments"],
             cwd=REPO_ROOT,
             text=True,
         ).strip()
