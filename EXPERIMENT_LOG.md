@@ -524,3 +524,66 @@ Global seed: 42.
   karma changes type across files (double vs int64) and has extreme negative values.
 - Decision / next step: NO-GO for owner linkage as a grouping signal. The salted owner keys
   stay available in data/interim but are not planned for use. Stop here for review.
+
+### E37 - Metadata-only monitor pilot for coordinated posting  (2026-11-07 23:50 IST)
+- Question: Can a monitor that sees no text (only posting times and account metadata)
+  separate authors who take part in multi-author exact-duplicate posting from organic
+  authors, and how quickly does it degrade when the coordinated authors jitter their
+  timestamps?
+- Hypothesis / expected: Synchrony and burstiness features should separate the classes
+  (AUROC above 0.75) and beat karma alone. Jitter should erode recall at 1% FPR quickly
+  once it exceeds the 60 s synchrony window. Known confound, stated before running:
+  organic authors need >= 20 posts while coordinated authors can have one post, so
+  interval and hour-entropy features partly encode activity level. Two diagnostics (not
+  used for GO) measure this: a post-count-only model, and a matched re-run in which
+  coordinated authors also need >= 20 posts.
+- Go / no-go criterion (pre-registered): GO if the gradient-boosted model (primary,
+  fixed now) reaches test AUROC >= 0.75 AND its group-bootstrap 95% CI lower bound is
+  above the karma-only model's test AUROC point estimate. Logistic regression is reported
+  alongside but does not decide GO.
+- Method:
+  Labels (content used only here, then discarded): every Moltbook post (3,602,713) gets
+  the E30 normalised-text hash (whitespace collapsed, lower-cased, blake2b-64; empty
+  texts ignored). Within each hash group, sorted by time, any 24-hour window that holds
+  posts by >= 3 distinct authors marks all posts in it. An author is coordinated if any
+  of their posts is marked. Organic = >= 20 posts and no marked post. Other authors are
+  excluded. Seeded sample: at most 10,000 authors per class (seed 42). After labels and
+  groups are built, text and hashes are dropped; only author ids, timestamps and agent
+  metadata go into features.
+  Groups: authors are linked if they share any exact-duplicate text (any hash with >= 2
+  authors); connected components are the groups. Train/test split 70/30 by group
+  (GroupShuffleSplit, seed 42), so no duplicate cluster spans both sides.
+  Features (no text, nothing derived from text): synchrony from all posts by other
+  authors: share of the author's posts with >= 1 other-author post within +/-60 s,
+  mean log1p count of such posts, and mean ratio of that count to the expected count from
+  the global posting rate in the same UTC hour; intervals between the author's posts:
+  median and mean log interval, coefficient of variation, burstiness (sd-mean)/(sd+mean),
+  share of intervals < 60 s, minimum interval; UTC hour-of-day entropy (normalised by
+  log 24); account created_at clustering from the agents table: log1p count of other agents
+  created within +/-60 s and within +/-1 h (missing flag if created_at is absent); karma
+  (signed log1p), follower_count and following_count (log1p). Post count is NOT a
+  feature, except in the post-count diagnostic.
+  Models: HistGradientBoostingClassifier (default parameters, random_state 42; handles
+  missing values natively); logistic regression (median imputation + missing indicators,
+  standard scaling, max_iter 2,000). Baselines: random scores (seed 42); karma-only
+  logistic regression on signed log1p karma + missing flag.
+  Metrics on the test set: AUROC and recall at 1% FPR (threshold = 99th percentile of the
+  organic test scores), each with a 95% CI from 1,000 bootstrap resamples of test groups
+  (threshold recomputed in each resample).
+  Evasion test: for jitter J in {0, 1, 5, 30, 120} minutes, every post of a coordinated
+  test author is shifted by U(-J, +J) minutes (seed 42). Their posts are replaced in the
+  global timeline, features are recomputed, and the trained models are re-scored. Recall
+  at 1% FPR uses the unchanged organic threshold, with a group-bootstrap CI. Plotted to
+  figures/E37_jitter_recall.png.
+- Architecture note: this is a detection task, not a dating task, so posting time is the
+  monitor's input by design and the "t is hidden" rule does not apply. The hidden quantity
+  is the label, built from content in src/labels.py; monitor features come from
+  src/monitor.py, which never receives text. E37 reads all raw posts (not the 300k sample)
+  through the Moltbook adapter's author_id / text helpers.
+- Code: experiments/E37_metadata_monitor_pilot.py, src/labels.py, src/monitor.py @ (filled after commit)
+- Params: 24 h window, >= 3 authors; organic >= 20 posts; <= 10,000 authors per class;
+  +/-60 s synchrony; 70/30 group split; 1,000 group-bootstrap resamples; jitter
+  {0, 1, 5, 30, 120} min; scikit-learn 1.9.1; seed 42 everywhere.
+- Results:
+- Interpretation:
+- Decision / next step:
