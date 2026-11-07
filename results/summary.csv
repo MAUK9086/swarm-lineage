@@ -1,0 +1,10 @@
+experiment,metric,value,git_hash,run_at
+E00,n_rows,189579,5d20b3e,2026-11-07 21:10 IST
+E00,file_size_bytes,15214685,5d20b3e,2026-11-07 21:10 IST
+E00,n_fields,7,5d20b3e,2026-11-07 21:10 IST
+E00,parse_errors,0,5d20b3e,2026-11-07 21:10 IST
+E00,ids_unique,189579,5d20b3e,2026-11-07 21:10 IST
+E00,go_a_all_lines_parse,True,5d20b3e,2026-11-07 21:10 IST
+E00,go_b_id_and_text_on_every_row,True,5d20b3e,2026-11-07 21:10 IST
+E00,go_c_ids_unique,True,5d20b3e,2026-11-07 21:10 IST
+E00,go_d_some_time_non_null,False,5d20b3e,2026-11-07 21:10 IST

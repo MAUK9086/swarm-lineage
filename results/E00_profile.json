@@ -1,0 +1,376 @@
+{
+  "experiment": "E00_profile",
+  "run_at": "2026-11-07 21:10 IST",
+  "git_hash": "5d20b3e",
+  "seed": 42,
+  "params": {
+    "example_trunc": 150,
+    "n_examples": 3,
+    "low_card_max": 200,
+    "distinct_cap": 5000,
+    "sampling": "none"
+  },
+  "results": {
+    "file": {
+      "path": "data/raw/redacted.jsonl.gz",
+      "size_bytes": 15214685
+    },
+    "n_rows": 189579,
+    "parse_errors": 0,
+    "key_sets": {
+      "cite|id|kind|parent_id|tags|text|time_utc": 189579
+    },
+    "fields": {
+      "id": {
+        "present": 189579,
+        "present_rate": 1.0,
+        "non_null": 189579,
+        "non_null_rate": 1.0,
+        "non_empty": 189579,
+        "non_empty_rate": 1.0,
+        "types": {
+          "str": 189579
+        },
+        "length": {
+          "min": 8,
+          "p50": 8.0,
+          "mean": 8.0,
+          "p99": 8.0,
+          "max": 8
+        },
+        "examples": [
+          {
+            "id": "R0000001",
+            "value": "R0000001"
+          },
+          {
+            "id": "R0000002",
+            "value": "R0000002"
+          },
+          {
+            "id": "R0000003",
+            "value": "R0000003"
+          }
+        ],
+        "distinct_values": ">5000"
+      },
+      "cite": {
+        "present": 189579,
+        "present_rate": 1.0,
+        "non_null": 189579,
+        "non_null_rate": 1.0,
+        "non_empty": 189579,
+        "non_empty_rate": 1.0,
+        "types": {
+          "str": 189579
+        },
+        "length": {
+          "min": 17,
+          "p50": 17.0,
+          "mean": 17.0,
+          "p99": 17.0,
+          "max": 17
+        },
+        "examples": [
+          {
+            "id": "R0000001",
+            "value": "R0000001:865502a6"
+          },
+          {
+            "id": "R0000002",
+            "value": "R0000002:44799675"
+          },
+          {
+            "id": "R0000003",
+            "value": "R0000003:49b0d4b6"
+          }
+        ],
+        "distinct_values": ">5000"
+      },
+      "kind": {
+        "present": 189579,
+        "present_rate": 1.0,
+        "non_null": 189579,
+        "non_null_rate": 1.0,
+        "non_empty": 189579,
+        "non_empty_rate": 1.0,
+        "types": {
+          "str": 189579
+        },
+        "length": {
+          "min": 7,
+          "p50": 8.0,
+          "mean": 9.91037509428787,
+          "p99": 14.0,
+          "max": 14
+        },
+        "examples": [
+          {
+            "id": "R0000001",
+            "value": "payload"
+          },
+          {
+            "id": "R0053433",
+            "value": "response"
+          },
+          {
+            "id": "R0062486",
+            "value": "recovered_text"
+          }
+        ],
+        "distinct_values": 3,
+        "value_counts": {
+          "payload": 91037,
+          "recovered_text": 75534,
+          "response": 23008
+        }
+      },
+      "parent_id": {
+        "present": 189579,
+        "present_rate": 1.0,
+        "non_null": 61125,
+        "non_null_rate": 0.322424952130774,
+        "non_empty": 61125,
+        "non_empty_rate": 0.322424952130774,
+        "types": {
+          "null": 128454,
+          "str": 61125
+        },
+        "length": {
+          "min": 8,
+          "p50": 8.0,
+          "mean": 8.0,
+          "p99": 8.0,
+          "max": 8
+        },
+        "examples": [
+          {
+            "id": "R0053434",
+            "value": "R0000027"
+          },
+          {
+            "id": "R0053435",
+            "value": "R0000038"
+          },
+          {
+            "id": "R0053436",
+            "value": "R0000071"
+          }
+        ],
+        "distinct_values": ">5000"
+      },
+      "time_utc": {
+        "present": 189579,
+        "present_rate": 1.0,
+        "non_null": 0,
+        "non_null_rate": 0.0,
+        "non_empty": 0,
+        "non_empty_rate": 0.0,
+        "types": {
+          "null": 189579
+        },
+        "examples": [],
+        "distinct_values": 0,
+        "value_counts": {}
+      },
+      "tags": {
+        "present": 189579,
+        "present_rate": 1.0,
+        "non_null": 189579,
+        "non_null_rate": 1.0,
+        "non_empty": 37,
+        "non_empty_rate": 0.00019516929617731922,
+        "types": {
+          "str": 189579
+        },
+        "length": {
+          "min": 0,
+          "p50": 0.0,
+          "mean": 0.010486393535148936,
+          "p99": 0.0,
+          "max": 59
+        },
+        "examples": [
+          {
+            "id": "R0189543",
+            "value": "article-evidence;g236-command;g23619cmd.bin;command-000001"
+          },
+          {
+            "id": "R0189544",
+            "value": "article-evidence;g236-command;g23619cmd.bin;command-000002"
+          },
+          {
+            "id": "R0189545",
+            "value": "article-evidence;g236-command;g23619cmd.bin;command-000003"
+          }
+        ],
+        "distinct_values": 35,
+        "value_counts": {
+          "": 189542,
+          "article-evidence;appendix-request": 3,
+          "article-evidence;g236-command;g23619cmd.bin;command-000007": 2,
+          "article-evidence;g236-command;g23619cmd.bin;command-000001": 1,
+          "article-evidence;g236-command;g23619cmd.bin;command-000002": 1,
+          "article-evidence;g236-command;g23619cmd.bin;command-000003": 1,
+          "article-evidence;g236-command;g23619cmd.bin;command-000004": 1,
+          "article-evidence;g236-command;g23619cmd.bin;command-000005": 1,
+          "article-evidence;g236-command;g23619cmd.bin;command-000006": 1,
+          "article-evidence;g236-command;g23619cmd.bin;command-000008": 1,
+          "article-evidence;g236-command;g23619cmd.bin;command-000009": 1,
+          "article-evidence;g236-command;g23619cmd.bin;command-000010": 1,
+          "article-evidence;g236-command;g23619cmd.bin;command-000011": 1,
+          "article-evidence;g236-command;g23619cmd.bin;command-000012": 1,
+          "article-evidence;g236-command;g23619cmd.bin;command-000013": 1,
+          "article-evidence;g236-command;g23619cmd.bin;command-000014": 1,
+          "article-evidence;g236-command;g23619cmd.bin;command-000015": 1,
+          "article-evidence;g236-command;g23619cmd.bin;command-000016": 1,
+          "article-evidence;g236-command;g23619cmd.bin;command-000017": 1,
+          "article-evidence;g236-command;g23619scmd.bin;command-000001": 1,
+          "article-evidence;g236-command;g23619scmd.bin;command-000002": 1,
+          "article-evidence;g236-command;g23619scmd.bin;command-000003": 1,
+          "article-evidence;g236-command;g23619scmd.bin;command-000004": 1,
+          "article-evidence;g236-command;g23619scmd.bin;command-000005": 1,
+          "article-evidence;g236-command;g23619scmd.bin;command-000006": 1,
+          "article-evidence;g236-command;g23619scmd.bin;command-000007": 1,
+          "article-evidence;g236-command;g23619scmd.bin;command-000008": 1,
+          "article-evidence;g236-command;g23619scmd.bin;command-000009": 1,
+          "article-evidence;g236-command;g23619scmd.bin;command-000010": 1,
+          "article-evidence;g236-child-controller": 1,
+          "article-evidence;slack-search;slackcyber.json": 1,
+          "article-evidence;slack-search;slackbatch.gz": 1,
+          "article-evidence;slack-search;slackbatch2.gz": 1,
+          "article-evidence;slack-search;slackd3.gz": 1,
+          "article-evidence;PHASEONE64H;partial-fragment": 1
+        }
+      },
+      "text": {
+        "present": 189579,
+        "present_rate": 1.0,
+        "non_null": 189579,
+        "non_null_rate": 1.0,
+        "non_empty": 189579,
+        "non_empty_rate": 1.0,
+        "types": {
+          "str": 189579
+        },
+        "length": {
+          "min": 1,
+          "p50": 119.0,
+          "mean": 344.02470210308104,
+          "p99": 3540.0,
+          "max": 445502
+        },
+        "examples": [
+          {
+            "id": "R0000001",
+            "length": 778
+          },
+          {
+            "id": "R0000002",
+            "length": 278
+          },
+          {
+            "id": "R0000003",
+            "length": 701
+          }
+        ],
+        "distinct_values": ">5000"
+      }
+    },
+    "non_empty_by_kind": {
+      "id": {
+        "payload": 91037,
+        "response": 23008,
+        "recovered_text": 75534
+      },
+      "cite": {
+        "payload": 91037,
+        "response": 23008,
+        "recovered_text": 75534
+      },
+      "kind": {
+        "payload": 91037,
+        "response": 23008,
+        "recovered_text": 75534
+      },
+      "text": {
+        "payload": 91037,
+        "response": 23008,
+        "recovered_text": 75534
+      },
+      "parent_id": {
+        "response": 18417,
+        "recovered_text": 42708
+      },
+      "tags": {
+        "recovered_text": 37
+      }
+    },
+    "ids": {
+      "n": 189579,
+      "unique": 189579,
+      "bad_format": 0,
+      "numeric_min": 1,
+      "numeric_max": 189579,
+      "strictly_increasing_in_file": true,
+      "n_gaps": 0,
+      "missing_numbers_in_range": 0
+    },
+    "parent_id": {
+      "rows_with_parent": 61125,
+      "distinct_parents": 26248,
+      "parents_resolving_to_ids": 26248,
+      "max_children_per_parent": 858
+    },
+    "cite": {
+      "with_suffix": 189579,
+      "suffix_len_8": 189579,
+      "cite_prefix_equals_id": 189579,
+      "md5_prefix_match": 0,
+      "sha1_prefix_match": 0,
+      "sha256_prefix_match": 189579
+    },
+    "text_storage": {
+      "field": "text",
+      "str": 189579,
+      "empty": 0,
+      "has_newline": 75736,
+      "has_crlf": 395,
+      "non_ascii": 8422,
+      "base64_charset_only_len_ge_40": 12,
+      "leading_or_trailing_ws": 43648,
+      "chars_total": 65219859,
+      "length_percentiles": {
+        "1": 17.0,
+        "5": 32.0,
+        "25": 57.0,
+        "50": 119.0,
+        "75": 276.0,
+        "95": 1160.0,
+        "99": 3540.0
+      }
+    },
+    "parquet": {
+      "path": "data/interim/corpus_slim.parquet",
+      "columns": [
+        "id",
+        "kind",
+        "parent_id",
+        "text",
+        "tags",
+        "time_utc",
+        "id_num",
+        "text_len"
+      ],
+      "rows": 189579,
+      "size_bytes": 11985271,
+      "agent_field_found": false
+    },
+    "go_no_go": {
+      "a_all_lines_parse": true,
+      "b_id_and_text_on_every_row": true,
+      "c_ids_unique": true,
+      "d_some_time_non_null": false
+    }
+  }
+}
