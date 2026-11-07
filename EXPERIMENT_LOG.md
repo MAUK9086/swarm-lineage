@@ -217,3 +217,51 @@ Global seed: 42.
   suffix, diff_base, diff_base_reason, hunks, archived_at) and the evaluation units
   (within-page order on pages with >= 5 revisions; cross-page copy direction). Stop here
   for review.
+
+---
+
+### Corpus change #2: collusion.wiki -> Moltbook for method development  (2026-11-07 22:19 IST)
+- What changed: The collusion.wiki analysis (E21: leakage audit and baselines) was stopped
+  by safety classifiers before any code ran; E21 has no code or results. E20 is kept as a
+  profile-only result. New plan: develop and freeze the method on a benign agent corpus,
+  Moltbook (SimulaMet/moltbook-observatory-archive, public, Hugging Face, MIT licence).
+  The user then runs the frozen pipeline blind on collusion.wiki themselves.
+- Ground truth: Moltbook post creation times (created_at), hidden from the method.
+- Architecture rule (all new code): every corpus goes through an adapter that outputs one
+  standard table: doc_id, text, group_id, author_id, t. Only src/evaluate.py may read t;
+  method code takes a table without t. src/adapters/collusion_wiki.py is a stub mapping
+  page_id->group_id, label->author_id, body->text, time->t.
+- Note on order: before writing the adapter, the dataset's file listing, README and the
+  schema of one small posts file were inspected (no statistics computed). The listing is
+  re-recorded by E30.
+- Kept: all hard rules and the protocol. Moltbook experiments are numbered from E30.
+
+### E30 - Moltbook profile and 300k-post sample  (2026-11-07 22:19 IST)
+- Question: Is the Moltbook archive a usable development corpus: enough timestamped posts,
+  enough prolific agents, and enough duplicated / near-duplicated text to study copying?
+- Hypothesis / expected: The listing shows 220 daily posts files (1.74 GB) and 217 comments
+  files (0.96 GB). The README says posts are near-complete to end of March 2026 and that
+  some tables are backfilled, so the same post id may appear in several daily files; posts
+  are deduplicated by id (latest dump kept) before counting. Expected: well over 100k
+  posts with created_at; many agents with 20+ posts; a noticeable duplicate rate, since
+  agent posting is often templated.
+- Go / no-go criterion (pre-registered): GO if at least 100,000 posts with a parseable
+  timestamp, AND at least 1,000 agents with 20 or more posts, AND an exact-or-near
+  duplicate rate of at least 1%. Exact duplicate rate = share of posts whose normalised
+  text (adapter text, whitespace collapsed, lower-cased) hash occurs more than once. Near
+  duplicates are measured in E31; for E30 the exact rate alone decides the third
+  criterion, and if it is below 1% the criterion is reported as undecided until E31.
+- Method: List all files and sizes. Download posts and comments (comments are under 2 GB).
+  Read posts file by file (column subset), deduplicate by id, then report fields, types
+  and null rates, created_at parse rate and span, posts per agent (agent_id), posts per
+  submolt, exact duplicate rate, and text length percentiles. Comments: row count, id
+  dedup, timestamp parse rate and span only. Write data/interim/moltbook_slim.parquet with
+  a 300,000-post random sample (seed 42) through src/adapters/moltbook.py.
+- Code: experiments/E30_profile.py @ (filled after commit)
+- Params: sample 300,000 drawn without replacement from deduplicated posts with a
+  parseable created_at, seed 42; adapter text = title + blank line + content; exact
+  duplicate rate computed over posts with non-empty normalised text (empty texts would all
+  collide); GO thresholds 100,000 / 1,000 agents with >= 20 posts / 1%.
+- Results:
+- Interpretation:
+- Decision / next step:
