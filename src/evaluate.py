@@ -10,6 +10,9 @@ File structure:
     recall_at_fpr          recall at a fixed FPR (threshold from negatives)
     detection_metrics      AUROC and recall at 1% FPR with group-bootstrap CIs
     recall_fixed_threshold recall above a fixed threshold with a group-bootstrap CI
+    truth_codes            hidden times per document code (int64 ns)
+    order_from_codes       pair order truth from coded times
+    null_order_draws       pair order truth under within-group permutation nulls
 """
 
 from __future__ import annotations
@@ -220,3 +223,67 @@ def recall_fixed_threshold(y: np.ndarray, score: np.ndarray, groups: np.ndarray,
     rng = np.random.default_rng(seed)
     boots = [s[k].sum() / c[k].sum() for k in (rng.integers(0, len(per), len(per)) for _ in range(n_boot))]
     return {"recall": float(hit.mean()), "ci": [float(np.percentile(boots, 2.5)), float(np.percentile(boots, 97.5))]}
+
+
+def truth_codes(truth: pd.Series, doc_ids: np.ndarray) -> np.ndarray:
+    """Hidden times for a list of documents as int64 nanoseconds (NaT -> min int64).
+
+    Kept inside the evaluation module; callers only receive comparisons.
+
+    Args:
+        truth: t indexed by doc_id.
+        doc_ids: Doc ids in code order.
+
+    Returns:
+        int64 array.
+    """
+    t = pd.to_datetime(truth.reindex(doc_ids), utc=True).dt.tz_convert(None)
+    out = t.to_numpy(dtype="datetime64[ns]").astype(np.int64)
+    return out
+
+
+def order_from_codes(tc: np.ndarray, a: np.ndarray, b: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """For coded pairs, whether a is earlier, and a validity mask (unequal, non-missing times).
+
+    Args:
+        tc: Times per document code (int64 ns; NaT encoded as min int64).
+        a: Codes of the first element.
+        b: Codes of the second element.
+
+    Returns:
+        (a_earlier, valid)
+    """
+    nat = np.iinfo(np.int64).min
+    ta, tb = tc[a], tc[b]
+    valid = (ta != tb) & (ta != nat) & (tb != nat)
+    return ta < tb, valid
+
+
+def null_order_draws(truth: pd.Series, doc_ids: np.ndarray, doc_group: np.ndarray, a: np.ndarray, b: np.ndarray,
+                     n_draws: int, seed: int = 42):
+    """Yield (a_earlier, valid) under a null that permutes times within each group.
+
+    Draw r uses seed + r. The permutation keeps each group's set of times and the
+    cluster structure, and removes any real order signal between documents.
+
+    Args:
+        truth: t indexed by doc_id.
+        doc_ids: Doc ids in code order.
+        doc_group: Group (component) id per document code.
+        a: Codes of the first element of each pair.
+        b: Codes of the second element of each pair.
+        n_draws: Number of draws.
+        seed: Base seed.
+
+    Yields:
+        (a_earlier, valid) boolean arrays per draw.
+    """
+    tc = truth_codes(truth, doc_ids)
+    base = np.argsort(doc_group, kind="stable")
+    t_by_group = tc[base]
+    for r in range(n_draws):
+        key = np.random.default_rng(seed + r).random(len(tc))
+        order = np.lexsort((key, doc_group))
+        perm = np.empty_like(tc)
+        perm[order] = t_by_group
+        yield order_from_codes(perm, a, b)

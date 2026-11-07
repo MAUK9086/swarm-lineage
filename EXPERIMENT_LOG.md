@@ -640,3 +640,149 @@ Global seed: 42.
   isolates or holds out the largest components separately, and (c) reports synchrony-only
   features as their own model, so the jitter test measures what it is meant to. Stop here
   for review.
+
+---
+
+### Final scope  (2026-11-08 00:50 IST)
+- Paper direction, fixed now: (1) a pre-registered negative result: content-only cues
+  (length, containment, extension, insertion vs deletion) do not recover copy direction
+  between near-duplicate agent posts once clusters are scored properly (E31, E32);
+  (2) a cluster-aware evaluation lesson for agent-corpus forensics: pair-level or
+  author-level evaluation of clustered agent text inflates estimates and false-positive
+  rates (E34, E35, E38 vs E37). No new hypotheses about dating are added.
+- Remaining work: E38 (monitor, activity-matched), E34 (inflation curve), E35 (null
+  simulation), E36 (frozen replication script, Moltbook only), FIG1 (combined figure).
+
+### E38 - Metadata monitor, activity-matched, with feature-set ablation  (2026-11-08 00:50 IST)
+- Question: With both classes at the same activity floor, and a split that respects
+  duplicate-sharing components, does a metadata-only monitor detect coordinated authors,
+  and which feature family carries the signal?
+- Hypothesis / expected: E37's matched diagnostic (AUROC 0.722, recall at 1% FPR about
+  0.14) suggests NO-GO on recall. Expected: (a) full AUROC near 0.7; (c) activity-only
+  close to (a); (b) synchrony-only weaker; (d) creation clustering and (e) karma near
+  chance. Jitter should hurt (b) more than (a).
+- Go / no-go criterion (pre-registered): "a metadata monitor works" if feature set (a)
+  with gradient-boosted trees reaches pooled out-of-fold AUROC >= 0.75 AND pooled
+  out-of-fold recall at 1% FPR >= 0.30. Numbers are reported either way.
+- Method: Labels and components exactly as in E37 (24 h window, >= 3 authors; components
+  from any shared exact-duplicate text). Population: coordinated authors with >= 20 posts
+  and organic authors (>= 20 posts, no marked post); up to 5,000 per class (seed 42).
+  Held-out set: components ranked by the number of sampled authors (ties by component
+  id); the top 1% of components that contain sampled authors (rounded up) are held out
+  and reported on their own. The rest goes to StratifiedGroupKFold (5 folds, shuffle,
+  seed 42; groups = components, strata = class).
+  Feature sets (no text): (a) full = synchrony (3) + post count (log1p) + interval stats
+  (7) + hour entropy + creation clustering (3) + karma / followers / following; (b)
+  synchrony-only (the 3 features within +/-60 s); (c) activity-only = post count (log1p) +
+  the 7 interval stats; (d) creation clustering only (3); (e) karma only. Each set uses
+  HistGradientBoostingClassifier (defaults, random_state 42); logistic regression on (a)
+  is secondary.
+  Metrics: per fold, AUROC and recall at 1% FPR (threshold from that fold's organic
+  scores), as mean +/- sd; pooled out-of-fold predictions with a group-bootstrap 95% CI
+  (1,000 resamples). Held-out: each set refit on all cross-validation authors; recall at
+  the threshold from pooled out-of-fold organic scores; AUROC against held-out organic
+  authors if there are >= 20 of them, otherwise against pooled out-of-fold organic scores
+  (reported which).
+  Jitter on (a) and (b): J in {0, 1, 5, 30, 120} min; every post of every sampled
+  coordinated cross-validation author is shifted by U(-J, +J) min (seed 42) in the global
+  timeline; their timeline features are recomputed and scored by the fold model in which
+  they were test; pooled recall at the fixed J = 0 pooled organic threshold, with a
+  group-bootstrap CI.
+- Code: experiments/E38_monitor_matched.py, src/monitor_data.py @ (filled after commit)
+- Params: >= 20 posts both classes; <= 5,000 per class; top 1% components held out; 5 folds;
+  1,000 bootstrap resamples; jitter {0, 1, 5, 30, 120} min; seed 42.
+- Results:
+- Interpretation:
+- Decision / next step:
+
+### E34 - Inflation curve: pair-level vs component-level scoring  (2026-11-08 00:50 IST)
+- Question: How much does pair-level scoring inflate the "longer is later" estimate and
+  shrink its CI compared with component-level scoring, as the Jaccard window and the
+  per-component cap vary?
+- Hypothesis / expected: Pair-level accuracy is about 0.70 at cap "none" (E31) and stays
+  well above component-level macro accuracy, which is near 0.5 (E32 found 0.496 with the
+  template filter). The gap and the CI-width ratio should grow with the cap. The number of
+  components (effective sample size) is orders of magnitude below the pair count.
+- Criterion (pre-registered, descriptive): inflation is called material if, in the
+  0.5-0.95 window at cap "none", pair-level accuracy minus component-level macro accuracy
+  is >= 5 points.
+- Method: E31's 8,361,829 scored pairs (data/interim/E31_pairs.parquet). Length-rule
+  predictions recomputed exactly as in E31 (ties random, seed 42, same pair order), so cap
+  "none" at 0.5-0.95 reproduces E31's pair-level accuracy. No template filter in the
+  main grid (it isolates the clustering effect); one secondary row repeats the 0.5-0.95
+  window with E32's template filter. Windows: Jaccard >= 0.5, >= 0.7, >= 0.9 (all <= 0.95).
+  For each window, components are recomputed on that window's pairs. Caps: 1, 5, 20, 100,
+  none; at most k pairs per component, chosen with a seeded random key (seed 42). For each
+  (window, cap): pair-level accuracy over the capped pairs with a Wald 95% CI (the pair
+  bootstrap at this n gives the same width; checked once with 200 resamples at
+  0.5-0.95 / none); component-level macro accuracy (mean of per-component accuracy) with
+  a component-bootstrap 95% CI (1,000 resamples); raw pair count; number of components
+  (effective n); CI-width ratio = component width / pair width. Headline figure:
+  figures/E34_inflation_curve.png, pair-level vs component-level estimate against cap,
+  one panel per window.
+- Code: experiments/E34_inflation_curve.py, src/clusters.py @ (filled after commit)
+- Params: windows {0.5, 0.7, 0.9}-0.95; caps {1, 5, 20, 100, none}; 1,000 component-bootstrap
+  resamples; seed 42.
+- Results:
+- Interpretation:
+- Decision / next step:
+
+### E35 - Null simulation: false-positive rate of naive evaluation  (2026-11-08 00:50 IST)
+- Question: Under a known null that keeps the real cluster structure, how often does
+  pair-level analysis declare a significant "longer is later" effect, compared with
+  component-level analysis?
+- Hypothesis / expected: Pair-level analysis will declare significance far more often
+  than the nominal 5%, because its CI assumes 8.36M independent pairs; component-level
+  analysis should be near 5%.
+- Criterion (pre-registered, descriptive): naive evaluation is called miscalibrated if
+  its false-positive rate is > 10% while the component-level rate is <= 10%.
+- Method: Components over E31's pairs (0.5-0.95 window). In each of 1,000 draws (seed
+  42 + r), the true timestamps are permuted among the posts within each component, which
+  keeps the cluster structure and destroys any real order signal. Length-rule predictions
+  stay fixed. Pair-level: accuracy over all 8,361,829 pairs, Wald 95% CI; significant if
+  the CI excludes 0.5. Component-level: the cap-20 pair set from E34 (0.5-0.95, no
+  filter, fixed selection), macro accuracy with a component-bootstrap 95% CI (1,000
+  resamples); significant if the CI excludes 0.5. Pairs with equal permuted times are
+  dropped in that draw. False-positive rates are reported with Wilson 95% CIs, along with
+  the spread of each estimate across draws.
+- Code: experiments/E35_null_simulation.py, src/clusters.py @ (filled after commit)
+- Params: 1,000 draws; Wald CI (pair-level); 1,000 component-bootstrap resamples; seed 42 + r.
+- Results:
+- Interpretation:
+- Decision / next step:
+
+### E36 - Frozen replication script  (2026-11-08 00:50 IST)
+- Question: Can the E31/E32 pipeline be packaged as one frozen script that takes any
+  adapter's standard table, and does it reproduce E31/E32 exactly on Moltbook?
+- Expected: exact reproduction (same counts, same accuracies and CIs), since every step
+  is seeded and uses the same code paths.
+- Criterion (pre-registered): reproduction passes if, on data/interim/moltbook_slim.parquet,
+  all E31 counts and pair-level results for (a) random, (b) length and (c) containment, and
+  all E32 counts and component-level results for (a), (b), (i) extension and (ii)
+  insertion vs deletion, match the saved results to within 1e-9.
+- Method: experiments/E36_replication.py --table <standard-table parquet>. The parameters
+  are frozen in configs/E36_pipeline.json, whose SHA-256 is recorded here after the
+  commit. Steps: split_truth (t read only by src/evaluate.py); E31 pair finding (shingle
+  hashes, MinHash, banded LSH, different-author pairs, 60M memory guard with seeded
+  Bernoulli fallback, 20M cap, Jaccard 0.5-0.95, exact duplicates excluded); E31
+  pair-level scoring for (a), (b), (c); E32 component pipeline (union-find, template
+  filter, cap 20, macro scoring with a component bootstrap) for (a), (b), (c), (i), (ii).
+  Pair-level scoring of (i) and (ii) is new: it uses a seeded uniform subsample of
+  200,000 scored pairs (word diffs on all 8M pairs are too slow) and is not part of the
+  reproduction check. Run only on the Moltbook table; not run on any other corpus.
+- Config SHA-256 (configs/E36_pipeline.json, LF line endings enforced by .gitattributes):
+  5ac6686ab5779f23bce7f0c296358873e15f8abfd0c33403ce133ae395e8f017
+- Code: experiments/E36_replication.py, configs/E36_pipeline.json @ (filled after commit)
+- Results:
+- Interpretation:
+- Decision / next step:
+
+### FIG1 - Naive vs proper estimates, dating and monitor tasks  (2026-11-08 00:50 IST)
+- What: one two-panel figure built only from saved results. Dating: "longer is later"
+  accuracy, naive = E34 pair-level (0.5-0.95, cap none) vs proper = E34 component-level
+  macro (0.5-0.95, cap 20). Monitor: AUROC, naive = E37 gradient-boosted (activity
+  confounded, unbalanced split) vs proper = E38 feature set (a), pooled out-of-fold. Each
+  point has its CI; chance lines at 0.5; E35 false-positive rates are noted in the dating
+  panel.
+- Code: experiments/FIG1_naive_vs_proper.py @ (filled after commit); output
+  figures/FIG1_naive_vs_proper.png.
