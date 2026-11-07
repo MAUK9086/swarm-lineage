@@ -580,10 +580,63 @@ Global seed: 42.
   is the label, built from content in src/labels.py; monitor features come from
   src/monitor.py, which never receives text. E37 reads all raw posts (not the 300k sample)
   through the Moltbook adapter's author_id / text helpers.
-- Code: experiments/E37_metadata_monitor_pilot.py, src/labels.py, src/monitor.py @ (filled after commit)
+- Code: experiments/E37_metadata_monitor_pilot.py, src/labels.py, src/monitor.py @ 03149e7
 - Params: 24 h window, >= 3 authors; organic >= 20 posts; <= 10,000 authors per class;
   +/-60 s synchrony; 70/30 group split; 1,000 group-bootstrap resamples; jitter
   {0, 1, 5, 30, 120} min; scikit-learn 1.9.1; seed 42 everywhere.
-- Results:
-- Interpretation:
-- Decision / next step:
+- Results: (results/E37_metadata_monitor_pilot.json, figures/E37_jitter_recall.png)
+
+  | item | value |
+  |---|---|
+  | posts / authors | 3,602,697 / 181,589 |
+  | marked posts | 210,886 |
+  | coordinated / organic authors | 59,127 (6,987 with >= 20 posts) / 16,526 |
+  | sample | 10,000 coordinated + 10,000 organic; all 20,000 found in the agents table |
+  | train | 7,260 authors, 496 coordinated, 6,837 groups |
+  | test | 12,740 authors, 9,504 coordinated, 2,931 groups |
+  | groups on both sides | 0 |
+  | feature missingness | interval features 11.9%, cv / burstiness 15.4%, created_at clustering 42.6%, others 0% |
+
+  | model (test) | AUROC | 95% CI (group bootstrap) | recall at 1% FPR | 95% CI |
+  |---|---|---|---|---|
+  | gradient-boosted trees (primary) | 0.9605 | 0.9549 - 0.9980 | 0.8594 | 0.8541 - 0.9899 |
+  | logistic regression | 0.9215 | 0.9191 - 0.9896 | 0.6662 | 0.6451 - 0.9383 |
+  | random | 0.5009 | 0.4648 - 0.5132 | 0.0105 | 0.0000 - 0.0180 |
+  | karma only | 0.5886 | 0.5740 - 0.6691 | 0.0022 | 0.0000 - 0.0113 |
+  | diagnostic: post count only | 0.9482 | 0.9292 - 0.9857 | 0.8825 | 0.4598 - 0.8926 |
+
+  Matched diagnostic (coordinated authors also >= 20 posts; 121 train / 1,117 test
+  coordinated): gradient-boosted AUROC 0.7220 (CI 0.6606 - 0.9892), recall 0.1397; logistic
+  AUROC 0.6551 (CI 0.6100 - 0.9895), recall 0.1379.
+  Largest standardised logistic coefficients: iv_mean_log +5.82, iv_median_log -3.95,
+  sync_mean_log1p +1.72, burstiness -1.11, iv_share_lt_60s +0.91.
+  Jitter (recall at 1% FPR, fixed organic threshold), 0 / 1 / 5 / 30 / 120 min:
+  gradient-boosted 0.859 / 0.863 / 0.860 / 0.858 / 0.855; logistic 0.666 / 0.676 / 0.654 /
+  0.636 / 0.588.
+  GO (pre-registered rule): yes. AUROC 0.9605 >= 0.75 and CI lower bound 0.9549 > karma-only
+  0.5886.
+- Interpretation: The pre-registered rule is met, but the result does not support a
+  metadata monitor for coordination, for three reasons visible in the same run.
+  (1) Activity confound: post count alone reaches AUROC 0.948, close to the full model's
+  0.960. With activity matched, the model falls to 0.722 (logistic 0.655), below the 0.75
+  bar, with recall at 1% FPR around 0.14. The interval features at the top of the
+  logistic model mostly encode how many posts an author has.
+  (2) Unbalanced group split: coordinated authors are tied into large duplicate-sharing
+  components, so the group split put 9,504 of the coordinated authors in test and only
+  496 in train. The models learned coordination from about 500 examples, and the test is
+  dominated by a few large groups. That shows in the bootstrap CIs, where the point
+  estimate sits at the bottom edge of the interval (e.g. 0.9605 in 0.9549 - 0.9980). These
+  CIs do not measure generalisation uncertainty well.
+  (3) Jitter barely moves the gradient-boosted recall (0.859 to 0.855 at +/-120 min). The
+  primary model therefore does not rely on the 60 s synchrony signal the monitor was
+  meant to test; it relies on per-author activity patterns that jitter does not change.
+  The logistic model, which weights synchrony more, loses about 8 points by 120 min.
+  The earlier pattern holds: Moltbook exact-duplicate posting happens mostly in short
+  bursts by low-activity accounts.
+- Decision / next step: Formally GO, but not adopted as evidence for a metadata monitor;
+  the matched diagnostic (0.722) is below the GO bar. A follow-up needs a new
+  pre-registration that (a) defines both classes with the same activity floor (e.g. >= 20
+  posts) as the primary analysis, (b) splits by group with class stratification and
+  isolates or holds out the largest components separately, and (c) reports synchrony-only
+  features as their own model, so the jitter test measures what it is meant to. Stop here
+  for review.
