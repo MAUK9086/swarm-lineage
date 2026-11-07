@@ -1,0 +1,23 @@
+{
+  "experiment": "E02_leakage",
+  "run_at": "2026-11-07 21:11 IST",
+  "git_hash": "b8875d5",
+  "seed": 42,
+  "params": {
+    "min_n": 30,
+    "rho_threshold": 0.5,
+    "p_threshold": 0.01,
+    "sampling": "none"
+  },
+  "results": {
+    "rows_with_id_and_time": 0,
+    "overall": {
+      "n": 0,
+      "computable": false,
+      "rho": null,
+      "p": null
+    },
+    "per_kind": {},
+    "id_order_leaks_time": null
+  }
+}

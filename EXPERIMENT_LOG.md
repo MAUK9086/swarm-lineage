@@ -8,7 +8,7 @@ Global seed: 42.
 
 ---
 
-### E00 - Corpus profile and slim Parquet  (2026-11-07 21:12 IST)
+### E00 - Corpus profile and slim Parquet  (2026-11-07 21:09 IST)
 - Question: What does data/raw/redacted.jsonl.gz contain: row count, fields, their types
   and presence rates, example values, and how the decoded program text is stored?
 - Hypothesis / expected: Over 80,000 rows (the Swarm Traces report says "over 80,000
@@ -64,7 +64,7 @@ Global seed: 42.
   available from time_utc; any replacement (e.g. timestamps embedded in the text) is a
   method change that needs a decision before it is tried.
 
-### E01 - Time estimates: coverage, source, span  (2026-11-07 21:20 IST)
+### E01 - Time estimates: coverage, source, span  (2026-11-07 21:11 IST)
 - Question: How many rows have a time estimate, where does it come from, what span does
   it cover, and what does its distribution look like?
 - Hypothesis / expected: Written after E00, which found time_utc null on all 189,579
@@ -77,13 +77,30 @@ Global seed: 42.
   unparseable values overall and per kind. List any column whose name suggests a time
   source or provenance. If any times parse: report min, max and span, and plot an hourly
   histogram to figures/E01_time_hist.png.
-- Code: experiments/E01_timestamps.py @ (filled after commit)
+- Code: experiments/E01_timestamps.py @ 7647235 (re-run at b8875d5 after a metadata-only
+  fix to the dirty flag in src/io_utils.py; numbers identical)
 - Params: GO threshold 100 rows; histogram bin 1 hour; seed 42 (no sampling).
-- Results:
-- Interpretation:
-- Decision / next step:
+- Results: (results/E01_timestamps.json)
 
-### E02 - Leakage check: row id vs time  (2026-11-07 21:20 IST)
+  | item | value |
+  |---|---|
+  | rows | 189,579 |
+  | time columns | time_utc only |
+  | source / provenance columns | none |
+  | time_utc non-null | 0 (payload 0 / 91,037; recovered_text 0 / 75,534; response 0 / 23,008) |
+  | parseable / unparseable | 0 / 0 |
+  | span | none |
+  | histogram | not produced (no data) |
+
+  GO: no (0 < 100).
+- Interpretation: The release has no time estimates and no field naming a time source.
+  The report says its estimates came from gzip header bytes, JWTs, Docker build times
+  and timestamps in recovered responses. None of these appear as a field here; if they
+  exist, they are inside the text.
+- Decision / next step: NO-GO for time_utc as ground-truth source (1). Recorded as a null
+  result. Whether to try extracting timestamps from the text is left open for a decision.
+
+### E02 - Leakage check: row id vs time  (2026-11-07 21:11 IST)
 - Question: Does the row id number track time, i.e. is file order a leak of time order?
 - Hypothesis / expected: Written after E00/E01 pre-registration. With no time estimates
   expected, the correlation should not be computable.
@@ -94,8 +111,19 @@ Global seed: 42.
   question stays open.
 - Method: From the slim Parquet take rows with both id_num and a parsed time_utc;
   Spearman rho and two-sided p-value overall and per kind (per kind only if n >= 30).
-- Code: experiments/E02_leakage.py @ (filled after commit)
+- Code: experiments/E02_leakage.py @ 7647235 (re-run at b8875d5, see E01)
 - Params: minimum n 30; thresholds |rho| >= 0.5, p < 0.01; seed 42 (no sampling).
-- Results:
-- Interpretation:
-- Decision / next step:
+- Results: (results/E02_leakage.json)
+
+  | item | value |
+  |---|---|
+  | rows with id_num and time | 0 |
+  | Spearman rho / p | not computable |
+  | per kind | none |
+
+- Interpretation: Not computable. The leakage question is open. E00 did show that ids are
+  a dense 1..189,579 sequence in file order with kinds interleaved (first response at
+  R0053433, first recovered_text at R0062486), so id order is some kind of ordering. It
+  is unknown whether it follows time, crawl order or chain order.
+- Decision / next step: Leakage stays untested. If a time signal is recovered later
+  (e.g. from text), re-run E02 unchanged on it before using id order in any comparison.

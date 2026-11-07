@@ -1,0 +1,42 @@
+{
+  "experiment": "E01_timestamps",
+  "run_at": "2026-11-07 21:11 IST",
+  "git_hash": "b8875d5",
+  "seed": 42,
+  "params": {
+    "go_min_rows": 100,
+    "hist_bin": "1h",
+    "sampling": "none"
+  },
+  "results": {
+    "n_rows": 189579,
+    "time_columns": [
+      "time_utc"
+    ],
+    "source_or_provenance_columns": [],
+    "non_null": 0,
+    "parsed": 0,
+    "unparseable": 0,
+    "share_with_time": 0.0,
+    "per_kind": {
+      "payload": {
+        "rows": 91037,
+        "non_null": 0,
+        "parsed": 0
+      },
+      "recovered_text": {
+        "rows": 75534,
+        "non_null": 0,
+        "parsed": 0
+      },
+      "response": {
+        "rows": 23008,
+        "non_null": 0,
+        "parsed": 0
+      }
+    },
+    "span": null,
+    "figure": null,
+    "go": false
+  }
+}

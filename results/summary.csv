@@ -8,3 +8,12 @@ E00,go_a_all_lines_parse,True,5d20b3e,2026-11-07 21:10 IST
 E00,go_b_id_and_text_on_every_row,True,5d20b3e,2026-11-07 21:10 IST
 E00,go_c_ids_unique,True,5d20b3e,2026-11-07 21:10 IST
 E00,go_d_some_time_non_null,False,5d20b3e,2026-11-07 21:10 IST
+E01,rows_with_time,0,b8875d5,2026-11-07 21:11 IST
+E01,share_with_time,0.0,b8875d5,2026-11-07 21:11 IST
+E01,unparseable,0,b8875d5,2026-11-07 21:11 IST
+E01,go,False,b8875d5,2026-11-07 21:11 IST
+E02,n,0,b8875d5,2026-11-07 21:11 IST
+E02,computable,False,b8875d5,2026-11-07 21:11 IST
+E02,rho,None,b8875d5,2026-11-07 21:11 IST
+E02,p,None,b8875d5,2026-11-07 21:11 IST
+E02,leak,None,b8875d5,2026-11-07 21:11 IST
