@@ -755,12 +755,50 @@ Global seed: 42.
   (effective n); CI-width ratio = component width / pair width. Headline figure:
   figures/E34_inflation_curve.png, pair-level vs component-level estimate against cap,
   one panel per window.
-- Code: experiments/E34_inflation_curve.py, src/clusters.py @ (filled after commit)
+- Code: experiments/E34_inflation_curve.py, src/clusters.py @ 01d35b4 (figure titles and
+  legend fixed afterwards and the figure redrawn from the saved results; numbers unchanged)
 - Params: windows {0.5, 0.7, 0.9}-0.95; caps {1, 5, 20, 100, none}; 1,000 component-bootstrap
   resamples; seed 42.
-- Results:
-- Interpretation:
-- Decision / next step:
+- Results: (results/E34_inflation_curve.json, figures/E34_inflation_curve.png)
+  Check: cap "none" at 0.5-0.95 reproduces E31's pair-level accuracy (0.6960842); 1,396,762
+  length ties; no pairs with equal times. Pair bootstrap (200) CI 0.69578 - 0.69640 vs Wald
+  0.69577 - 0.69640.
+
+  | window | cap | pairs | components | pair-level acc [Wald CI] | component macro [bootstrap CI] | inflation (pts) | CI width ratio |
+  |---|---|---|---|---|---|---|---|
+  | 0.5-0.95 | 1 | 1,198 | 1,198 | 0.501 [0.473, 0.529] | 0.501 [0.473, 0.527] | 0.0 | 1.0 |
+  | 0.5-0.95 | 5 | 2,060 | 1,198 | 0.511 [0.490, 0.533] | 0.506 [0.480, 0.530] | 0.5 | 1.1 |
+  | 0.5-0.95 | 20 | 3,029 | 1,198 | 0.506 [0.488, 0.524] | 0.504 [0.478, 0.528] | 0.2 | 1.4 |
+  | 0.5-0.95 | 100 | 6,063 | 1,198 | 0.503 [0.491, 0.516] | 0.504 [0.477, 0.528] | 0.0 | 2.0 |
+  | 0.5-0.95 | none | 8,361,829 | 1,198 | 0.696 [0.696, 0.696] | 0.504 [0.477, 0.528] | 19.2 | 81.0 |
+  | 0.7-0.95 | 1 | 482 | 482 | 0.461 [0.416, 0.505] | 0.461 [0.419, 0.504] | 0.0 | 1.0 |
+  | 0.7-0.95 | 5 | 831 | 482 | 0.444 [0.410, 0.478] | 0.454 [0.417, 0.495] | -1.0 | 1.2 |
+  | 0.7-0.95 | 20 | 1,206 | 482 | 0.453 [0.425, 0.481] | 0.449 [0.412, 0.490] | 0.3 | 1.4 |
+  | 0.7-0.95 | 100 | 2,504 | 482 | 0.507 [0.488, 0.527] | 0.450 [0.412, 0.490] | 5.8 | 2.0 |
+  | 0.7-0.95 | none | 328,847 | 482 | 0.698 [0.697, 0.700] | 0.450 [0.412, 0.490] | 24.8 | 24.7 |
+  | 0.9-0.95 | 1 | 80 | 80 | 0.600 [0.493, 0.707] | 0.600 [0.500, 0.700] | 0.0 | 0.9 |
+  | 0.9-0.95 | 5 | 180 | 80 | 0.594 [0.523, 0.666] | 0.598 [0.504, 0.688] | -0.3 | 1.3 |
+  | 0.9-0.95 | 20 | 352 | 80 | 0.611 [0.560, 0.662] | 0.610 [0.518, 0.695] | 0.1 | 1.7 |
+  | 0.9-0.95 | 100 | 1,016 | 80 | 0.598 [0.568, 0.629] | 0.611 [0.518, 0.698] | -1.3 | 3.0 |
+  | 0.9-0.95 | none | 9,431 | 80 | 0.858 [0.851, 0.865] | 0.612 [0.519, 0.699] | 24.6 | 12.7 |
+
+  Secondary (0.5-0.95 with E32's template filter; 651 components / 9,167 pairs dropped;
+  547 components): cap 1 / 5 / 20 / 100 / none pair-level 0.492 / 0.495 / 0.505 / 0.507 /
+  0.696, macro 0.492 / 0.494 / 0.497 / 0.496 / 0.497; inflation at none 19.9 points; CI
+  width ratio 117.0.
+  Criterion: material (19.2 >= 5 points).
+- Interpretation: Inflation is material in every window: 19.2 to 24.8 points at cap
+  "none", with CIs 12.7 to 81 times too narrow. The curve is a step, not a gradual rise.
+  At caps up to 100, pair-level and component-level estimates nearly coincide; the jump
+  appears only when large components contribute all their pairs. A few big clusters with
+  a consistent length pattern produce the whole "effect", and the effective sample size
+  is the component count (80 to 1,198), not the pair count (9,431 to 8.4M). The 0.9-0.95
+  window gives the highest component-level estimate (0.61, CI 0.52 - 0.70) from only 80
+  components; this was not pre-registered as a hypothesis and is not claimed. The
+  hypothesis that the gap grows smoothly with the cap was wrong: it is near zero until
+  the cap is removed (except 0.7-0.95 at cap 100, 5.8 points).
+- Decision / next step: Supports the evaluation lesson. Headline figure produced. No
+  further dating analysis (final scope).
 
 ### E35 - Null simulation: false-positive rate of naive evaluation  (2026-11-08 00:50 IST)
 - Question: Under a known null that keeps the real cluster structure, how often does
@@ -780,11 +818,26 @@ Global seed: 42.
   resamples); significant if the CI excludes 0.5. Pairs with equal permuted times are
   dropped in that draw. False-positive rates are reported with Wilson 95% CIs, along with
   the spread of each estimate across draws.
-- Code: experiments/E35_null_simulation.py, src/clusters.py @ (filled after commit)
+- Code: experiments/E35_null_simulation.py, src/clusters.py @ 01d35b4 (results file stamped
+  378f8c9: it ran in the same chain after E34, after an unrelated log/figure commit; E35
+  code unchanged)
 - Params: 1,000 draws; Wald CI (pair-level); 1,000 component-bootstrap resamples; seed 42 + r.
-- Results:
-- Interpretation:
-- Decision / next step:
+- Results: (results/E35_null_simulation.json)
+
+  | analysis | significant draws / 1,000 | false-positive rate [Wilson 95% CI] | estimate across draws: mean (sd) [2.5-97.5%] |
+  |---|---|---|---|
+  | pair-level, 8,361,829 pairs, Wald CI | 863 | 0.863 [0.840, 0.883] | 0.4999 (0.0019) [0.4961, 0.5036] |
+  | component-level, cap 20 (3,029 pairs, 1,198 components) | 53 | 0.053 [0.041, 0.069] | 0.5005 (0.0127) [0.4762, 0.5251] |
+
+  Pairs with equal permuted times per draw: mean 1.18, max 7. Criterion: naive
+  miscalibrated (0.863 > 0.10 while 0.053 <= 0.10).
+- Interpretation: Under a null that keeps the real cluster structure and removes any
+  order signal, naive pair-level analysis declares a significant "longer is later"
+  effect in 86% of draws. The estimate itself is unbiased (mean 0.4999), but it varies
+  across draws (sd 0.0019) far more than the Wald CI assumes (its full width at this n is
+  about 0.0006, from E34). Component-level analysis is close to nominal (5.3%).
+- Decision / next step: Supports the evaluation lesson: in clustered agent text,
+  pair-level significance is mostly a false positive. Feeds FIG1.
 
 ### E36 - Frozen replication script  (2026-11-08 00:50 IST)
 - Question: Can the E31/E32 pipeline be packaged as one frozen script that takes any
@@ -807,10 +860,29 @@ Global seed: 42.
   reproduction check. Run only on the Moltbook table; not run on any other corpus.
 - Config SHA-256 (configs/E36_pipeline.json, LF line endings enforced by .gitattributes):
   5ac6686ab5779f23bce7f0c296358873e15f8abfd0c33403ce133ae395e8f017
-- Code: experiments/E36_replication.py, configs/E36_pipeline.json @ (filled after commit)
-- Results:
-- Interpretation:
-- Decision / next step:
+- Code: experiments/E36_replication.py, configs/E36_pipeline.json @ 01d35b4 (results stamped
+  378f8c9-dirty: the run started after an unrelated commit, and the E34 plotting function
+  had uncommitted edits when results were saved; E36 code and config unchanged)
+- Results: (results/E36_replication_moltbook.json)
+  Config SHA-256 in results: 5ac6686ab5779f23bce7f0c296358873e15f8abfd0c33403ce133ae395e8f017
+  (matches the value recorded above).
+  Reproduction check: 63 items compared (E31 counts and pair-level n / accuracy / CI for
+  (a), (b), (c); E32 counts and component-level n / macro / CI / micro for (a), (b), (i),
+  (ii)); maximum absolute difference 0.0; passes at 1e-9.
+  Pair-level (8,361,829 pairs): (a) 0.5000, (b) 0.6961, (c) 0.5902 (identical to E31).
+  New, not part of the check: pair-level on a 200,000-pair seeded subsample: (i) extension
+  0.5737 [0.5714, 0.5758], 129,778 ties; (ii) insertion vs deletion 0.5890 [0.5866,
+  0.5911], 103,989 ties; component-level (c) containment macro 0.5069 [0.4710, 0.5415] on
+  547 components.
+  Component-level (547 components, 1,767 pairs): (a) 0.5105, (b) 0.4964, (i) 0.5081,
+  (ii) 0.5055 (identical to E32).
+- Interpretation: The frozen pipeline reproduces E31 and E32 exactly from the standard
+  table alone, so it is ready to be handed over. The new pair-level edit-cue numbers show
+  the same inflation pattern: (ii) is 58.9% at pair level and 50.6% at component level.
+- Decision / next step: experiments/E36_replication.py with configs/E36_pipeline.json
+  (SHA-256 above) is the frozen pipeline. Not run on any other corpus in this repo; the
+  collusion.wiki run is left to the user (src/adapters/collusion_wiki.py maps the export
+  to the standard table).
 
 ### FIG1 - Naive vs proper estimates, dating and monitor tasks  (2026-11-08 00:50 IST)
 - What: one two-panel figure built only from saved results. Dating: "longer is later"
@@ -822,5 +894,9 @@ Global seed: 42.
 - Change after E38 results, presentation only: the monitor panel note also states the
   number of coordinated authors in E38's cross-validation (13) and the held-out AUROC,
   so the cluster-aware point is not read without that context.
-- Code: experiments/FIG1_naive_vs_proper.py @ (filled after commit); output
-  figures/FIG1_naive_vs_proper.png.
+- Code: experiments/FIG1_naive_vs_proper.py; output figures/FIG1_naive_vs_proper.png
+  (layout adjusted after the first render for overlapping labels; values unchanged).
+- Result: dating panel: naive 0.696 [0.696, 0.696] vs cluster-aware 0.504 [0.478, 0.528];
+  null false-positive rates 86.3% vs 5.3%. Monitor panel: naive AUROC 0.960 [0.955, 0.998]
+  vs cluster-aware 0.691 [0.563, 0.821] (13 coordinated authors in CV; held-out AUROC
+  0.529); recall at 1% FPR 0.86 vs 0.08. All values read from results/E34, E35, E37, E38.

@@ -1,0 +1,56 @@
+{
+  "experiment": "E35_null_simulation",
+  "run_at": "2026-11-08 00:59 IST",
+  "git_hash": "378f8c9",
+  "seed": 42,
+  "params": {
+    "draws": 1000,
+    "cap": 20,
+    "n_boot": 1000,
+    "seed": "42 + r",
+    "null": "permute true times within each component"
+  },
+  "results": {
+    "draws": 1000,
+    "pairs": 8361829,
+    "components": 1198,
+    "capped_pairs": 3029,
+    "equal_time_pairs_dropped_per_draw": {
+      "mean": 1.182,
+      "max": 7
+    },
+    "pair_level": {
+      "significant": 863,
+      "false_positive_rate": 0.863,
+      "fpr_wilson_ci": [
+        0.8402949037824456,
+        0.8829268695133805
+      ],
+      "accuracy_across_draws": {
+        "mean": 0.49993732756263204,
+        "sd": 0.00189657677873602,
+        "p2.5": 0.4961007220788989,
+        "p97.5": 0.5035809260355371
+      }
+    },
+    "component_level": {
+      "significant": 53,
+      "false_positive_rate": 0.053,
+      "fpr_wilson_ci": [
+        0.04074650516410494,
+        0.06867461697574555
+      ],
+      "macro_across_draws": {
+        "mean": 0.5004743278768604,
+        "sd": 0.012684266717695227,
+        "p2.5": 0.47618098272864484,
+        "p97.5": 0.5250623088884775
+      }
+    },
+    "criterion": {
+      "naive_fpr_gt_10pct": true,
+      "component_fpr_le_10pct": true,
+      "naive_miscalibrated": true
+    }
+  }
+}

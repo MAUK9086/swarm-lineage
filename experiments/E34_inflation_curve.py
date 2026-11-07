@@ -84,7 +84,7 @@ def plot_curve(windows: dict[str, list[dict[str, Any]]]) -> str:
         ax.set_xticks(x, labels)
         ax.set_xlabel("pairs kept per component (cap)", color=C_TEXT2, fontsize=8)
         comps = rows[-1]["components"]
-        ax.set_title(f"Jaccard {wlab}  ·  {rows[-1]['pairs']:,} pairs, {comps:,} components",
+        ax.set_title(f"Jaccard {wlab}\n{rows[-1]['pairs']:,} pairs in {comps:,} components",
                      loc="left", fontsize=9, color=C_TEXT)
         ax.tick_params(colors=C_TEXT2, labelsize=8)
         ax.grid(axis="y", color=C_GRID, linewidth=0.6)
@@ -94,7 +94,10 @@ def plot_curve(windows: dict[str, list[dict[str, Any]]]) -> str:
         ax.spines["bottom"].set_color(C_GRID)
     axes[0].set_ylabel('"longer is later" accuracy', color=C_TEXT2)
     axes[0].set_ylim(0.3, 0.9)
-    axes[-1].legend(frameon=False, fontsize=8, loc="upper left")
+    from matplotlib.lines import Line2D
+    handles = [Line2D([], [], color=C_PAIR, marker="o", linewidth=2, label="pair-level"),
+               Line2D([], [], color=C_COMP, marker="o", linewidth=2, label="component-level")]
+    axes[-1].legend(handles=handles, frameon=False, fontsize=8, loc="upper left")
     fig.suptitle("Pair-level scoring inflates the copy-direction estimate as more pairs per cluster are kept "
                  "(95% CIs; dashed line = chance)", x=0.01, ha="left", fontsize=10, color=C_TEXT)
     fig.tight_layout()
