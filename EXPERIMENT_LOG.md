@@ -170,10 +170,50 @@ Global seed: 42.
   verify the hash). Pages later deleted: share of held pages with a delete event after
   their first revision, cross-checked against pages.n_deletions. Write
   data/interim/collusion_slim.parquet.
-- Code: experiments/E20_profile.py @ (filled after commit)
+- Code: experiments/E20_profile.py @ 674419c
 - Params: example truncation 80 chars; value counts only for low-cardinality categorical
   fields (<= 30 distinct, excluding names, labels, IPs, free text); GO thresholds 5,000
   revisions and 200 pages with >= 5 revisions; seed 42 (no sampling).
-- Results:
-- Interpretation:
-- Decision / next step:
+- Results: (results/E20_profile.json, figures/E20_daily_revisions.png)
+
+  | item | value |
+  |---|---|
+  | manifest | generated 2026-09-03T03:42:36Z; cut revision.write_date >= 2026-05-01; counts revisions 14,591, pages 4,579, labels 3,103 |
+  | manifest self-checks | 122 / 122 ok |
+  | SHA256SUMS | 5 / 5 files verified |
+  | files (rows, bytes) | pages 4,579 (2,973,326); revisions 14,591 (41,521,492); events 19,913 (8,543,896); labels 3,103 (1,471,940); plain .jsonl |
+  | wikis (revisions) | dse 13,403; probier 1,013; fractal 169; dorfwiki 6 |
+  | timestamp field | revisions.time, ISO-8601 UTC "...Z" on 14,591 / 14,591; parsed 14,591 (100%) |
+  | time grade | reqlog 14,482; rclog 103; write_date 6; uncertainty_seconds = 1 on all rows |
+  | span | 2026-05-24T06:02:19Z to 2026-07-02T17:51:22Z (39.5 days); revisions on 28 distinct days |
+  | revisions per page | median 1, p75 2, p95 8, p99 28, mean 3.19, max 2,327; pages >= 2: 1,453; >= 5: 453; >= 10: 195; >= 20: 80; >= 50: 16; 8,927 revisions sit on pages with >= 5 |
+  | revisions per label | 3,102 non-blank labels + 899 blank-label revisions; median 2, p95 14, p99 36, max 317; labels >= 5 revisions: 722; top 10 labels hold 10.6% of labelled revisions |
+  | prev link | diff_base on 10,012 of 10,029 revisions with seq > 1, always = same page's seq-1; 17 null (earlier revisions not published); seq 1 never has a diff_base |
+  | seq vs time | seq contiguous on all 4,579 pages; 4,562 start at seq 1; of 10,012 consecutive pairs time increases in 9,783, ties in 229, decreases in 0 |
+  | text length (chars) | min 0, p5 27, p25 326, median 1,092, p75 2,986.5, p95 5,642, p99 7,635.8, max 38,832; 77 empty bodies |
+  | exact texts | 11,867 distinct body_sha256 over 14,591 revisions; 291 hashes on > 1 page, covering 1,767 revisions; 1,317 within-page repeats; recomputed UTF-8 SHA-256 matches body_sha256 on 14,340 |
+  | deletions | 5,217 delete events, 3,969 on held pages; 3,898 / 4,579 held pages (85.1%) deleted after their first revision; equals pages with n_deletions > 0 (3,898); deleted_live is false on all pages |
+  | slim Parquet | data/interim/collusion_slim.parquet, 14,591 rows, 18 columns, 2,516,883 bytes |
+
+  GO: yes (14,591 >= 5,000 timed revisions; 453 >= 200 pages with >= 5 revisions).
+- Interpretation: The export is internally consistent: all 122 manifest checks pass, the
+  checksums verify, page revision counts agree with pages.n_revs on every page, and
+  delete-event counts agree with pages.n_deletions. Timestamps are complete and precise
+  (1 s), so the ground truth is strong. Activity is bursty: the figure shows most
+  revisions between 16 and 22 June 2026. Histories are long-tailed: most pages have a
+  single revision and one page has 2,327, so per-page results will need weighting or
+  capping. Three things are order leaks and must be hidden from any content-only method:
+  seq, rev_id (which ends in "@seq") and diff_base all encode within-page order exactly
+  (seq never disagrees with time). request_time, success_time, write_date and archived_at
+  are further time fields. The 251 hash mismatches equal the manifest's non-ASCII body
+  count (250 UTF-8 + 1 Latin-1), which suggests the stored hash is over the original
+  bytes; this was not checked row by row. "Deleted" here means a logged admin deletion;
+  deleted_live is false everywhere, so pages were apparently restored or kept in the
+  archive, and the field's exact meaning is unconfirmed. Cross-page exact copies exist
+  (291 texts shared by more than one page), which is direct evidence of copying for the
+  lineage part.
+- Decision / next step: GO. Use the collusion export as the benchmark. Before any method
+  experiment, define the hidden-field list (time and all time-like fields, seq, rev_id
+  suffix, diff_base, diff_base_reason, hunks, archived_at) and the evaluation units
+  (within-page order on pages with >= 5 revisions; cross-page copy direction). Stop here
+  for review.

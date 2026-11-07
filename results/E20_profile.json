@@ -1,0 +1,2333 @@
+{
+  "experiment": "E20_profile",
+  "run_at": "2026-11-07 21:44 IST",
+  "git_hash": "674419c",
+  "seed": 42,
+  "params": {
+    "example_trunc": 80,
+    "n_examples": 3,
+    "low_card_max": 30,
+    "go_min_timed_revisions": 5000,
+    "go_min_pages_5plus": 200,
+    "sampling": "none"
+  },
+  "results": {
+    "manifest": {
+      "top_level_keys": [
+        "generated_at",
+        "db_sha256",
+        "cut",
+        "counts",
+        "per_wiki",
+        "population_counts",
+        "grade_histograms",
+        "body_bytes",
+        "body_encoding",
+        "page_family_coverage",
+        "facts",
+        "recreation_source",
+        "resources",
+        "tool_versions",
+        "source_scan",
+        "request_source_note",
+        "checks"
+      ],
+      "generated_at": "2026-09-03T03:42:36Z",
+      "cut": {
+        "field": "revision.write_date",
+        "operator": ">=",
+        "value": "2026-05-01"
+      },
+      "counts": {
+        "revisions": 14591,
+        "pages": 4579,
+        "labels": 3103
+      },
+      "per_wiki": {
+        "dse": {
+          "revisions": 13403,
+          "pages": 3908,
+          "body_bytes": 26358586
+        },
+        "probier": {
+          "revisions": 1013,
+          "pages": 601,
+          "body_bytes": 628751
+        },
+        "fractal": {
+          "revisions": 169,
+          "pages": 68,
+          "body_bytes": 195967
+        },
+        "dorfwiki": {
+          "revisions": 6,
+          "pages": 2,
+          "body_bytes": 2754
+        }
+      },
+      "population_counts": {
+        "save": 14591,
+        "delete": 5217,
+        "revert": 4,
+        "probe": 101,
+        "first_recreation_relations": 68
+      },
+      "n_checks": 122,
+      "n_checks_ok": 122,
+      "checks": [
+        {
+          "name": "published revisions",
+          "expected": 14591,
+          "actual": 14591,
+          "ok": true
+        },
+        {
+          "name": "published pages",
+          "expected": 4579,
+          "actual": 4579,
+          "ok": true
+        },
+        {
+          "name": "dse revisions",
+          "expected": 13403,
+          "actual": 13403,
+          "ok": true
+        },
+        {
+          "name": "dse pages",
+          "expected": 3908,
+          "actual": 3908,
+          "ok": true
+        },
+        {
+          "name": "probier revisions",
+          "expected": 1013,
+          "actual": 1013,
+          "ok": true
+        },
+        {
+          "name": "probier pages",
+          "expected": 601,
+          "actual": 601,
+          "ok": true
+        },
+        {
+          "name": "fractal revisions",
+          "expected": 169,
+          "actual": 169,
+          "ok": true
+        },
+        {
+          "name": "fractal pages",
+          "expected": 68,
+          "actual": 68,
+          "ok": true
+        },
+        {
+          "name": "dorfwiki revisions",
+          "expected": 6,
+          "actual": 6,
+          "ok": true
+        },
+        {
+          "name": "dorfwiki pages",
+          "expected": 2,
+          "actual": 2,
+          "ok": true
+        },
+        {
+          "name": "pages beginning at seq 1",
+          "expected": 4562,
+          "actual": 4562,
+          "ok": true
+        },
+        {
+          "name": "pages with earlier unpublished revisions",
+          "expected": 17,
+          "actual": 17,
+          "ok": true
+        },
+        {
+          "name": "published body bytes",
+          "expected": 27186058,
+          "actual": 27186058,
+          "ok": true
+        },
+        {
+          "name": "blank-label revisions",
+          "expected": 899,
+          "actual": 899,
+          "ok": true
+        },
+        {
+          "name": "distinct labels",
+          "expected": 3103,
+          "actual": 3103,
+          "ok": true
+        },
+        {
+          "name": "human-handle labels",
+          "expected": 3,
+          "actual": 3,
+          "ok": true
+        },
+        {
+          "name": "non-ASCII bodies",
+          "expected": 251,
+          "actual": 251,
+          "ok": true
+        },
+        {
+          "name": "ASCII bodies",
+          "expected": 14340,
+          "actual": 14340,
+          "ok": true
+        },
+        {
+          "name": "UTF-8 byte bodies",
+          "expected": 250,
+          "actual": 250,
+          "ok": true
+        },
+        {
+          "name": "Latin-1 byte bodies",
+          "expected": 1,
+          "actual": 1,
+          "ok": true
+        },
+        {
+          "name": "source body hash failures",
+          "expected": 0,
+          "actual": 0,
+          "ok": true
+        },
+        {
+          "name": "round-trip revision rows",
+          "expected": 14591,
+          "actual": 14591,
+          "ok": true
+        },
+        {
+          "name": "round-trip body hash failures",
+          "expected": 0,
+          "actual": 0,
+          "ok": true
+        },
+        {
+          "name": "revision order failures",
+          "expected": 0,
+          "actual": 0,
+          "ok": true
+        },
+        {
+          "name": "revision hunk regeneration failures",
+          "expected": 0,
+          "actual": 0,
+          "ok": true
+        },
+        {
+          "name": "revision public identity failures",
+          "expected": 0,
+          "actual": 0,
+          "ok": true
+        },
+        {
+          "name": "page keys",
+          "expected": 4579,
+          "actual": 4579,
+          "ok": true
+        },
+        {
+          "name": "NFC-normalized page keys",
+          "expected": 4579,
+          "actual": 4579,
+          "ok": true
+        },
+        {
+          "name": "published names containing slash",
+          "expected": 77,
+          "actual": 77,
+          "ok": true
+        },
+        {
+          "name": "published names containing tilde",
+          "expected": 0,
+          "actual": 0,
+          "ok": true
+        },
+        {
+          "name": "non-ASCII published names",
+          "expected": 1,
+          "actual": 1,
+          "ok": true
+        },
+        {
+          "name": "DSE pages with page family",
+          "expected": 3908,
+          "actual": 3908,
+          "ok": true
+        },
+        {
+          "name": "off-store unclassified pages",
+          "expected": 671,
+          "actual": 671,
+          "ok": true
+        },
+        {
+          "name": "write_time source rows",
+          "expected": 13414,
+          "actual": 13414,
+          "ok": true
+        },
+        {
+          "name": "write_time full grade histogram",
+          "expected": {
+            "rclog": 50,
+            "reqlog": 13359,
+            "unknown": 5
+          },
+          "actual": {
+            "reqlog": 13359,
+            "unknown": 5,
+            "rclog": 50
+          },
+          "ok": true
+        },
+        {
+          "name": "dse cut save grades",
+          "expected": {
+            "rclog": 44,
+            "reqlog": 13359
+          },
+          "actual": {
+            "reqlog": 13359,
+            "rclog": 44
+          },
+          "ok": true
+        },
+        {
+          "name": "probier save grades",
+          "expected": {
+            "rclog": 22,
+            "reqlog": 991
+          },
+          "actual": {
+            "reqlog": 991,
+            "rclog": 22
+          },
+          "ok": true
+        },
+        {
+          "name": "fractal save grades",
+          "expected": {
+            "rclog": 37,
+            "reqlog": 132
+          },
+          "actual": {
+            "reqlog": 132,
+            "rclog": 37
+          },
+          "ok": true
+        },
+        {
+          "name": "dorfwiki save grades",
+          "expected": {
+            "write_date": 6
+          },
+          "actual": {
+            "write_date": 6
+          },
+          "ok": true
+        },
+        {
+          "name": "whole-cut save grades",
+          "expected": {
+            "rclog": 103,
+            "reqlog": 14482,
+            "write_date": 6
+          },
+          "actual": {
+            "rclog": 103,
+            "reqlog": 14482,
+            "write_date": 6
+          },
+          "ok": true
+        },
+        {
+          "name": "unknown save grades",
+          "expected": 0,
+          "actual": 0,
+          "ok": true
+        },
+        {
+          "name": "probier 2026-05 grades",
+          "expected": {
+            "rclog": 22,
+            "reqlog": 5
+          },
+          "actual": {
+            "reqlog": 5,
+            "rclog": 22
+          },
+          "ok": true
+        },
+        {
+          "name": "probier 2026-06 grades",
+          "expected": {
+            "reqlog": 977
+          },
+          "actual": {
+            "reqlog": 977
+          },
+          "ok": true
+        },
+        {
+          "name": "probier 2026-07 grades",
+          "expected": {
+            "reqlog": 9
+          },
+          "actual": {
+            "reqlog": 9
+          },
+          "ok": true
+        },
+        {
+          "name": "fractal 2026-05 grades",
+          "expected": {
+            "rclog": 37
+          },
+          "actual": {
+            "rclog": 37
+          },
+          "ok": true
+        },
+        {
+          "name": "fractal 2026-06 grades",
+          "expected": {
+            "reqlog": 130
+          },
+          "actual": {
+            "reqlog": 130
+          },
+          "ok": true
+        },
+        {
+          "name": "fractal 2026-07 grades",
+          "expected": {
+            "reqlog": 2
+          },
+          "actual": {
+            "reqlog": 2
+          },
+          "ok": true
+        },
+        {
+          "name": "rclog source rows",
+          "expected": 158016,
+          "actual": 158016,
+          "ok": true
+        },
+        {
+          "name": "dse [Admin1] deletion predicate rows",
+          "expected": 5218,
+          "actual": 5218,
+          "ok": true
+        },
+        {
+          "name": "deletion events",
+          "expected": 5217,
+          "actual": 5217,
+          "ok": true
+        },
+        {
+          "name": "deleted pages",
+          "expected": 5144,
+          "actual": 5144,
+          "ok": true
+        },
+        {
+          "name": "deletion grades",
+          "expected": {
+            "rclog": 1,
+            "reqlog": 5216
+          },
+          "actual": {
+            "rclog": 1,
+            "reqlog": 5216
+          },
+          "ok": true
+        },
+        {
+          "name": "same-second delete requests",
+          "expected": 4746,
+          "actual": 4746,
+          "ok": true
+        },
+        {
+          "name": "one-second-prior delete requests",
+          "expected": 470,
+          "actual": 470,
+          "ok": true
+        },
+        {
+          "name": "ambiguous delete requests",
+          "expected": 1,
+          "actual": 1,
+          "ok": true
+        },
+        {
+          "name": "deletion actor IPs",
+          "expected": {
+            "[Admin1-host1]": 1874,
+            "[Admin1-host2]": 3343
+          },
+          "actual": {
+            "[Admin1-host1]": 1874,
+            "[Admin1-host2]": 3343
+          },
+          "ok": true
+        },
+        {
+          "name": "sole rclog deletion page",
+          "expected": "AgentOfficialDirectQueryAA3",
+          "actual": "AgentOfficialDirectQueryAA3",
+          "ok": true
+        },
+        {
+          "name": "sole rclog deletion has clock note",
+          "expected": true,
+          "actual": true,
+          "ok": true
+        },
+        {
+          "name": "admin form_edit requests",
+          "expected": 3889,
+          "actual": 3889,
+          "ok": true
+        },
+        {
+          "name": "admin form_edit requests by IP",
+          "expected": {
+            "[Admin1-host1]": 1490,
+            "[Admin1-host2]": 2399
+          },
+          "actual": {
+            "[Admin1-host1]": 1490,
+            "[Admin1-host2]": 2399
+          },
+          "ok": true
+        },
+        {
+          "name": "eligible recreation deletions",
+          "expected": 433,
+          "actual": 433,
+          "ok": true
+        },
+        {
+          "name": "first-recreation relations",
+          "expected": 68,
+          "actual": 68,
+          "ok": true
+        },
+        {
+          "name": "recreated pages",
+          "expected": 50,
+          "actual": 50,
+          "ok": true
+        },
+        {
+          "name": "recreation grades",
+          "expected": {
+            "reqlog": 68
+          },
+          "actual": {
+            "reqlog": 68
+          },
+          "ok": true
+        },
+        {
+          "name": "recreations with revision refs",
+          "expected": 64,
+          "actual": 64,
+          "ok": true
+        },
+        {
+          "name": "recreations without revision refs",
+          "expected": 4,
+          "actual": 4,
+          "ok": true
+        },
+        {
+          "name": "stored first-recreation relation edges",
+          "expected": 64,
+          "actual": 64,
+          "ok": true
+        },
+        {
+          "name": "stored revisions carrying recreation relations",
+          "expected": 63,
+          "actual": 63,
+          "ok": true
+        },
+        {
+          "name": "revert events",
+          "expected": 4,
+          "actual": 4,
+          "ok": true
+        },
+        {
+          "name": "revert grades",
+          "expected": {
+            "reqlog": 4
+          },
+          "actual": {
+            "reqlog": 4
+          },
+          "ok": true
+        },
+        {
+          "name": "no-body recovery request actions",
+          "expected": {
+            "form_edit": 4
+          },
+          "actual": {
+            "form_edit": 4
+          },
+          "ok": true
+        },
+        {
+          "name": "native revert request rows",
+          "expected": 4,
+          "actual": 4,
+          "ok": true
+        },
+        {
+          "name": "same-second recreation requests",
+          "expected": 60,
+          "actual": 60,
+          "ok": true
+        },
+        {
+          "name": "one-second-prior recreation requests",
+          "expected": 8,
+          "actual": 8,
+          "ok": true
+        },
+        {
+          "name": "recreator labels",
+          "expected": 57,
+          "actual": 57,
+          "ok": true
+        },
+        {
+          "name": "recreator IPs",
+          "expected": 66,
+          "actual": 66,
+          "ok": true
+        },
+        {
+          "name": "probe events",
+          "expected": 101,
+          "actual": 101,
+          "ok": true
+        },
+        {
+          "name": "probe grades",
+          "expected": {
+            "reqlog": 101
+          },
+          "actual": {
+            "reqlog": 101
+          },
+          "ok": true
+        },
+        {
+          "name": "May probes",
+          "expected": 39,
+          "actual": 39,
+          "ok": true
+        },
+        {
+          "name": "May probe IPs",
+          "expected": 37,
+          "actual": 37,
+          "ok": true
+        },
+        {
+          "name": "June probes",
+          "expected": 62,
+          "actual": 62,
+          "ok": true
+        },
+        {
+          "name": "June probe IPs",
+          "expected": 31,
+          "actual": 31,
+          "ok": true
+        },
+        {
+          "name": "all probe IPs",
+          "expected": 68,
+          "actual": 68,
+          "ok": true
+        },
+        {
+          "name": "first probe",
+          "expected": "2026-05-17T05:46:45Z",
+          "actual": "2026-05-17T05:46:45Z",
+          "ok": true
+        },
+        {
+          "name": "last probe",
+          "expected": "2026-06-30T12:10:38Z",
+          "actual": "2026-06-30T12:10:38Z",
+          "ok": true
+        },
+        {
+          "name": "probe key schema",
+          "expected": true,
+          "actual": true,
+          "ok": true
+        },
+        {
+          "name": "event type populations",
+          "expected": {
+            "delete": 5217,
+            "probe": 101,
+            "revert": 4,
+            "save": 14591
+          },
+          "actual": {
+            "delete": 5217,
+            "probe": 101,
+            "revert": 4,
+            "save": 14591
+          },
+          "ok": true
+        },
+        {
+          "name": "events rows",
+          "expected": 19913,
+          "actual": 19913,
+          "ok": true
+        },
+        {
+          "name": "pages ordered by page_key",
+          "expected": true,
+          "actual": true,
+          "ok": true
+        },
+        {
+          "name": "labels ordered by UTF-8 bytes",
+          "expected": true,
+          "actual": true,
+          "ok": true
+        },
+        {
+          "name": "events ordered by time and event_id",
+          "expected": true,
+          "actual": true,
+          "ok": true
+        },
+        {
+          "name": "save key schema",
+          "expected": true,
+          "actual": true,
+          "ok": true
+        },
+        {
+          "name": "general event key schema",
+          "expected": true,
+          "actual": true,
+          "ok": true
+        },
+        {
+          "name": "non-probe event page keys",
+          "expected": true,
+          "actual": true,
+          "ok": true
+        },
+        {
+          "name": "save revision references resolve one-to-one",
+          "expected": 14591,
+          "actual": 14591,
+          "ok": true
+        },
+        {
+          "name": "stored recreation edges on save events",
+          "expected": 64,
+          "actual": 64,
+          "ok": true
+        },
+        {
+          "name": "multi-round pages",
+          "expected": 11,
+          "actual": 11,
+          "ok": true
+        },
+        {
+          "name": "multi-round relation edges",
+          "expected": 29,
+          "actual": 29,
+          "ok": true
+        },
+        {
+          "name": "AgentRelent stored revisions",
+          "expected": 317,
+          "actual": 317,
+          "ok": true
+        },
+        {
+          "name": "AgentRelent stored revision IPs",
+          "expected": 308,
+          "actual": 308,
+          "ok": true
+        },
+        {
+          "name": "AgentRelent stored revision pages",
+          "expected": 4,
+          "actual": 4,
+          "ok": true
+        },
+        {
+          "name": "AgentRelent save requests",
+          "expected": 798,
+          "actual": 798,
+          "ok": true
+        },
+        {
+          "name": "AgentRelent save-request IPs",
+          "expected": 756,
+          "actual": 756,
+          "ok": true
+        },
+        {
+          "name": "AgentRelent save-request /16s",
+          "expected": 119,
+          "actual": 119,
+          "ok": true
+        },
+        {
+          "name": "[Admin1] save requests",
+          "expected": 3887,
+          "actual": 3887,
+          "ok": true
+        },
+        {
+          "name": "[Admin1] save-request IPs",
+          "expected": 2,
+          "actual": 2,
+          "ok": true
+        },
+        {
+          "name": "603-byte created-page revision exists",
+          "expected": 603,
+          "actual": 603,
+          "ok": true
+        },
+        {
+          "name": "created-page diff base",
+          "expected": null,
+          "actual": null,
+          "ok": true
+        },
+        {
+          "name": "created-page diff reason",
+          "expected": "page_created",
+          "actual": "page_created",
+          "ok": true
+        },
+        {
+          "name": "created-page hunk covers every line",
+          "expected": true,
+          "actual": true,
+          "ok": true
+        },
+        {
+          "name": "ZZZ construction page creation",
+          "expected": "2026-06-19T14:06:38Z",
+          "actual": "2026-06-19T14:06:38Z",
+          "ok": true
+        },
+        {
+          "name": "DataUSAConstructionWageSep18Live named deletion",
+          "expected": 1,
+          "actual": 1,
+          "ok": true
+        },
+        {
+          "name": "DataUSAConstructionWageSep18Live named deletion grade",
+          "expected": "reqlog",
+          "actual": "reqlog",
+          "ok": true
+        },
+        {
+          "name": "ZZZDataUSAConstructionWageLive named deletion",
+          "expected": 1,
+          "actual": 1,
+          "ok": true
+        },
+        {
+          "name": "ZZZDataUSAConstructionWageLive named deletion grade",
+          "expected": "reqlog",
+          "actual": "reqlog",
+          "ok": true
+        },
+        {
+          "name": "labels overlapping pre-2026",
+          "expected": {
+            "[Admin2]": 4,
+            "[Admin1]": 26,
+            "[Person22]": 1
+          },
+          "actual": {
+            "[Admin2]": 4,
+            "[Admin1]": 26,
+            "[Person22]": 1
+          },
+          "ok": true
+        },
+        {
+          "name": "published IPs overlapping pre-2026",
+          "expected": 0,
+          "actual": 0,
+          "ok": true
+        },
+        {
+          "name": "deletions sharing an RCS archive second",
+          "expected": 2,
+          "actual": 2,
+          "ok": true
+        },
+        {
+          "name": "credential-parameter literals in JSONL outputs",
+          "expected": 0,
+          "actual": 0,
+          "ok": true
+        },
+        {
+          "name": "forbidden research account in output objects",
+          "expected": false,
+          "actual": false,
+          "ok": true
+        },
+        {
+          "name": "request-derived URL strings retained",
+          "expected": 0,
+          "actual": 0,
+          "ok": true
+        },
+        {
+          "name": "peak RSS KiB",
+          "expected": "< 2097152",
+          "actual": 253552,
+          "ok": true
+        }
+      ],
+      "sha256sums_verified": {
+        "pages.jsonl": true,
+        "revisions.jsonl": true,
+        "events.jsonl": true,
+        "labels.jsonl": true,
+        "manifest.json": true
+      }
+    },
+    "files": {
+      "pages": {
+        "path": "data/raw/collusion/full-wiki-logs/pages.jsonl",
+        "size_bytes": 2973326,
+        "rows": 4579,
+        "fields": {
+          "page_id": {
+            "present": 4579,
+            "present_rate": 1.0,
+            "non_null": 4579,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 4579
+            },
+            "distinct": 4579
+          },
+          "page_key": {
+            "present": 4579,
+            "present_rate": 1.0,
+            "non_null": 4579,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 4579
+            },
+            "distinct": 4579
+          },
+          "wiki": {
+            "present": 4579,
+            "present_rate": 1.0,
+            "non_null": 4579,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 4579
+            },
+            "distinct": 4,
+            "value_counts": {
+              "dse": 3908,
+              "probier": 601,
+              "fractal": 68,
+              "dorfwiki": 2
+            }
+          },
+          "name": {
+            "present": 4579,
+            "present_rate": 1.0,
+            "non_null": 4579,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 4579
+            },
+            "distinct": 4568
+          },
+          "bucket": {
+            "present": 4579,
+            "present_rate": 1.0,
+            "non_null": 4579,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 4579
+            },
+            "distinct": 26,
+            "value_counts": {
+              "A": 2183,
+              "O": 497,
+              "L": 336,
+              "T": 254,
+              "D": 219,
+              "C": 199,
+              "S": 155,
+              "R": 93,
+              "M": 82,
+              "Z": 77,
+              "F": 74,
+              "N": 73,
+              "E": 60,
+              "P": 51,
+              "B": 41,
+              "I": 33,
+              "U": 27,
+              "J": 25,
+              "G": 24,
+              "W": 19,
+              "Y": 16,
+              "Q": 15,
+              "H": 10,
+              "X": 10,
+              "V": 5,
+              "other": 1
+            }
+          },
+          "page_family": {
+            "present": 4579,
+            "present_rate": 1.0,
+            "non_null": 4579,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 4579
+            },
+            "distinct": 49
+          },
+          "page_family_cohort": {
+            "present": 4579,
+            "present_rate": 1.0,
+            "non_null": 1245,
+            "non_null_rate": 0.27189342651233894,
+            "types": {
+              "null": 3334,
+              "str": 1245
+            },
+            "distinct": 340
+          },
+          "page_family_confidence": {
+            "present": 4579,
+            "present_rate": 1.0,
+            "non_null": 3908,
+            "non_null_rate": 0.8534614544660406,
+            "types": {
+              "null": 671,
+              "float": 3908
+            },
+            "distinct": 9,
+            "value_counts": {}
+          },
+          "page_family_method": {
+            "present": 4579,
+            "present_rate": 1.0,
+            "non_null": 3908,
+            "non_null_rate": 0.8534614544660406,
+            "types": {
+              "null": 671,
+              "str": 3908
+            },
+            "distinct": 114
+          },
+          "page_family_source": {
+            "present": 4579,
+            "present_rate": 1.0,
+            "non_null": 4579,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 4579
+            },
+            "distinct": 2
+          },
+          "n_revs": {
+            "present": 4579,
+            "present_rate": 1.0,
+            "non_null": 4579,
+            "non_null_rate": 1.0,
+            "types": {
+              "int": 4579
+            },
+            "distinct": 54
+          },
+          "n_revs_before": {
+            "present": 4579,
+            "present_rate": 1.0,
+            "non_null": 4579,
+            "non_null_rate": 1.0,
+            "types": {
+              "int": 4579
+            },
+            "distinct": 14,
+            "value_counts": {
+              "0": 4562,
+              "1": 4,
+              "3": 2,
+              "25": 1,
+              "216": 1,
+              "6": 1,
+              "702": 1,
+              "22": 1,
+              "8": 1,
+              "21": 1,
+              "86": 1,
+              "20": 1,
+              "110": 1,
+              "2": 1
+            }
+          },
+          "first_write": {
+            "present": 4579,
+            "present_rate": 1.0,
+            "non_null": 4579,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 4579
+            },
+            "distinct": 4217
+          },
+          "last_write": {
+            "present": 4579,
+            "present_rate": 1.0,
+            "non_null": 4579,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 4579
+            },
+            "distinct": 4197
+          },
+          "body_bytes": {
+            "present": 4579,
+            "present_rate": 1.0,
+            "non_null": 4579,
+            "non_null_rate": 1.0,
+            "types": {
+              "int": 4579
+            },
+            "distinct": 2018
+          },
+          "deleted_live": {
+            "present": 4579,
+            "present_rate": 1.0,
+            "non_null": 4579,
+            "non_null_rate": 1.0,
+            "types": {
+              "bool": 4579
+            },
+            "distinct": 1,
+            "value_counts": {
+              "False": 4579
+            }
+          },
+          "live_body_variant": {
+            "present": 4579,
+            "present_rate": 1.0,
+            "non_null": 4579,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 4579
+            },
+            "distinct": 2
+          },
+          "head_differs_from_live": {
+            "present": 4579,
+            "present_rate": 1.0,
+            "non_null": 4579,
+            "non_null_rate": 1.0,
+            "types": {
+              "bool": 4579
+            },
+            "distinct": 2,
+            "value_counts": {
+              "False": 3903,
+              "True": 676
+            }
+          },
+          "n_deletions": {
+            "present": 4579,
+            "present_rate": 1.0,
+            "non_null": 4579,
+            "non_null_rate": 1.0,
+            "types": {
+              "int": 4579
+            },
+            "distinct": 6,
+            "value_counts": {
+              "1": 3845,
+              "0": 681,
+              "2": 42,
+              "3": 9,
+              "8": 1,
+              "5": 1
+            }
+          },
+          "n_recreations": {
+            "present": 4579,
+            "present_rate": 1.0,
+            "non_null": 4579,
+            "non_null_rate": 1.0,
+            "types": {
+              "int": 4579
+            },
+            "distinct": 5,
+            "value_counts": {
+              "0": 4531,
+              "1": 37,
+              "2": 9,
+              "7": 1,
+              "4": 1
+            }
+          },
+          "labels": {
+            "present": 4579,
+            "present_rate": 1.0,
+            "non_null": 4579,
+            "non_null_rate": 1.0,
+            "types": {
+              "list": 4579
+            },
+            "distinct": 2632
+          },
+          "n_labels": {
+            "present": 4579,
+            "present_rate": 1.0,
+            "non_null": 4579,
+            "non_null_rate": 1.0,
+            "types": {
+              "int": 4579
+            },
+            "distinct": 44
+          },
+          "n_ips": {
+            "present": 4579,
+            "present_rate": 1.0,
+            "non_null": 4579,
+            "non_null_rate": 1.0,
+            "types": {
+              "int": 4579
+            },
+            "distinct": 55
+          },
+          "n_ip16": {
+            "present": 4579,
+            "present_rate": 1.0,
+            "non_null": 4579,
+            "non_null_rate": 1.0,
+            "types": {
+              "int": 4579
+            },
+            "distinct": 45
+          }
+        }
+      },
+      "revisions": {
+        "path": "data/raw/collusion/full-wiki-logs/revisions.jsonl",
+        "size_bytes": 41521492,
+        "rows": 14591,
+        "fields": {
+          "rev_id": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 14591,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 14591
+            },
+            "distinct": 14591
+          },
+          "page_id": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 14591,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 14591
+            },
+            "distinct": 4579
+          },
+          "page_key": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 14591,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 14591
+            },
+            "distinct": 4579
+          },
+          "wiki": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 14591,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 14591
+            },
+            "distinct": 4,
+            "value_counts": {
+              "dse": 13403,
+              "probier": 1013,
+              "fractal": 169,
+              "dorfwiki": 6
+            }
+          },
+          "name": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 14591,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 14591
+            },
+            "distinct": 4568
+          },
+          "seq": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 14591,
+            "non_null_rate": 1.0,
+            "types": {
+              "int": 14591
+            },
+            "distinct": 2335
+          },
+          "rcs_rev": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 14591,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 14591
+            },
+            "distinct": 2335
+          },
+          "rcs_path": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 14591,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 14591
+            },
+            "distinct": 4579
+          },
+          "body": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 14591,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 14591
+            },
+            "distinct": 11867
+          },
+          "body_len": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 14591,
+            "non_null_rate": 1.0,
+            "types": {
+              "int": 14591
+            },
+            "distinct": 4334
+          },
+          "body_sha256": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 14591,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 14591
+            },
+            "distinct": 11867
+          },
+          "lines": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 14591,
+            "non_null_rate": 1.0,
+            "types": {
+              "int": 14591
+            },
+            "distinct": 140
+          },
+          "diff_base": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 10012,
+            "non_null_rate": 0.6861764101158249,
+            "types": {
+              "null": 4579,
+              "str": 10012
+            },
+            "distinct": 10012
+          },
+          "diff_base_reason": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 4579,
+            "non_null_rate": 0.3138235898841752,
+            "types": {
+              "str": 4579,
+              "null": 10012
+            },
+            "distinct": 2,
+            "value_counts": {
+              "page_created": 4562,
+              "earlier_revisions_not_published": 17
+            }
+          },
+          "hunks": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 14591,
+            "non_null_rate": 1.0,
+            "types": {
+              "list": 14591
+            },
+            "distinct": 2848
+          },
+          "label": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 14591,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 14591
+            },
+            "distinct": 3103
+          },
+          "ip16": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 14591,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 14591
+            },
+            "distinct": 191
+          },
+          "time": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 14591,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 14591
+            },
+            "distinct": 12949
+          },
+          "time_grade": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 14591,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 14591
+            },
+            "distinct": 3,
+            "value_counts": {
+              "reqlog": 14482,
+              "rclog": 103,
+              "write_date": 6
+            }
+          },
+          "winning_clock": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 14591,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 14591
+            },
+            "distinct": 1,
+            "value_counts": {
+              "revision.pref_ts": 14591
+            }
+          },
+          "uncertainty_seconds": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 14591,
+            "non_null_rate": 1.0,
+            "types": {
+              "int": 14591
+            },
+            "distinct": 1,
+            "value_counts": {
+              "1": 14591
+            }
+          },
+          "request_time": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 14482,
+            "non_null_rate": 0.9925296415598657,
+            "types": {
+              "null": 109,
+              "str": 14482
+            },
+            "distinct": 12847
+          },
+          "success_time": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 14585,
+            "non_null_rate": 0.9995887876088,
+            "types": {
+              "null": 6,
+              "str": 14585
+            },
+            "distinct": 12946
+          },
+          "recent_changes_time": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 0,
+            "non_null_rate": 0.0,
+            "types": {
+              "null": 14591
+            },
+            "distinct": 0,
+            "value_counts": {}
+          },
+          "write_date": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 14591,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 14591
+            },
+            "distinct": 12949
+          },
+          "archived_at": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 14591,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 14591
+            },
+            "distinct": 13809
+          },
+          "request_action": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 14482,
+            "non_null_rate": 0.9925296415598657,
+            "types": {
+              "null": 109,
+              "str": 14482
+            },
+            "distinct": 1,
+            "value_counts": {
+              "form_edit": 14482
+            }
+          },
+          "change_summary": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 13619,
+            "non_null_rate": 0.9333835926255911,
+            "types": {
+              "null": 972,
+              "str": 13619
+            },
+            "distinct": 4902
+          },
+          "related_event_id": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 63,
+            "non_null_rate": 0.004317730107600576,
+            "types": {
+              "null": 14528,
+              "list": 63
+            },
+            "distinct": 63
+          },
+          "relation_type": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 63,
+            "non_null_rate": 0.004317730107600576,
+            "types": {
+              "null": 14528,
+              "str": 63
+            },
+            "distinct": 1,
+            "value_counts": {
+              "first_recreation_of": 63
+            }
+          },
+          "round_id": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 63,
+            "non_null_rate": 0.004317730107600576,
+            "types": {
+              "null": 14528,
+              "list": 63
+            },
+            "distinct": 29,
+            "value_counts": {}
+          },
+          "body_encoding": {
+            "present": 14591,
+            "present_rate": 1.0,
+            "non_null": 14591,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 14591
+            },
+            "distinct": 3
+          }
+        }
+      },
+      "events": {
+        "path": "data/raw/collusion/full-wiki-logs/events.jsonl",
+        "size_bytes": 8543896,
+        "rows": 19913,
+        "fields": {
+          "event_id": {
+            "present": 19913,
+            "present_rate": 1.0,
+            "non_null": 19913,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 19913
+            },
+            "distinct": 19913
+          },
+          "event_type": {
+            "present": 19913,
+            "present_rate": 1.0,
+            "non_null": 19913,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 19913
+            },
+            "distinct": 4,
+            "value_counts": {
+              "save": 14591,
+              "delete": 5217,
+              "probe": 101,
+              "revert": 4
+            }
+          },
+          "time": {
+            "present": 19913,
+            "present_rate": 1.0,
+            "non_null": 19913,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 19913
+            },
+            "distinct": 18248
+          },
+          "time_grade": {
+            "present": 19913,
+            "present_rate": 1.0,
+            "non_null": 19913,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 19913
+            },
+            "distinct": 3,
+            "value_counts": {
+              "reqlog": 19803,
+              "rclog": 104,
+              "write_date": 6
+            }
+          },
+          "ip16": {
+            "present": 5322,
+            "present_rate": 0.26726259227640237,
+            "non_null": 5322,
+            "non_null_rate": 0.26726259227640237,
+            "types": {
+              "str": 5322
+            },
+            "distinct": 50
+          },
+          "request_action": {
+            "present": 5322,
+            "present_rate": 0.26726259227640237,
+            "non_null": 5322,
+            "non_null_rate": 0.26726259227640237,
+            "types": {
+              "str": 5322
+            },
+            "distinct": 11,
+            "value_counts": {
+              "delete": 5217,
+              "browse-bare": 43,
+              "form_editprefs": 26,
+              "browse": 24,
+              "form_edit": 4,
+              "form_search": 2,
+              "editprefs": 2,
+              "showtop": 1,
+              "random": 1,
+              "rc": 1,
+              "<script>alert('XSS')</script>": 1
+            }
+          },
+          "param_family": {
+            "present": 101,
+            "present_rate": 0.005072063476121127,
+            "non_null": 101,
+            "non_null_rate": 0.005072063476121127,
+            "types": {
+              "str": 101
+            },
+            "distinct": 26,
+            "value_counts": {
+              "search": 29,
+              "old_plist": 26,
+              "msg": 13,
+              "id": 9,
+              "title": 2,
+              "word": 2,
+              "mp": 1,
+              "formpage": 1,
+              "continue": 1,
+              "case": 1,
+              "bl": 1,
+              "lang": 1,
+              "NkoU": 1,
+              "VvhK": 1,
+              "zhhn": 1,
+              "Fvez": 1,
+              "UccE": 1,
+              "oldid": 1,
+              "QtOI": 1,
+              "username": 1,
+              "error": 1,
+              "lPfi": 1,
+              "mals": 1,
+              "owBD": 1,
+              "action": 1,
+              "nOit": 1
+            }
+          },
+          "source_refs": {
+            "present": 5322,
+            "present_rate": 0.26726259227640237,
+            "non_null": 5322,
+            "non_null_rate": 0.26726259227640237,
+            "types": {
+              "list": 5322
+            },
+            "distinct": 5322
+          },
+          "success_observed": {
+            "present": 5322,
+            "present_rate": 0.26726259227640237,
+            "non_null": 5322,
+            "non_null_rate": 0.26726259227640237,
+            "types": {
+              "bool": 5322
+            },
+            "distinct": 2,
+            "value_counts": {
+              "True": 5221,
+              "False": 101
+            }
+          },
+          "wiki": {
+            "present": 19812,
+            "present_rate": 0.9949279365238789,
+            "non_null": 19812,
+            "non_null_rate": 0.9949279365238789,
+            "types": {
+              "str": 19812
+            },
+            "distinct": 4,
+            "value_counts": {
+              "dse": 18624,
+              "probier": 1013,
+              "fractal": 169,
+              "dorfwiki": 6
+            }
+          },
+          "page": {
+            "present": 19812,
+            "present_rate": 0.9949279365238789,
+            "non_null": 19812,
+            "non_null_rate": 0.9949279365238789,
+            "types": {
+              "str": 19812
+            },
+            "distinct": 5812
+          },
+          "page_key": {
+            "present": 19812,
+            "present_rate": 0.9949279365238789,
+            "non_null": 19812,
+            "non_null_rate": 0.9949279365238789,
+            "types": {
+              "str": 19812
+            },
+            "distinct": 5825
+          },
+          "revision_ref": {
+            "present": 19812,
+            "present_rate": 0.9949279365238789,
+            "non_null": 14591,
+            "non_null_rate": 0.7327374077235976,
+            "types": {
+              "str": 14591,
+              "null": 5221
+            },
+            "distinct": 14591
+          },
+          "related_event_id": {
+            "present": 19812,
+            "present_rate": 0.9949279365238789,
+            "non_null": 67,
+            "non_null_rate": 0.0033646361673278762,
+            "types": {
+              "null": 19745,
+              "list": 63,
+              "str": 4
+            },
+            "distinct": 67
+          },
+          "relation_type": {
+            "present": 19812,
+            "present_rate": 0.9949279365238789,
+            "non_null": 67,
+            "non_null_rate": 0.0033646361673278762,
+            "types": {
+              "null": 19745,
+              "str": 67
+            },
+            "distinct": 1,
+            "value_counts": {
+              "first_recreation_of": 67
+            }
+          },
+          "round_id": {
+            "present": 19812,
+            "present_rate": 0.9949279365238789,
+            "non_null": 92,
+            "non_null_rate": 0.004620097423793502,
+            "types": {
+              "null": 19720,
+              "list": 63,
+              "str": 29
+            },
+            "distinct": 58
+          },
+          "winning_clock": {
+            "present": 5221,
+            "present_rate": 0.2621905288002812,
+            "non_null": 5221,
+            "non_null_rate": 0.2621905288002812,
+            "types": {
+              "str": 5221
+            },
+            "distinct": 1,
+            "value_counts": {
+              "rclog.unix_ts": 5221
+            }
+          },
+          "uncertainty_seconds": {
+            "present": 5221,
+            "present_rate": 0.2621905288002812,
+            "non_null": 5221,
+            "non_null_rate": 0.2621905288002812,
+            "types": {
+              "int": 5221
+            },
+            "distinct": 1,
+            "value_counts": {
+              "1": 5221
+            }
+          },
+          "request_time": {
+            "present": 5221,
+            "present_rate": 0.2621905288002812,
+            "non_null": 5220,
+            "non_null_rate": 0.2621403103500226,
+            "types": {
+              "str": 5220,
+              "null": 1
+            },
+            "distinct": 5220
+          },
+          "success_time": {
+            "present": 5221,
+            "present_rate": 0.2621905288002812,
+            "non_null": 5221,
+            "non_null_rate": 0.2621905288002812,
+            "types": {
+              "str": 5221
+            },
+            "distinct": 5221
+          },
+          "write_date": {
+            "present": 5221,
+            "present_rate": 0.2621905288002812,
+            "non_null": 0,
+            "non_null_rate": 0.0,
+            "types": {
+              "null": 5221
+            },
+            "distinct": 0,
+            "value_counts": {}
+          },
+          "rcs_date": {
+            "present": 5221,
+            "present_rate": 0.2621905288002812,
+            "non_null": 0,
+            "non_null_rate": 0.0,
+            "types": {
+              "null": 5221
+            },
+            "distinct": 0,
+            "value_counts": {}
+          },
+          "recent_changes_time": {
+            "present": 5221,
+            "present_rate": 0.2621905288002812,
+            "non_null": 0,
+            "non_null_rate": 0.0,
+            "types": {
+              "null": 5221
+            },
+            "distinct": 0,
+            "value_counts": {}
+          },
+          "clock_delta_seconds": {
+            "present": 5221,
+            "present_rate": 0.2621905288002812,
+            "non_null": 5220,
+            "non_null_rate": 0.2621403103500226,
+            "types": {
+              "int": 5220,
+              "null": 1
+            },
+            "distinct": 2,
+            "value_counts": {
+              "0": 4750,
+              "1": 470
+            }
+          },
+          "change_summary": {
+            "present": 5221,
+            "present_rate": 0.2621905288002812,
+            "non_null": 5221,
+            "non_null_rate": 0.2621905288002812,
+            "types": {
+              "str": 5221
+            },
+            "distinct": 4
+          },
+          "actor_label": {
+            "present": 5221,
+            "present_rate": 0.2621905288002812,
+            "non_null": 5221,
+            "non_null_rate": 0.2621905288002812,
+            "types": {
+              "str": 5221
+            },
+            "distinct": 4
+          },
+          "page_held": {
+            "present": 5221,
+            "present_rate": 0.2621905288002812,
+            "non_null": 5221,
+            "non_null_rate": 0.2621905288002812,
+            "types": {
+              "bool": 5221
+            },
+            "distinct": 2,
+            "value_counts": {
+              "True": 3971,
+              "False": 1250
+            }
+          },
+          "clock_note": {
+            "present": 5221,
+            "present_rate": 0.2621905288002812,
+            "non_null": 1,
+            "non_null_rate": 0.00005021845025862502,
+            "types": {
+              "null": 5220,
+              "str": 1
+            },
+            "distinct": 1
+          }
+        }
+      },
+      "labels": {
+        "path": "data/raw/collusion/full-wiki-logs/labels.jsonl",
+        "size_bytes": 1471940,
+        "rows": 3103,
+        "fields": {
+          "label": {
+            "present": 3103,
+            "present_rate": 1.0,
+            "non_null": 3103,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 3103
+            },
+            "distinct": 3103
+          },
+          "stored_revisions": {
+            "present": 3103,
+            "present_rate": 1.0,
+            "non_null": 3103,
+            "non_null_rate": 1.0,
+            "types": {
+              "int": 3103
+            },
+            "distinct": 59
+          },
+          "first_write": {
+            "present": 3103,
+            "present_rate": 1.0,
+            "non_null": 3103,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 3103
+            },
+            "distinct": 3047
+          },
+          "last_write": {
+            "present": 3103,
+            "present_rate": 1.0,
+            "non_null": 3103,
+            "non_null_rate": 1.0,
+            "types": {
+              "str": 3103
+            },
+            "distinct": 3056
+          },
+          "stored_revision_ips": {
+            "present": 3103,
+            "present_rate": 1.0,
+            "non_null": 3103,
+            "non_null_rate": 1.0,
+            "types": {
+              "int": 3103
+            },
+            "distinct": 61
+          },
+          "stored_revision_ip16": {
+            "present": 3103,
+            "present_rate": 1.0,
+            "non_null": 3103,
+            "non_null_rate": 1.0,
+            "types": {
+              "int": 3103
+            },
+            "distinct": 50
+          },
+          "pages": {
+            "present": 3103,
+            "present_rate": 1.0,
+            "non_null": 3103,
+            "non_null_rate": 1.0,
+            "types": {
+              "list": 3103
+            },
+            "distinct": 2549
+          },
+          "stored_revision_pages": {
+            "present": 3103,
+            "present_rate": 1.0,
+            "non_null": 3103,
+            "non_null_rate": 1.0,
+            "types": {
+              "int": 3103
+            },
+            "distinct": 43
+          },
+          "wikis": {
+            "present": 3103,
+            "present_rate": 1.0,
+            "non_null": 3103,
+            "non_null_rate": 1.0,
+            "types": {
+              "list": 3103
+            },
+            "distinct": 7,
+            "value_counts": {}
+          },
+          "is_human_handle": {
+            "present": 3103,
+            "present_rate": 1.0,
+            "non_null": 3103,
+            "non_null_rate": 1.0,
+            "types": {
+              "bool": 3103
+            },
+            "distinct": 2,
+            "value_counts": {
+              "False": 3100,
+              "True": 3
+            }
+          },
+          "save_requests": {
+            "present": 3103,
+            "present_rate": 1.0,
+            "non_null": 3103,
+            "non_null_rate": 1.0,
+            "types": {
+              "int": 3103
+            },
+            "distinct": 129
+          },
+          "save_request_ips": {
+            "present": 3103,
+            "present_rate": 1.0,
+            "non_null": 3103,
+            "non_null_rate": 1.0,
+            "types": {
+              "int": 3103
+            },
+            "distinct": 125
+          },
+          "save_request_ip16": {
+            "present": 3103,
+            "present_rate": 1.0,
+            "non_null": 3103,
+            "non_null_rate": 1.0,
+            "types": {
+              "int": 3103
+            },
+            "distinct": 83
+          },
+          "save_request_pages": {
+            "present": 3103,
+            "present_rate": 1.0,
+            "non_null": 3103,
+            "non_null_rate": 1.0,
+            "types": {
+              "int": 3103
+            },
+            "distinct": 57
+          },
+          "save_request_source": {
+            "present": 3103,
+            "present_rate": 1.0,
+            "non_null": 3040,
+            "non_null_rate": 0.9796970673541734,
+            "types": {
+              "str": 3040,
+              "null": 63
+            },
+            "distinct": 1
+          }
+        }
+      }
+    },
+    "revisions": {
+      "timestamp": {
+        "field": "time",
+        "non_null": 14591,
+        "format_iso8601_utc_z": 14591,
+        "parsed": 14591,
+        "parse_rate": 1.0,
+        "min": "2026-05-24T06:02:19+00:00",
+        "max": "2026-07-02T17:51:22+00:00",
+        "span_days": 39.49239583333333,
+        "time_grade_counts": {
+          "reqlog": 14482,
+          "rclog": 103,
+          "write_date": 6
+        },
+        "n_days_with_revisions": 28
+      },
+      "revisions_per_page": {
+        "pages": 4579,
+        "p1": 1.0,
+        "p5": 1.0,
+        "p25": 1.0,
+        "p50": 1.0,
+        "p75": 2.0,
+        "p95": 8.0,
+        "p99": 28.0,
+        "min": 1.0,
+        "mean": 3.1865036034068575,
+        "max": 2327.0,
+        "pages_ge_2": 1453,
+        "pages_ge_3": 848,
+        "pages_ge_5": 453,
+        "pages_ge_10": 195,
+        "pages_ge_20": 80,
+        "pages_ge_50": 16,
+        "revisions_on_pages_ge_5": 8927,
+        "agrees_with_pages_n_revs": 4579
+      },
+      "revisions_per_label": {
+        "distinct_non_blank_labels": 3102,
+        "blank_label_revisions": 899,
+        "p1": 1.0,
+        "p5": 1.0,
+        "p25": 1.0,
+        "p50": 2.0,
+        "p75": 4.0,
+        "p95": 14.0,
+        "p99": 36.0,
+        "min": 1.0,
+        "mean": 4.413926499032882,
+        "max": 317.0,
+        "labels_ge_2": 1770,
+        "labels_ge_5": 722,
+        "labels_ge_10": 273,
+        "labels_ge_50": 21,
+        "share_of_labelled_revisions_by_top_10_labels": 0.1058282208588957
+      },
+      "prev_link": {
+        "field": "diff_base",
+        "revisions_seq_gt_1": 10029,
+        "seq_gt_1_diff_base_null": 17,
+        "seq_gt_1_diff_base_eq_prev_seq": 10012,
+        "seq_gt_1_diff_base_other_rev_same_page": 0,
+        "seq_gt_1_diff_base_not_in_export": 17,
+        "seq_1_diff_base_non_null": 0,
+        "diff_base_reason_counts": {
+          "null": 10012,
+          "page_created": 4562,
+          "earlier_revisions_not_published": 17
+        }
+      },
+      "seq_order": {
+        "pages_with_contiguous_seq": 4579,
+        "pages_starting_at_seq_1": 4562,
+        "consecutive_pairs": 10012,
+        "pairs_time_increasing": 9783,
+        "pairs_time_equal": 229,
+        "pairs_time_decreasing": 0
+      },
+      "text_length": {
+        "chars": {
+          "p1": 10.0,
+          "p5": 27.0,
+          "p25": 326.0,
+          "p50": 1092.0,
+          "p75": 2986.5,
+          "p95": 5642.0,
+          "p99": 7635.800000000003,
+          "min": 0.0,
+          "mean": 1863.2073195805633,
+          "max": 38832.0
+        },
+        "body_len_field": {
+          "p1": 10.0,
+          "p5": 27.0,
+          "p25": 326.0,
+          "p50": 1092.0,
+          "p75": 2986.5,
+          "p95": 5642.0,
+          "p99": 7635.800000000003,
+          "min": 0.0,
+          "mean": 1863.2073195805633,
+          "max": 38832.0
+        },
+        "empty_bodies": 77
+      },
+      "exact_texts": {
+        "revisions": 14591,
+        "distinct_body_sha256": 11867,
+        "body_sha256_matches_utf8_recompute": 14340,
+        "hashes_on_more_than_one_page": 291,
+        "revisions_whose_text_appears_on_another_page": 1767,
+        "within_page_repeats": 1317
+      }
+    },
+    "deletions": {
+      "event_type_counts": {
+        "save": 14591,
+        "delete": 5217,
+        "probe": 101,
+        "revert": 4
+      },
+      "delete_events": 5217,
+      "delete_events_parsed_time": 5217,
+      "delete_events_on_held_pages": 3969,
+      "delete_events_page_held_flag_true": 3969,
+      "held_pages": 4579,
+      "held_pages_with_any_delete_event": 3898,
+      "held_pages_deleted_after_first_write": 3898,
+      "share_held_pages_deleted_after_first_write": 0.8512775715221664,
+      "pages_n_deletions_gt_0": 3898,
+      "pages_deleted_live_true": 0
+    },
+    "figure": "figures/E20_daily_revisions.png",
+    "parquet": {
+      "path": "data/interim/collusion_slim.parquet",
+      "columns": [
+        "rev_id",
+        "page_id",
+        "page_key",
+        "wiki",
+        "name",
+        "seq",
+        "label",
+        "time",
+        "time_grade",
+        "write_date",
+        "diff_base",
+        "diff_base_reason",
+        "body",
+        "body_len",
+        "body_sha256",
+        "lines",
+        "t_utc",
+        "text_len"
+      ],
+      "rows": 14591,
+      "size_bytes": 2516883
+    },
+    "go_no_go": {
+      "timed_revisions": 14591,
+      "timed_revisions_ge_5000": true,
+      "pages_with_ge_5_revisions": 453,
+      "pages_ge_5_ge_200": true,
+      "go": true
+    }
+  }
+}
