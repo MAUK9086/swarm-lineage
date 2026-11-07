@@ -315,7 +315,7 @@ Global seed: 42.
   used for GO). Secondary, not used for GO: a bootstrap over connected components of the
   pair graph, since pairs sharing documents are not independent; and the agreement rate
   between (b) and (c).
-- Code: experiments/E31_copy_direction_pilot.py, src/copydir.py @ (filled after commit; see implementation note)
+- Code: experiments/E31_copy_direction_pilot.py, src/copydir.py @ 10d6367 (see implementation note)
 - Params: shingle k = 5 words; num_perm 128; LSH threshold 0.5; Jaccard window
   [0.5, 0.95]; cap of 20,000,000 different-author candidate pairs (uniform subsample, seed
   42, only if exceeded); 1,000 bootstrap resamples; seed 42.
@@ -337,6 +337,44 @@ Global seed: 42.
   analytically from text-hash groups (all pairs and different-author pairs) as well as
   within the generated pairs. Verified on 3,000 texts: the sampled generator at rate 1.0
   reproduces the unsampled different-author pair set exactly (7,811 pairs).
-- Results:
-- Interpretation:
-- Decision / next step:
+- Results: (results/E31_copy_direction_pilot.json)
+
+  | item | value |
+  |---|---|
+  | docs / with shingles | 300,000 / 299,959 |
+  | LSH band-sum bound | 381,518,142 |
+  | pair path | bernoulli_fallback (memory guard of 60,000,000 different-author pairs tripped on the exact path); sampling rate 0.0524 |
+  | different-author candidate pairs (sampled) | 10,808,912 (below the 20,000,000 cap, no further subsample) |
+  | exact-duplicate pairs (analytic, whole sample) | 2,115,898 total; 1,983,717 different-author |
+  | exact-duplicate pairs excluded (in sampled pairs) | 104,013 |
+  | non-exact Jaccard > 0.95 / < 0.5 | 32,324 / 2,310,745 |
+  | pairs in [0.5, 0.95] | 8,361,830; 1 dropped for equal times; scored 8,361,829 |
+  | distinct docs / components in scored pairs | 62,111 / 1,198 |
+  | Jaccard of scored pairs | p5 0.500, p25 0.538, median 0.538, p75 0.583, p95 0.636 |
+
+  | method | accuracy | pair bootstrap 95% CI | ties (random) | component bootstrap 95% CI (secondary) |
+  |---|---|---|---|---|
+  | (a) random | 0.5000 | 0.4997 - 0.5004 | - | 0.4989 - 0.5012 |
+  | (b) longer is later | 0.6961 | 0.6958 - 0.6964 | 1,396,762 | 0.4743 - 0.7199 |
+  | (c) containment | 0.5902 | 0.5898 - 0.5905 | 4,360,308 | 0.4665 - 0.6675 |
+
+  Agreement (b) vs (c): 68.7%. GO: no (margin c - b = -10.6 points; CIs do not show c above b).
+- Interpretation: NO-GO, as anticipated in the hypothesis, and more clearly than
+  expected: containment is 10.6 points below the length rule. The reason is visible in the
+  ties: under (c) 52% of scored pairs (4,360,308 / 8,361,829) have equal shingle-set sizes
+  and fall to a coin flip, because the pairs are dominated by fixed-length templates whose
+  Jaccard sits at the bottom of the window (median 0.538). Character length still
+  separates many of those pairs. On a pair basis, "the longer post is later" is right
+  69.6% of the time. The pairs are far from independent: 8.36M pairs come from only 62,111
+  posts in 1,198 connected components. Under the secondary component bootstrap the CIs
+  for (b) (47.4%-72.0%) and (c) (46.6%-66.8%) both include 50%, so neither rule is shown to
+  beat chance once cluster dependence is accounted for. The pair-level CIs used for GO
+  are therefore over-confident. The pre-registered exact path could not run: the
+  different-author pairs exceeded the 60M memory guard, so the logged Bernoulli fallback
+  was used.
+- Decision / next step: NO-GO for containment as a copy-direction signal. The length
+  baseline is the reference to beat, but its advantage is not robust to cluster
+  dependence. Before any further method work, the evaluation should change so that
+  template clusters do not dominate: e.g. cap pairs per component or per document, score
+  per component, and report component-level CIs as primary. That is a new
+  pre-registration, not a change to E31. Stop here for review.

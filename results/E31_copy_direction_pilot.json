@@ -1,0 +1,96 @@
+{
+  "experiment": "E31_copy_direction_pilot",
+  "run_at": "2026-11-07 23:16 IST",
+  "git_hash": "10d6367",
+  "seed": 42,
+  "params": {
+    "shingle_k_words": 5,
+    "num_perm": 128,
+    "lsh_threshold": 0.5,
+    "jaccard_window": [
+      0.5,
+      0.95
+    ],
+    "max_pairs": 20000000,
+    "memory_guard_pairs": 60000000,
+    "n_boot": 1000,
+    "go_min_pairs": 500,
+    "go_min_margin": 0.05,
+    "corpus": "moltbook_slim (300k sample)"
+  },
+  "results": {
+    "counts": {
+      "docs": 300000,
+      "docs_with_shingles": 299959,
+      "lsh_band_pair_upper_bound": 381518142,
+      "pair_generation_path": "bernoulli_fallback",
+      "sampling_rate": 0.05242214667736561,
+      "candidate_pairs_different_authors": 10808912,
+      "capped_to_max_pairs": false,
+      "pairs_after_cap": 10808912,
+      "exact_duplicate_pairs_all_analytic": 2115898,
+      "exact_duplicate_pairs_different_authors_analytic": 1983717,
+      "exact_duplicate_pairs_in_sample_excluded": 104013,
+      "non_exact_jaccard_gt_095": 32324,
+      "non_exact_jaccard_lt_05": 2310745,
+      "pairs_in_window": 8361830,
+      "pairs_equal_or_missing_time_excluded": 1,
+      "pairs_scored": 8361829,
+      "distinct_docs_in_scored_pairs": 62111
+    },
+    "methods": {
+      "a_random": {
+        "n": 8361829,
+        "accuracy": 0.5000410795293709,
+        "ci_low": 0.49971073613201134,
+        "ci_high": 0.5003961902354138,
+        "ties_broken_randomly": null,
+        "secondary_component_bootstrap": {
+          "n_components": 1198,
+          "ci_low": 0.49894236500059796,
+          "ci_high": 0.5011561492204991
+        }
+      },
+      "b_longer_is_later": {
+        "n": 8361829,
+        "accuracy": 0.6960841940202317,
+        "ci_low": 0.6957668262529645,
+        "ci_high": 0.6963905534303559,
+        "ties_broken_randomly": 1396762,
+        "secondary_component_bootstrap": {
+          "n_components": 1198,
+          "ci_low": 0.4743155031089228,
+          "ci_high": 0.7198846554375873
+        }
+      },
+      "c_containment": {
+        "n": 8361829,
+        "accuracy": 0.5901623915054948,
+        "ci_low": 0.5898291569942413,
+        "ci_high": 0.5905035937711715,
+        "ties_broken_randomly": 4360308,
+        "secondary_component_bootstrap": {
+          "n_components": 1198,
+          "ci_low": 0.46647375218129833,
+          "ci_high": 0.6675313208349187
+        }
+      },
+      "agreement_b_vs_c": 0.6873339552865767
+    },
+    "go_no_go": {
+      "pairs": 8361829,
+      "pairs_ge_500": true,
+      "margin_c_minus_b": -0.10592180251473693,
+      "margin_ge_5pp": false,
+      "cis_non_overlapping": false,
+      "go": false
+    },
+    "scored_pair_jaccard": {
+      "p5": 0.5,
+      "p25": 0.5384615384615384,
+      "p50": 0.5384615384615384,
+      "p75": 0.5833333333333334,
+      "p95": 0.6363636363636364
+    }
+  }
+}
