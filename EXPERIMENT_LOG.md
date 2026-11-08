@@ -957,13 +957,31 @@ Global seed: 42.
   Figure: the 4 largest lineage components drawn as trees (root at top, depth downwards),
   nodes coloured by true time rank within the component (single-hue sequential scale),
   root marked: figures/E41_lineage_trees.png.
-- Code: experiments/E41_lineage.py, src/lineage.py, src/evaluate.py, configs/E41_lineage.json @ (filled after commit)
+- Code: experiments/E41_lineage.py, src/lineage.py, src/evaluate.py, configs/E41_lineage.json @ 13e4672
 - Config SHA-256 (configs/E41_lineage.json, LF enforced): 5b6c45ef7d350bcb854e00ed567d13535d5a2f4db374644adebf502ddf45b6db
 - Params: see config; corpus = data/interim/moltbook_slim.parquet only; not run on any
   other corpus.
-- Results:
-- Interpretation:
-- Decision / next step:
+- Results: (results/E41_lineage_moltbook.json, figures/E41_lineage_trees.png)
+  Config SHA-256 in results matches. Posts 300,000 (4 empty) -> 284,974 nodes (2,475 with
+  more than one post). Candidate components with >= 5 nodes: 700 (86,064 nodes; 17 capped
+  at 200). Lineage components: 488 with 8,447 nodes (8,676 posts), 251,194 within-component
+  node pairs; component size median 8 (5 to 200); tree max depth median 2 (1 to 24); the
+  root was the shortest text in 252 of 488 components.
+
+  | order | macro tau [component bootstrap CI] | naive pooled tau [Wald CI] | null FPR macro | null FPR naive |
+  |---|---|---|---|---|
+  | depth | 0.098 [0.074, 0.124] | 0.082 [0.078, 0.086] | 0.052 [0.040, 0.068] | 0.716 [0.687, 0.743] |
+  | length | 0.057 [0.026, 0.086] | 0.035 [0.031, 0.038] | 0.052 [0.040, 0.068] | 0.707 [0.678, 0.734] |
+
+  Figure components: 200, 200, 198, 174 nodes; depth-vs-time tau (tau-a) +0.29, +0.14,
+  +0.02, +0.04.
+  GO (pre-registered rule): yes (CI excludes 0; 0.098 > 0.057).
+- Interpretation: Met the rule, against the pre-registered expectation. The figure then
+  showed leaves in near time order, which pointed to a row-order dependence (see E41b).
+  E41b withdrew the GO: with rows shuffled, depth falls to 0.033, below length. The null
+  results hold in both runs: the macro analysis is calibrated (about 5% false positives)
+  and the naive pooled analysis is not (about 71%).
+- Decision / next step: GO withdrawn by E41b (row-order leak). See E41b.
 
 ### E41b - Post-hoc leakage check: row order  (2026-11-08 20:20 IST)
 - Why (written after seeing E41's result, before this check runs): E41 met its GO rule,
@@ -981,6 +999,32 @@ Global seed: 42.
   macro tau falls to the length baseline or to 0, E41's GO is attributed to a row-order
   leak and withdrawn.
 - Code: experiments/E41_lineage.py (unchanged) @ 13e4672; shuffle step recorded in results.
-- Results:
-- Interpretation:
-- Decision / next step:
+- Results: (results/E41_lineage_moltbook_rowshuffled.json, figures/E41b_lineage_trees_rowshuffled.png)
+  Shuffle: data/interim/moltbook_slim_rowshuffled.parquet = the same 300,000 rows,
+  pandas sample(frac=1, random_state=42). Same config SHA-256. 489 lineage components,
+  8,454 nodes, 253,356 node pairs (one more component than E41: candidate-component
+  sampling depends on node indices).
+
+  | order | macro tau [CI] | naive pooled tau [CI] | null FPR macro | null FPR naive |
+  |---|---|---|---|---|
+  | depth | 0.033 [0.006, 0.063] | 0.004 [-0.000, 0.008] | 0.049 | 0.714 |
+  | length | 0.050 [0.021, 0.083] | 0.048 [0.044, 0.052] | 0.058 | 0.708 |
+
+  Figure components: 200, 200, 195, 182 nodes; depth-vs-time tau-a +0.016, -0.014, +0.011,
+  -0.023. The frozen script writes its figure to a fixed path, so the shuffled run's figure
+  was renamed to E41b_lineage_trees_rowshuffled.png and the original was restored from
+  commit c40ef59.
+- Interpretation: The depth signal is mostly a row-order artifact. With the rows in
+  random order, depth's macro tau falls from 0.098 to 0.033 and goes below the length
+  baseline (0.050), which barely moves (0.057 -> 0.050) because it does not depend on node
+  indices. The mechanism matches the hypothesis behind the check: many equal Jaccard
+  distances in templated clusters, so scipy's spanning tree breaks ties by index, and
+  index order followed time order in the stored table. Length's small positive macro tau
+  (CI excluding 0 in both runs) is an unregistered observation and is not claimed.
+- Decision / next step: Per the reading rule fixed before the check, E41's GO is
+  withdrawn; the lineage claim is not supported. Lesson for the paper and for the frozen
+  pipelines: a dataset-agnostic script must not inherit row order from the adapter. Any
+  future version of E41 (and, for safety, E36) should shuffle rows with a seeded
+  permutation inside the script, under a new config hash. Neither script was changed here.
+  The user's planned collusion.wiki run should not use E41 as it stands: the collusion
+  adapter orders revisions by page and sequence, which is time order within each page.

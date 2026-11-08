@@ -72,3 +72,8 @@ E41_moltbook,depth_macro_tau,0.09831772658976186,13e4672,2026-11-08 20:19 IST
 E41_moltbook,length_macro_tau,0.05704014068312691,13e4672,2026-11-08 20:19 IST
 E41_moltbook,depth_naive_tau,0.08183316480489178,13e4672,2026-11-08 20:19 IST
 E41_moltbook,go,True,13e4672,2026-11-08 20:19 IST
+E41_moltbook_rowshuffled,components,489,c40ef59,2026-11-08 20:23 IST
+E41_moltbook_rowshuffled,depth_macro_tau,0.033207203253865045,c40ef59,2026-11-08 20:23 IST
+E41_moltbook_rowshuffled,length_macro_tau,0.05013409644013604,c40ef59,2026-11-08 20:23 IST
+E41_moltbook_rowshuffled,depth_naive_tau,0.00386807496171393,c40ef59,2026-11-08 20:23 IST
+E41_moltbook_rowshuffled,go,False,c40ef59,2026-11-08 20:23 IST
