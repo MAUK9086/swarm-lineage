@@ -13,6 +13,9 @@ File structure:
     truth_codes            hidden times per document code (int64 ns)
     order_from_codes       pair order truth from coded times
     null_order_draws       pair order truth under within-group permutation nulls
+    node_time_codes        earliest post time per collapsed node
+    lineage_evaluation     Kendall tau (macro, pooled) and within-component null for lineage orders
+    node_time_ranks        true time rank of nodes, for plotting only
 """
 
 from __future__ import annotations
@@ -21,6 +24,7 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
+from tqdm import tqdm
 
 from src.adapters import PUBLIC_COLUMNS, STANDARD_COLUMNS
 
@@ -287,3 +291,174 @@ def null_order_draws(truth: pd.Series, doc_ids: np.ndarray, doc_group: np.ndarra
         perm = np.empty_like(tc)
         perm[order] = t_by_group
         yield order_from_codes(perm, a, b)
+
+
+def node_time_codes(truth: pd.Series, node_docs: list[np.ndarray]) -> np.ndarray:
+    """Earliest post time per node (first appearance), int64 ns; min int64 if unknown.
+
+    Args:
+        truth: t indexed by doc_id.
+        node_docs: Doc ids per node.
+
+    Returns:
+        int64 array, one value per node.
+    """
+    big, nat = np.iinfo(np.int64).max, np.iinfo(np.int64).min
+    lengths = np.array([len(d) for d in node_docs])
+    tc = truth_codes(truth, np.concatenate(node_docs))
+    tc = np.where(tc == nat, big, tc)
+    node = np.repeat(np.arange(len(node_docs)), lengths)
+    out = np.full(len(node_docs), big)
+    np.minimum.at(out, node, tc)
+    out[out == big] = nat
+    return out
+
+
+def _pair_index(sizes: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """All within-component pairs (i < j) over the concatenated node list.
+
+    Args:
+        sizes: Nodes per component.
+
+    Returns:
+        (i, j, component index) arrays.
+    """
+    ii, jj, cc = [], [], []
+    off = 0
+    for c, n in enumerate(sizes):
+        a, b = np.triu_indices(n, k=1)
+        ii.append(a + off)
+        jj.append(b + off)
+        cc.append(np.full(len(a), c))
+        off += n
+    return np.concatenate(ii), np.concatenate(jj), np.concatenate(cc)
+
+
+def _taus(rank: np.ndarray, t: np.ndarray, i: np.ndarray, j: np.ndarray, c: np.ndarray, n_comp: int) -> dict[str, Any]:
+    """Per-component Kendall tau-b (rank has no ties) and pooled concordance counts.
+
+    Args:
+        rank: Inferred rank per concatenated node.
+        t: Time per concatenated node.
+        i: First node of each pair.
+        j: Second node of each pair.
+        c: Component index of each pair.
+        n_comp: Number of components.
+
+    Returns:
+        Dict with per-component tau, concordant and untied pair counts.
+    """
+    sx = np.sign(rank[i] - rank[j])
+    sy = np.sign(t[i] - t[j])
+    s = np.bincount(c, weights=sx * sy, minlength=n_comp)
+    n0 = np.bincount(c, minlength=n_comp).astype(float)
+    nt = np.bincount(c, weights=(sy == 0).astype(float), minlength=n_comp)
+    den = np.sqrt(n0 * (n0 - nt))
+    tau = np.where(den > 0, s / np.where(den > 0, den, 1), np.nan)
+    return {"tau": tau, "concordant": int(((sx * sy) > 0).sum()), "untied": int((sy != 0).sum())}
+
+
+def _macro_ci(tau: np.ndarray, n_boot: int, rng: np.random.Generator) -> tuple[float, float, float]:
+    """Macro mean of per-component tau with a component-bootstrap 95% CI.
+
+    Args:
+        tau: Per-component tau (NaN dropped).
+        n_boot: Resamples.
+        rng: Generator.
+
+    Returns:
+        (mean, low, high)
+    """
+    x = tau[~np.isnan(tau)]
+    boots = x[rng.integers(0, len(x), (n_boot, len(x)))].mean(axis=1)
+    return float(x.mean()), float(np.percentile(boots, 2.5)), float(np.percentile(boots, 97.5))
+
+
+def _pooled(res: dict[str, Any]) -> tuple[float, list[float]]:
+    """Pooled pair-level tau = 2p - 1 with a Wald CI.
+
+    Args:
+        res: Output of _taus.
+
+    Returns:
+        (tau, [low, high])
+    """
+    p = res["concordant"] / res["untied"]
+    h = 1.959964 * np.sqrt(p * (1 - p) / res["untied"])
+    return 2 * p - 1, [2 * (p - h) - 1, 2 * (p + h) - 1]
+
+
+def lineage_evaluation(truth: pd.Series, node_docs: list[np.ndarray], comp_nodes: list[np.ndarray],
+                       ranks: dict[str, list[np.ndarray]], n_boot: int = 1000, n_null: int = 1000,
+                       seed: int = 42) -> dict[str, Any]:
+    """Kendall tau of inferred orders vs node time: macro (primary), pooled (naive), and a null.
+
+    Args:
+        truth: t indexed by doc_id.
+        node_docs: Doc ids per node (all nodes).
+        comp_nodes: Node indices per lineage component.
+        ranks: Method name -> list of rank arrays (one per component, local order).
+        n_boot: Component-bootstrap resamples.
+        n_null: Null draws (times permuted within components; draw r uses seed + r).
+        seed: Base seed.
+
+    Returns:
+        Dict of results per method, including null false-positive rates.
+    """
+    from src.clusters import wilson_ci
+
+    sizes = np.array([len(c) for c in comp_nodes])
+    allnodes = np.concatenate(comp_nodes)
+    tn = node_time_codes(truth, [node_docs[v] for v in allnodes])
+    t = tn.astype(np.float64)
+    i, j, c = _pair_index(sizes)
+    comp_of_node = np.repeat(np.arange(len(sizes)), sizes)
+    out: dict[str, Any] = {"components": int(len(sizes)), "nodes": int(len(allnodes)),
+                           "within_component_pairs": int(len(i)),
+                           "nodes_with_unknown_time": int((tn == np.iinfo(np.int64).min).sum())}
+    rk = {m: np.concatenate(v).astype(np.float64) for m, v in ranks.items()}
+    for m, r in rk.items():
+        res = _taus(r, t, i, j, c, len(sizes))
+        mean, lo, hi = _macro_ci(res["tau"], n_boot, np.random.default_rng(seed))
+        ptau, pci = _pooled(res)
+        out[m] = {"macro_tau": mean, "macro_ci": [lo, hi], "components_with_tau": int((~np.isnan(res["tau"])).sum()),
+                  "naive_pooled_tau": ptau, "naive_ci": pci, "naive_untied_pairs": res["untied"],
+                  "per_component_tau": {"p25": float(np.nanpercentile(res["tau"], 25)),
+                                        "median": float(np.nanmedian(res["tau"])),
+                                        "p75": float(np.nanpercentile(res["tau"], 75))}}
+    base = np.argsort(comp_of_node, kind="stable")
+    t_by = t[base]
+    null = {m: {"macro_sig": 0, "naive_sig": 0, "macro": []} for m in rk}
+    for r in tqdm(range(n_null), desc="lineage null", unit="draw"):
+        order = np.lexsort((np.random.default_rng(seed + r).random(len(t)), comp_of_node))
+        tp = np.empty_like(t)
+        tp[order] = t_by
+        for m, rr in rk.items():
+            res = _taus(rr, tp, i, j, c, len(sizes))
+            mean, lo, hi = _macro_ci(res["tau"], n_boot, np.random.default_rng(seed + r))
+            _, pci = _pooled(res)
+            null[m]["macro_sig"] += int(lo > 0 or hi < 0)
+            null[m]["naive_sig"] += int(pci[0] > 0 or pci[1] < 0)
+            null[m]["macro"].append(mean)
+    for m in rk:
+        mm = np.array(null[m]["macro"])
+        out[m]["null"] = {"draws": n_null,
+                          "macro_fpr": null[m]["macro_sig"] / n_null, "macro_fpr_ci": wilson_ci(null[m]["macro_sig"], n_null),
+                          "naive_fpr": null[m]["naive_sig"] / n_null, "naive_fpr_ci": wilson_ci(null[m]["naive_sig"], n_null),
+                          "macro_tau_null_mean_sd": [float(mm.mean()), float(mm.std())]}
+    return out
+
+
+def node_time_ranks(truth: pd.Series, node_docs: list[np.ndarray], nodes: np.ndarray) -> np.ndarray:
+    """True time rank (0 = earliest) of the given nodes, for plotting only.
+
+    Args:
+        truth: t indexed by doc_id.
+        node_docs: Doc ids per node.
+        nodes: Node indices to rank.
+
+    Returns:
+        Rank per node.
+    """
+    tn = node_time_codes(truth, [node_docs[v] for v in nodes])
+    return np.argsort(np.argsort(tn, kind="stable"), kind="stable")

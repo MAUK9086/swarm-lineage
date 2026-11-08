@@ -900,3 +900,67 @@ Global seed: 42.
   null false-positive rates 86.3% vs 5.3%. Monitor panel: naive AUROC 0.960 [0.955, 0.998]
   vs cluster-aware 0.691 [0.563, 0.821] (13 coordinated authors in CV; held-out AUROC
   0.529); recall at 1% FPR 0.86 vs 0.08. All values read from results/E34, E35, E37, E38.
+
+---
+
+### Scope amendment: E41 lineage tree  (2026-11-08 20:14 IST)
+- E41 tests a lineage-order hypothesis (does a near-duplicate tree recover time order?).
+  The Final scope entry said no new hypotheses about dating would be added; E41 is added
+  at the user's explicit request and is recorded here as an amendment. It is analysed
+  under the same cluster-aware rules (component-level primary, naive pair-level shown
+  only for contrast, a within-cluster null for false-positive rates).
+
+### E41 - Lineage tree from near-duplicate components  (2026-11-08 20:14 IST)
+- Question: Within clusters of near-duplicate posts, does a minimum spanning tree rooted
+  by a "features-gained" rule put earlier posts nearer the root, i.e. does tree depth
+  recover time order better than chance and better than text length?
+- Hypothesis / expected: NO-GO is the expected outcome. The root rule picks the node with
+  the highest mean containment C(node in other) = |A and B| / |A|, which is largest for
+  small shingle sets, so the root will tend to be the shortest text and depth partly
+  tracks distance from the shortest text. E32 / E34 found length near chance at the
+  cluster level, so depth is expected near chance too (macro tau CI covering 0). The naive
+  pair-level tau is expected to be further from 0 with a far narrower CI, and the null
+  should show a high false-positive rate for the naive analysis and about 5% for the
+  macro analysis.
+- Go / no-go criterion (pre-registered): "a lineage signal exists" if the depth method's
+  macro Kendall tau has a component-bootstrap 95% CI that excludes 0 AND its macro tau is
+  above the length baseline's macro tau. (A CI entirely below 0 would also exclude 0; that
+  case would be reported as a reversed signal, not as support for lineage.)
+- Method (frozen in configs/E41_lineage.json; method code in src/lineage.py never reads
+  t; all scoring, node times and the null are in src/evaluate.py):
+  Nodes: posts in the standard table are collapsed by normalised text (whitespace
+  collapsed, lower-cased; empty texts dropped); each node keeps its post count. Node time
+  for evaluation = earliest post time among its posts (first appearance of the text).
+  Candidate components: 5-word shingles, MinHash (128 permutations, seed 42) and banded
+  LSH (threshold 0.5; 25 bands x 5 rows) from E31's code, applied to one representative
+  text per node; all nodes sharing any band bucket are joined (union-find over bucket
+  members, same and different authors), without listing pairs. This is a deviation from
+  "all near-duplicate pairs" forced by scale (E31: up to 381M candidate pair instances,
+  most same-author); it is fixed here before running.
+  Lineage components: candidate components with >= 5 nodes; if more than 200 nodes, a
+  seeded uniform sample of 200 (seed 42). Exact Jaccard (hashed shingles, as in E31) for
+  every pair of sampled nodes; edges = pairs with 0.5 <= Jaccard <= 0.95; connected
+  pieces of that graph with >= 5 nodes are the lineage components. Counts of candidate
+  components, capped components and fragments are reported.
+  Tree: minimum spanning tree of each lineage component's edge graph, weight 1 - Jaccard.
+  Root = node with the highest mean containment C(node in other) over all other nodes in
+  the component (ties random, seed 42). Inferred order = hop depth from the root, ties
+  broken by a seeded random key.
+  Baseline: length order (shorter representative text earlier, ties random, seed 42).
+  Evaluation: Kendall tau-b between inferred order and node time per component. Primary =
+  macro mean over components with a component-bootstrap 95% CI (1,000 resamples).
+  Naive contrast = pooled pair-level tau over all within-component node pairs (tau =
+  2p - 1, p = share of concordant pairs among pairs without tied times) with a Wald CI.
+  Null: 1,000 draws (seed 42 + r) permuting node times within each component; for depth
+  and length, the false-positive rate of the macro analysis (CI excludes 0) and of the
+  naive analysis (Wald CI excludes 0), with Wilson CIs.
+  Figure: the 4 largest lineage components drawn as trees (root at top, depth downwards),
+  nodes coloured by true time rank within the component (single-hue sequential scale),
+  root marked: figures/E41_lineage_trees.png.
+- Code: experiments/E41_lineage.py, src/lineage.py, src/evaluate.py, configs/E41_lineage.json @ (filled after commit)
+- Config SHA-256 (configs/E41_lineage.json, LF enforced): 5b6c45ef7d350bcb854e00ed567d13535d5a2f4db374644adebf502ddf45b6db
+- Params: see config; corpus = data/interim/moltbook_slim.parquet only; not run on any
+  other corpus.
+- Results:
+- Interpretation:
+- Decision / next step:
