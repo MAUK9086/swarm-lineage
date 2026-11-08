@@ -964,3 +964,23 @@ Global seed: 42.
 - Results:
 - Interpretation:
 - Decision / next step:
+
+### E41b - Post-hoc leakage check: row order  (2026-11-08 20:20 IST)
+- Why (written after seeing E41's result, before this check runs): E41 met its GO rule,
+  but its tree figure shows leaves laid out in near time order, because node indices follow
+  the standard table's row order and data/interim/moltbook_slim.parquet is stored roughly
+  in dump-date order (E30 sampled from a dump-date-sorted pool). The method never reads t,
+  but two steps can depend on row order: minimum-spanning-tree tie-breaking among equal
+  Jaccard distances (frequent in templated text) and component labelling. If the GO comes
+  from row order, it is an artifact.
+- Check (post-hoc, not part of E41's pre-registration): shuffle the rows of the standard
+  table once (seed 42) into data/interim/moltbook_slim_rowshuffled.parquet and run the
+  frozen E41 script unchanged with the same config (--name moltbook_rowshuffled).
+- Reading rule, fixed now: if the shuffled run's depth macro tau CI still excludes 0 and
+  stays above the length baseline, E41's signal is not a row-order artifact. If the depth
+  macro tau falls to the length baseline or to 0, E41's GO is attributed to a row-order
+  leak and withdrawn.
+- Code: experiments/E41_lineage.py (unchanged) @ 13e4672; shuffle step recorded in results.
+- Results:
+- Interpretation:
+- Decision / next step:

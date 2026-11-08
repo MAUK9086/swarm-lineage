@@ -1,0 +1,162 @@
+{
+  "experiment": "E41_lineage_moltbook",
+  "run_at": "2026-11-08 20:19 IST",
+  "git_hash": "13e4672",
+  "seed": 42,
+  "params": {
+    "config": {
+      "shingle_k_words": 5,
+      "num_perm": 128,
+      "lsh_threshold": 0.5,
+      "jaccard_window": [
+        0.5,
+        0.95
+      ],
+      "min_nodes": 5,
+      "max_nodes": 200,
+      "seed": 42,
+      "n_boot": 1000,
+      "n_null": 1000,
+      "node_key": "normalised text (whitespace collapsed, lower-cased)",
+      "node_time": "earliest post",
+      "tree": "minimum spanning tree on 1 - Jaccard over verified edges",
+      "root": "max mean containment C(node in other)",
+      "order": "hop depth from root, seeded random tie-break",
+      "baseline": "length (shorter earlier), seeded random tie-break"
+    },
+    "config_sha256": "5b6c45ef7d350bcb854e00ed567d13535d5a2f4db374644adebf502ddf45b6db",
+    "table": "data/interim/moltbook_slim.parquet"
+  },
+  "results": {
+    "table": "moltbook",
+    "config_sha256": "5b6c45ef7d350bcb854e00ed567d13535d5a2f4db374644adebf502ddf45b6db",
+    "counts": {
+      "candidate_components_ge_min": 700,
+      "candidate_components_capped": 17,
+      "nodes_in_candidates_ge_min": 86064,
+      "lineage_components": 488,
+      "nodes_in_lineage_components": 8447,
+      "posts": 300000,
+      "posts_with_empty_text": 4,
+      "nodes": 284974,
+      "nodes_with_more_than_one_post": 2475,
+      "component_nodes": {
+        "min": 5,
+        "median": 8.0,
+        "max": 200
+      },
+      "tree_max_depth": {
+        "min": 1,
+        "median": 2.0,
+        "max": 24
+      },
+      "components_where_root_is_shortest_text": 252,
+      "node_post_count_in_components": {
+        "total_posts": 8676
+      }
+    },
+    "evaluation": {
+      "components": 488,
+      "nodes": 8447,
+      "within_component_pairs": 251194,
+      "nodes_with_unknown_time": 0,
+      "depth": {
+        "macro_tau": 0.09831772658976186,
+        "macro_ci": [
+          0.07359743201251731,
+          0.12355235307859401
+        ],
+        "components_with_tau": 488,
+        "naive_pooled_tau": 0.08183316480489178,
+        "naive_ci": [
+          0.07793568018550356,
+          0.08573064942427999
+        ],
+        "naive_untied_pairs": 251194,
+        "per_component_tau": {
+          "p25": -0.06666666666666667,
+          "median": 0.09090909090909091,
+          "p75": 0.2936085187843982
+        },
+        "null": {
+          "draws": 1000,
+          "macro_fpr": 0.052,
+          "macro_fpr_ci": [
+            0.03987303620029011,
+            0.06755573945665176
+          ],
+          "naive_fpr": 0.716,
+          "naive_fpr_ci": [
+            0.6872658651921271,
+            0.7430809751161329
+          ],
+          "macro_tau_null_mean_sd": [
+            -0.0002730660751114474,
+            0.013320715273023375
+          ]
+        }
+      },
+      "length": {
+        "macro_tau": 0.05704014068312691,
+        "macro_ci": [
+          0.02597151701553019,
+          0.08560516148245417
+        ],
+        "components_with_tau": 488,
+        "naive_pooled_tau": 0.0345470035112303,
+        "naive_ci": [
+          0.03063873724058075,
+          0.03845526978187985
+        ],
+        "naive_untied_pairs": 251194,
+        "per_component_tau": {
+          "p25": -0.14502164502164502,
+          "median": 0.0189099112956981,
+          "p75": 0.2591719601747984
+        },
+        "null": {
+          "draws": 1000,
+          "macro_fpr": 0.052,
+          "macro_fpr_ci": [
+            0.03987303620029011,
+            0.06755573945665176
+          ],
+          "naive_fpr": 0.707,
+          "naive_fpr_ci": [
+            0.6780414919618647,
+            0.7343742300002178
+          ],
+          "macro_tau_null_mean_sd": [
+            -0.00011181150068008206,
+            0.015157953810977372
+          ]
+        }
+      }
+    },
+    "figure": "figures/E41_lineage_trees.png",
+    "figure_component_sizes": [
+      200,
+      200,
+      198,
+      174
+    ],
+    "figure_taus_tau_a": [
+      0.2930653266331658,
+      0.14452261306532663,
+      0.018202327846997896,
+      0.041658361570659753
+    ],
+    "go_no_go": {
+      "depth_macro_tau": 0.09831772658976186,
+      "depth_macro_ci": [
+        0.07359743201251731,
+        0.12355235307859401
+      ],
+      "ci_excludes_0": true,
+      "length_macro_tau": 0.05704014068312691,
+      "depth_above_length": true,
+      "ci_entirely_below_0": false,
+      "go": true
+    }
+  }
+}
