@@ -139,7 +139,10 @@ def table_tex(rows: list[list[str]], caption: str, label: str) -> str:
         LaTeX string.
     """
     n = len(rows[0])
-    spec = "L" * n
+    p = lambda w: r">{\raggedright\arraybackslash}p{" + w + "}"
+    specs = {"tab:ledger": p("1.9cm") + p("1.8cm") + "L" + p("2.6cm") + "L",
+             "tab:robustness": "L" + p("1.3cm") + p("3.0cm") + "L"}
+    spec = specs.get(label, "L" * n)
     head = " & ".join(r"\textbf{" + _plain(c) + "}" for c in rows[0]) + r" \\"
     body = "\n".join(" & ".join(_plain(c) for c in r) + r" \\" for r in rows[1:])
     return (r"\begin{table}[htbp]" + "\n" + r"\centering\small" + "\n" + r"\caption{" + esc(caption) + "}\\label{" + label + "}\n"
@@ -256,6 +259,7 @@ def build(draft: Path, out: Path) -> None:
     text = "\n".join(tex)
     head, sep, tail = text.partition(r"\section{Appendix}")
     if sep:
+        sep = "\\clearpage\n" + sep
         tail = tail.replace(r"\begin{table}[htbp]", r"\begin{table}[H]").replace(r"\begin{figure}[htbp]", r"\begin{figure}[H]")
         tail = tail.replace(r"\centering\small", r"\centering\footnotesize\setstretch{1.0}").replace(r"width=0.92\textwidth", r"width=0.62\textwidth")
         text = head + sep + tail
