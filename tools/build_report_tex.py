@@ -119,7 +119,7 @@ def md_tables(path: Path) -> dict[str, list[list[str]]]:
     out: dict[str, list[list[str]]] = {}
     cur = None
     for line in path.read_text(encoding="utf-8").splitlines():
-        if line.startswith("Table "):
+        if line.strip() and not line.startswith("|"):
             cur = line.strip()
             out[cur] = []
         elif line.startswith("|") and cur and not set(line.replace("|", "").strip()) <= set("-: "):
@@ -223,11 +223,14 @@ def build(draft: Path, out: Path) -> None:
             path = s.split("[", 1)[1].split("]")[0]
             cap = s.split("]", 1)[1].strip()
             num = re.findall(r"\d+", label)[0]
+            if (REPO / path.replace(".png", ".pdf")).exists():
+                path = path.replace(".png", ".pdf")
             tex.append(r"\begin{figure}[htbp]\centering" + "\n" + r"\includegraphics[width=\textwidth]{../" + path + "}\n"
                        + r"\caption{" + esc(cap.strip("*")) + "}\\label{fig:" + num + "}\n" + r"\end{figure}")
-        elif "[insert Table" in s:
-            name = "Table 1" if "Table 1" in s else "Table 2"
-            tex.append(table_tex(tables[name], TABLE_CAPTIONS[name], "tab:" + name[-1]))
+        elif "[insert " in s and " table]" in s:
+            name = s.split("[insert ", 1)[1].split(" table]")[0]
+            cap = s.split("]", 1)[1].strip().strip("*")
+            tex.append(table_tex(tables[name], cap, "tab:" + name.lower()))
         elif s.startswith("[figures/"):
             paths = re.findall(r"figures/[\w.]+\.png", s)
             cap = ""

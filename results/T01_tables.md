@@ -1,12 +1,21 @@
-Table 1
+Corpora
 
-| Corpus | Role | Documents | Timestamped | Near-duplicate pairs scored | Clusters (components) |
-|---|---|---|---|---|---|
-| Swarm Traces (public release) | motivation | 189,579 rows | 0 | - | - |
-| Moltbook (300k-post sample of 3,602,713) | development | 300,000 posts | 100% | 8,360,718 | 1,212 |
-| collusion.wiki export | held-out | 14,591 revisions | 100% | 36,711 | 1,179 |
+| Corpus | Role | Texts | Timestamped | Near-duplicate pairs | Clusters | Median pairs per cluster |
+|---|---|---|---|---|---|---|
+| Moltbook (sample of 3,602,713 posts) | development | 300,000 posts | 100% | 8,361,829 | 1,198 | 1 (largest: 4,229,393) |
+| collusion.wiki export | held-out | 14,591 revisions of 4,579 pages | 100% | 36,711 | 1,179 | - |
 
-Table 2
+Cues
+
+| Cue | Predicts A came first when | Equivalent to | Evidence (Moltbook unless noted) |
+|---|---|---|---|
+| Length | A is shorter (characters) | (reference rule) | ties on 16.7% of pairs |
+| Shingle containment | A's shingles are more fully contained in B | A has fewer distinct shingles | ties on 52.1% of pairs |
+| Insertion vs deletion | the diff A to B inserts more words than it deletes | A has fewer words | same prediction on 100% of 1,216 untied pairs |
+| Extension | more of A survives as B's prefix and suffix | A has fewer words; coin flip if nothing shared | 870 of 1,767 pairs tied |
+| Lineage root | A is the text most contained in the others | the shortest text is the root | root is shortest in 54% of clusters (87% on the wiki) |
+
+Ledger
 
 | Exp. | Pre-registered claim | Outcome | Key number |
 |---|---|---|---|

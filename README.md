@@ -1,21 +1,51 @@
 # swarm-lineage
 
-Recovering relative time order and copy/mutation lineage for payloads in the Swarm
-Traces redacted corpus, and checking the inferred order against independent ground
-truth (rows with time estimates, version tags written in the payloads, numbered
-command sequences).
+Content-only forensics on agent-swarm text: can the text of near-duplicate posts tell which
+copy came first, and does timing metadata alone flag coordinated agents? Every method sees
+a table without timestamps; true time is read only by `src/evaluate.py` when scoring.
 
-Work for the Apart Swarm Alignment Hackathon (deadline 9 Nov 2026).
+Developed on Moltbook (SimulaMet observatory archive) and run unchanged on the
+collusion.wiki export. Work for the Apart Swarm Alignment sprint (November 2026).
+
+## Main findings
+
+- The standard copy-direction cues (shingle containment, insertion vs deletion, prefix/suffix
+  extension, spanning-tree lineage) reduce to comparing text length, and none beats
+  "the longer text is later" by the pre-registered margin on either corpus.
+- Near-duplicate pairs are highly clustered (on Moltbook the two largest clusters hold 98% of
+  8.4M pairs). Scoring pairs instead of clusters inflates accuracy by 13-29 points and gives
+  an 86% false-positive rate under a cluster-preserving null (5% when scoring per cluster).
+- A lineage result that passed its pre-registered rule was a row-order leak; the frozen
+  pipelines now shuffle rows before processing.
+
+Every experiment is pre-registered in `EXPERIMENT_LOG.md` (question, hypothesis and go/no-go
+rule written before the run; results and decision after).
 
 ## Layout
 
 ```
-src/            shared code (streaming reader, result helpers, later: normalise, families, lineage)
-experiments/    one standalone script per experiment (E00_profile.py, ...)
-results/        E##_name.json per experiment (numbers, params, seed, git hash) and summary.csv
-figures/        E##_*.png
-EXPERIMENT_LOG.md   lab notebook; each entry is pre-registered before the run
+src/adapters/     corpus adapters -> standard table (doc_id, text, group_id, author_id, t)
+src/copydir.py    shingles, MinHash/LSH pair finding, direction cues (never sees t)
+src/lineage.py    clusters, spanning trees, lineage order (never sees t)
+src/evaluate.py   the only module that reads t: accuracy, Kendall tau, bootstrap CIs, nulls
+src/monitor*.py   metadata-only monitor features and data loading
+experiments/      one script per experiment (E00 ... E42), report numbers (T01, T02), figures
+configs/          frozen pipeline configurations (SHA-256 recorded in EXPERIMENT_LOG.md)
+results/          E##_*.json: aggregates and ids only, with params, seed and git hash
+figures/          report and experiment figures
+tools/            report builders
 ```
+
+## Running the frozen pipelines on a new corpus
+
+1. Write an adapter in `src/adapters/` that returns the standard table and save it as Parquet.
+2. Copy direction (pair finding, four cues, pair-level and cluster-level scoring, three pair scopes):
+   `python -I experiments/E36_replication_v2.py --table <table.parquet> --name <corpus>`
+3. Lineage trees (three edge scopes, within-cluster null):
+   `python -I experiments/E41_lineage_v2.py --table <table.parquet> --name <corpus>`
+
+Both scripts shuffle rows with a fixed seed (42) before any processing and read their
+parameters from `configs/E36_pipeline_v2.json` and `configs/E41_lineage_v2.json`.
 
 ## Setup
 
@@ -23,8 +53,7 @@ EXPERIMENT_LOG.md   lab notebook; each entry is pre-registered before the run
 pip install -r requirements.txt
 ```
 
-Place the corpus at `data/raw/redacted.jsonl.gz`. The `data/` directory is not tracked;
-results files hold aggregates and row ids only.
-
-Run an experiment from the repo root, e.g. `python experiments/E00_profile.py`.
-All randomness uses seed 42.
+Data are not included. Moltbook: Hugging Face `SimulaMet/moltbook-observatory-archive`
+(downloaded by `experiments/E30_profile.py`). collusion.wiki: export from https://collusion.wiki,
+converted with `src/adapters/collusion_wiki.py`. No post or revision text is stored in this
+repository.

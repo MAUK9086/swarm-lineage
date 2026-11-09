@@ -78,9 +78,10 @@ def save(fig, name: str) -> None:
         name: File name.
     """
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
-    fig.savefig(FIGURES_DIR / name, dpi=200, facecolor=SURFACE, bbox_inches="tight")
+    fig.savefig(FIGURES_DIR / name, dpi=300, facecolor=SURFACE, bbox_inches="tight")
+    fig.savefig(FIGURES_DIR / name.replace(".png", ".pdf"), facecolor=SURFACE, bbox_inches="tight")
     plt.close(fig)
-    print("figures/" + name)
+    print("figures/" + name + " (+ .pdf)")
 
 
 def fig_pipeline() -> None:
@@ -114,7 +115,20 @@ def fig_naive_vs_cluster() -> None:
     e34, e35 = load("E34_inflation_curve"), load("E35_null_simulation")
     l_m, l_c = load("E41v2_lineage_moltbook"), load("E41v2_lineage_collusion_wiki")
     rows = e34["grid"]["0.5-0.95"]
-    fig, (a, b) = plt.subplots(1, 2, figsize=(7.4, 3.0), facecolor=SURFACE, gridspec_kw={"width_ratios": [1.15, 1]})
+    t02 = load("T02_cluster_concentration")
+    fig, (c0, a, b) = plt.subplots(1, 3, figsize=(7.6, 2.9), facecolor=SURFACE, gridspec_kw={"width_ratios": [0.62, 1.05, 1]})
+    s1 = t02["share_of_pairs_in_largest"]["1"]
+    s2 = t02["share_of_pairs_in_largest"]["2"]
+    shares = [100 * s1, 100 * (s2 - s1), 100 * (1 - s2)]
+    labs = ["largest\ncluster", "2nd\nlargest", f"other\n{t02['clusters'] - 2:,}"]
+    c0.bar(range(3), shares, 0.66, color=[ORANGE, ORANGE, BLUE])
+    for k, v in enumerate(shares):
+        c0.text(k, v + 2, f"{v:.1f}%", ha="center", fontsize=7.5, color=TEXT)
+    c0.set_xticks(range(3), labs, fontsize=7.2)
+    c0.set_ylim(0, 100)
+    c0.set_ylabel(f"share of all {t02['pairs']/1e6:.1f}M pairs (%)", color=TEXT2)
+    c0.set_title("A. Where the pairs are", loc="left", fontsize=9, color=TEXT)
+    style(c0)
     x = np.arange(len(rows))
     for key, lab, col, off in (("pair_level", "every pair counted", ORANGE, -0.07),
                                ("component_level", "each cluster counted once", BLUE, 0.07)):
@@ -124,20 +138,19 @@ def fig_naive_vs_cluster() -> None:
         a.errorbar(x + off, est, yerr=[est - lo, hi - est], color=col, marker="o", ms=6, lw=2, elinewidth=1.4,
                    mec=SURFACE, mew=1.2, label=lab)
     a.axhline(0.5, color=TEXT2, lw=0.8, ls=(0, (3, 3)))
-    a.text(-0.35, 0.508, "chance", fontsize=7, color=TEXT2)
     a.set_xticks(x, ["1", "5", "20", "100", "all"])
     a.set_xlabel("pairs kept per cluster", color=TEXT2)
-    a.set_ylabel('"longer post is later" accuracy', color=TEXT2)
+    a.set_ylabel('"longer is later" accuracy', color=TEXT2)
     a.set_ylim(0.42, 0.75)
-    a.set_title(f"A. {rows[-1]['pairs']:,} pairs, but {rows[-1]['components']:,} clusters", loc="left", fontsize=9, color=TEXT)
+    a.set_title("B. Same data, two answers", loc="left", fontsize=9, color=TEXT)
     a.legend(handles=[Line2D([], [], color=ORANGE, marker="o", lw=2, label="every pair counted"),
                       Line2D([], [], color=BLUE, marker="o", lw=2, label="each cluster counted once")],
              frameon=False, fontsize=7.5, loc="upper left")
     style(a)
-    groups = [("copy direction\n(Moltbook, E35)", e35["pair_level"]["false_positive_rate"], e35["component_level"]["false_positive_rate"]),
-              ("lineage depth\n(Moltbook)", l_m["scopes"]["all"]["evaluation"]["depth"]["null"]["naive_fpr"],
+    groups = [("copy\ndirection", e35["pair_level"]["false_positive_rate"], e35["component_level"]["false_positive_rate"]),
+              ("lineage\n(Moltbook)", l_m["scopes"]["all"]["evaluation"]["depth"]["null"]["naive_fpr"],
                l_m["scopes"]["all"]["evaluation"]["depth"]["null"]["macro_fpr"]),
-              ("lineage depth\n(collusion.wiki)", l_c["scopes"]["all"]["evaluation"]["depth"]["null"]["naive_fpr"],
+              ("lineage\n(wiki)", l_c["scopes"]["all"]["evaluation"]["depth"]["null"]["naive_fpr"],
                l_c["scopes"]["all"]["evaluation"]["depth"]["null"]["macro_fpr"])]
     gx = np.arange(len(groups))
     w = 0.36
@@ -147,11 +160,10 @@ def fig_naive_vs_cluster() -> None:
         b.text(gx[k] - w / 2, 100 * naive + 2, f"{100*naive:.0f}%", ha="center", fontsize=7.5, color=TEXT)
         b.text(gx[k] + w / 2, 100 * macro + 2, f"{100*macro:.0f}%", ha="center", fontsize=7.5, color=TEXT)
     b.axhline(5, color=TEXT2, lw=0.8, ls=(0, (3, 3)))
-    b.text(-0.42, 6.5, "5% expected", fontsize=7, color=TEXT2, ha="left")
     b.set_xticks(gx, [g[0] for g in groups], fontsize=7.5)
     b.set_ylim(0, 100)
-    b.set_ylabel("'significant' under a null with\nno real order (% of 1,000 draws)", color=TEXT2)
-    b.set_title("B. False alarms when nothing is there", loc="left", fontsize=9, color=TEXT)
+    b.set_ylabel("% of 1,000 null draws\ncalled significant", color=TEXT2)
+    b.set_title("C. False alarms under a null", loc="left", fontsize=9, color=TEXT)
     style(b)
     fig.tight_layout()
     save(fig, "R2_naive_vs_cluster.png")

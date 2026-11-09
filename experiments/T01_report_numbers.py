@@ -206,13 +206,25 @@ def main() -> None:
                                                "source": "E42 seeds 42-45 + E36v2 all"}
     save_result("T01_report_numbers", res, {"inputs": "results/*.json only"})
     c = res["corpora"]
-    t1 = ["| Corpus | Role | Documents | Timestamped | Near-duplicate pairs scored | Clusters (components) |", "|---|---|---|---|---|---|",
-          f"| Swarm Traces (public release) | motivation | {c['swarm_traces']['rows']:,} rows | {c['swarm_traces']['rows_with_time']:,} | - | - |",
-          f"| Moltbook (300k-post sample of {c['moltbook']['posts']:,}) | development | {c['moltbook']['sample']:,} posts | {100*c['moltbook']['timestamped_share']:.0f}% | {c['moltbook']['pairs_scored_v2']:,} | {c['moltbook']['components_v2']:,} |",
-          f"| collusion.wiki export | held-out | {c['collusion_wiki']['revisions']:,} revisions | {100*c['collusion_wiki']['timestamped_share']:.0f}% | {c['collusion_wiki']['pairs_scored_v2']:,} | {c['collusion_wiki']['components_v2']:,} |"]
+    t02 = load("T02_cluster_concentration")
+    t1 = ["| Corpus | Role | Texts | Timestamped | Near-duplicate pairs | Clusters | Median pairs per cluster |", "|---|---|---|---|---|---|---|",
+          f"| Moltbook (sample of {c['moltbook']['posts']:,} posts) | development | {c['moltbook']['sample']:,} posts | {100*c['moltbook']['timestamped_share']:.0f}% | {t02['pairs']:,} | {t02['clusters']:,} | {t02['pairs_per_cluster']['median']:.0f} (largest: {t02['pairs_per_cluster']['max']:,}) |",
+          f"| collusion.wiki export | held-out | {c['collusion_wiki']['revisions']:,} revisions of {c['collusion_wiki']['pages']:,} pages | {100*c['collusion_wiki']['timestamped_share']:.0f}% | {c['collusion_wiki']['pairs_scored_v2']:,} | {c['collusion_wiki']['components_v2']:,} | - |"]
+    a = res["copy_cues"]["algebra"]
+    e31 = load("E31_copy_direction_pilot")
+    len_ties = e31["methods"]["b_longer_is_later"]["ties_broken_randomly"] / e31["counts"]["pairs_scored"]
+    lin = res["lineage"]
+    tc = ["| Cue | Predicts A came first when | Equivalent to | Evidence (Moltbook unless noted) |", "|---|---|---|---|",
+          f"| Length | A is shorter (characters) | (reference rule) | ties on {100*len_ties:.1f}% of pairs |",
+          f"| Shingle containment | A's shingles are more fully contained in B | A has fewer distinct shingles | ties on {100*a['containment_ties_share_E31']:.1f}% of pairs |",
+          f"| Insertion vs deletion | the diff A to B inserts more words than it deletes | A has fewer words | same prediction on {100*a['insdel_vs_token_count_agreement_non_ties_E32']:.0f}% of {a['non_tied_pairs_E32']:,} untied pairs |",
+          f"| Extension | more of A survives as B's prefix and suffix | A has fewer words; coin flip if nothing shared | {a['extension_ties_E32']:,} of {a['pairs_scored_E32']:,} pairs tied |",
+          f"| Lineage root | A is the text most contained in the others | the shortest text is the root | root is shortest in {100*lin['moltbook_root_is_shortest_share']:.0f}% of clusters ({100*lin['collusion_wiki_root_is_shortest_share']:.0f}% on the wiki) |"]
     t2 = ["| Exp. | Pre-registered claim | Outcome | Key number |", "|---|---|---|---|"] + \
          [f"| {r['exp']} | {r['claim']} | {r['outcome']} | {r['key']} |" for r in res["ledger"]]
-    (RESULTS_DIR / "T01_tables.md").write_text("Table 1\n\n" + "\n".join(t1) + "\n\nTable 2\n\n" + "\n".join(t2) + "\n", encoding="utf-8")
+    (RESULTS_DIR / "T01_tables.md").write_text("Corpora\n\n" + "\n".join(x for x in t1 if x) + "\n\nCues\n\n" + "\n".join(tc)
+                                               + "\n\nLedger\n\n" + "\n".join(t2) + "\n", encoding="utf-8")
+    t1 = t1 + [""] + tc
     print(json.dumps({"E35_ratio": res["evaluation"]["E35"]["null_sd_over_wald_se"],
                       "within_share": res["copy_cues"]["within_group_share_of_pairs"],
                       "lineage_fpr_naive": res["lineage"]["null_fpr_naive_range"],
