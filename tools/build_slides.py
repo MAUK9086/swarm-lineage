@@ -143,18 +143,21 @@ def notes(slide, text: str) -> None:
     slide.notes_slide.notes_text_frame.text = text
 
 
-def s_title(prs) -> None:
+def s_title(prs, a: dict[str, Path]) -> None:
     s = prs.slides.add_slide(prs.slide_layouts[6])
-    dark_bg(s)
-    textbox(s, 0.9, 2.0, 11.5, 1.2, [("Counting Clusters, Not Pairs", 44, ON_DARK, True, HEAD)], anchor=MSO_ANCHOR.BOTTOM, name="title")
-    textbox(s, 0.9, 3.3, 11.5, 0.6, [("Evaluating content-only forensics on agent-swarm text", 24, ON_DARK2, False, HEAD)], name="subtitle")
-    textbox(s, 0.9, 4.05, 11.5, 0.5, [("On agent text, copy-direction tools are easy to overrate: the cues add nothing beyond length, and pair-level scoring flatters them.", 15, ON_DARK2, False, BODY, True)], name="claim")
-    textbox(s, 0.9, 5.0, 11.5, 1.2, [("Mohammad Ahmadullah Khan, independent researcher", 16, ON_DARK),
-                                     ("Apart Research Swarm Alignment Sprint, Track 4: Multi-Agent Oversight and Control, November 2026", 14, ON_DARK2),
-                                     (REPO_URL, 14, ON_DARK2)], name="byline")
+    textbox(s, 0.6, 0.55, 7.0, 0.3, [("APART RESEARCH  \u00b7  SWARM ALIGNMENT SPRINT  \u00b7  NOVEMBER 2026", 12, BLUE, True)], name="venue")
+    textbox(s, 0.6, 1.3, 7.6, 1.9, [("Counting Clusters, Not Pairs", 40, INK, True, HEAD)], anchor=MSO_ANCHOR.BOTTOM, name="title")
+    textbox(s, 0.6, 3.3, 7.6, 0.9, [("Evaluating content-only forensics on agent-swarm text", 20, MUTED, False, HEAD)], name="subtitle")
+    textbox(s, 0.6, 4.35, 6.8, 1.0, [("On agent text, copy-direction tools are easy to overrate: the cues add nothing beyond length, "
+                                      "and pair-level scoring flatters them.", 16, INK)], name="claim")
+    textbox(s, 0.6, 5.75, 7.0, 1.1, [("Mohammad Ahmadullah Khan", 18, INK, True),
+                                     ("Independent researcher  \u00b7  Track 4: Multi-Agent Oversight and Control", 14, MUTED),
+                                     (REPO_URL, 14, MUTED)], name="byline")
+    image(s, a["R2B"], 8.55, 1.6, h=4.0, name="key result")
+    textbox(s, 8.55, 5.7, 4.2, 0.8, [("The same data, scored per pair (orange) and per cluster (blue).", 12, MUTED)], name="key result caption")
     notes(s, "This project asks whether the text that agents copy from each other can tell us which copy came first, "
-             "and how we should evaluate any tool that claims to do that. The short answer: the cues we tested add nothing "
-             "beyond text length, and scoring them per pair, as is standard in related fields, gives confident, wrong answers.")
+             "and how we should evaluate any tool that claims to do that. The chart on the right is the whole talk in one picture: "
+             "the same data gives 0.70 when every pair is counted and chance when each cluster counts once.")
 
 
 def s_problem(prs, k: int) -> None:
@@ -322,19 +325,22 @@ def s_robust(prs, k: int) -> None:
 
 def s_close(prs, k: int) -> None:
     s = prs.slides.add_slide(prs.slide_layouts[6])
-    dark_bg(s)
-    kicker(s, "Takeaway", dark=True)
-    title(s, "Evaluate swarm forensics per cluster", dark=True)
+    kicker(s, "Takeaway")
+    title(s, "Evaluate swarm forensics per cluster")
     items = ["Report clusters next to pairs, and score each cluster once",
              "Check significance against a null that keeps clusters fixed",
-             "Shuffle inputs, re-run under several orders, and hide every field that reveals order",
+             "Shuffle inputs, re-run under several orders, hide fields that reveal order",
              "Separate growth within a page or thread from copying across them",
              "Test provenance against recorded parents where they exist"]
-    paras = [[(f"{i + 1}   ", 18, ON_DARK2, True), (t, 18, ON_DARK)] for i, t in enumerate(items)]
-    textbox(s, 0.6, 1.8, 11.9, 3.8, paras, name="checklist")
-    textbox(s, 0.6, 5.6, 11.9, 1.0, [("Paper, code, tests, pre-registration log and the full checklist:", 15, ON_DARK2),
-                                     (REPO_URL, 18, ON_DARK, True)], name="links")
-    number(s, k, dark=True)
+    paras = [[(f"{i + 1}   ", 18, BLUE, True), (t, 18, INK)] for i, t in enumerate(items)]
+    textbox(s, 0.6, 1.8, 7.6, 3.9, paras, name="checklist")
+    textbox(s, 8.9, 1.9, 3.8, 3.6, [("What we found", 16, INK, True, HEAD),
+                                    ("No content cue beat text length.", 15, INK),
+                                    ("Trees find true parents, but length orients them better.", 15, INK),
+                                    ("Pair-level scoring turned chance into 0.70 and 86% false alarms.", 15, INK)], name="summary")
+    textbox(s, 0.6, 5.85, 11.9, 0.9, [("Paper, code, tests, pre-registration log and the full checklist", 14, MUTED),
+                                      (REPO_URL, 18, INK, True)], name="links")
+    number(s, k)
     notes(s, "Our recommendation for anyone building or judging swarm-forensic tools is short: count clusters, not pairs; calibrate with a "
              "cluster-preserving null; test for order leaks under several input orders; and use recorded provenance where it exists. "
              "Everything, including the failed experiments, is in the repository.")
@@ -347,7 +353,7 @@ def main() -> None:
     prs.slide_width, prs.slide_height = Inches(W), Inches(H)
     prs.core_properties.title = "Counting Clusters, Not Pairs"
     prs.core_properties.author = "Mohammad Ahmadullah Khan"
-    s_title(prs)
+    s_title(prs, a)
     s_problem(prs, 2)
     s_setup(prs, 3)
     s_concentration(prs, a, 4)
