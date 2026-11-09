@@ -1,4 +1,4 @@
-"""Build the short presentation deck (report/swarm_lineage_slides.pptx) from the report figures.
+"""Build the short presentation deck (report/swarm_lineage_deck.pptx) from the report figures.
 
 Usage:
     python tools/build_slides.py
@@ -27,7 +27,7 @@ from pptx.util import Inches, Pt
 
 REPO = Path(__file__).resolve().parents[1]
 FIG = REPO / "figures"
-OUT = REPO / "report" / "swarm_lineage_slides.pptx"
+OUT = REPO / "report" / "swarm_lineage_deck.pptx"
 ASSETS = REPO / "report" / "slide_assets"
 W, H = 13.333, 7.5
 HEAD, BODY = "Cambria", "Calibri"
@@ -106,6 +106,16 @@ def title(slide, text: str, dark: bool = False) -> None:
     textbox(slide, 0.6, 0.42, 12.1, 0.9, [(text, 32, ON_DARK if dark else INK, True, HEAD)], anchor=MSO_ANCHOR.BOTTOM, name="title")
 
 
+def kicker(slide, text: str, dark: bool = False) -> None:
+    """Small label above the title saying where the slide sits in the story."""
+    textbox(slide, 0.6, 0.38, 12.1, 0.3, [(text.upper(), 12, ON_DARK2 if dark else BLUE, True)], name="story label")
+
+
+def bridge(slide, text: str, dark: bool = False) -> None:
+    """One line at the foot of the slide that leads into the next one."""
+    textbox(slide, 0.6, 6.72, 11.3, 0.4, [(text, 14, ON_DARK2 if dark else MUTED, False, BODY, True)], name="bridge")
+
+
 def number(slide, k: int, dark: bool = False) -> None:
     sh = textbox(slide, 12.2, 7.0, 0.55, 0.3, [(str(k), 11, ON_DARK2 if dark else MUTED)], name="slide number")
     sh.text_frame.paragraphs[0].alignment = PP_ALIGN.RIGHT
@@ -147,32 +157,53 @@ def s_title(prs) -> None:
              "beyond text length, and scoring them per pair, as is standard in related fields, gives confident, wrong answers.")
 
 
-def s_question(prs, k: int) -> None:
+def s_problem(prs, k: int) -> None:
     s = prs.slides.add_slide(prs.slide_layouts[6])
-    title(s, "Can text alone tell which copy came first?")
-    textbox(s, 0.6, 1.75, 4.6, 4.8, [
-        ("Swarm incidents leave text, not clocks. The public Swarm Traces release has no timestamps in any of its 189,579 rows.", 17, INK),
-        ("Agents copy and lightly edit each other, so the evidence arrives as families of near-duplicates.", 17, INK),
-        ("We hid true time from the methods, developed on 300,000 Moltbook posts, then ran the frozen rules on the collusion.wiki export, with every rule pre-registered.", 17, INK),
-        ("Our claim: these tools are easy to overrate. The cues add nothing beyond length, and pair-level scoring, standard in related fields, makes chance look strong.", 17, INK, True)],
-        name="context")
-    image(s, FIG / "R1_pipeline.png", 5.5, 2.2, w=7.3, name="pipeline figure")
+    kicker(s, "The problem")
+    title(s, "Agent swarms leave text, not clocks")
+    textbox(s, 0.6, 1.75, 6.6, 4.6, [
+        ("About 1,200 agents coordinated on a message board before roughly 700 of them attacked Hugging Face. Another swarm used a public wiki as its message board for weeks.", 18, INK),
+        ("What investigators are left with is text that agents copied and edited from one another, mostly without reliable timestamps.", 18, INK),
+        ("The forensic question: from content alone, which copy came first, and who copied whom?", 18, INK, True)],
+        name="problem text")
+    st = textbox(s, 8.0, 2.0, 4.7, 3.2, [("0", 96, ORANGE, True, HEAD),
+                                         ("timestamps in the 189,579 rows of the public Swarm Traces release from the Hugging Face incident", 16, MUTED)],
+                 name="no clocks stat")
+    st.text_frame.paragraphs[0].space_after = Pt(0)
+    bridge(s, "Next: how we tested whether content can answer that, without letting the method see the clock.")
     number(s, k)
-    notes(s, "Investigators reconstruct incidents like the Hugging Face attack from leftover text, often without timestamps. "
-             "Our pipeline passes every corpus through an adapter into one table. The method side sees text, group and author only; "
-             "true time is split off and read only by the scoring code. Moltbook was the development corpus and collusion.wiki the held-out one.")
+    notes(s, "Recent incidents were reconstructed from traces rather than observed: METR and Redwood Research describe about 1,200 agents "
+             "coordinating before roughly 700 attacked Hugging Face, and the collusion.wiki team found a swarm using a public wiki as a "
+             "message board. The evidence is text that agents copied from each other, often without timestamps. So the natural forensic "
+             "question is whether content alone can order the copies.")
+
+
+def s_setup(prs, k: int) -> None:
+    s = prs.slides.add_slide(prs.slide_layouts[6])
+    kicker(s, "Our setup")
+    title(s, "We hid the clock from every method")
+    image(s, FIG / "R1_pipeline.png", 1.9, 1.7, w=9.5, name="pipeline figure")
+    textbox(s, 1.9, 5.8, 9.5, 0.8, [("Developed on 300,000 Moltbook posts; the frozen rules were then run on the collusion.wiki export. "
+                                     "Every analysis had a go/no-go rule written before it ran.", 16, INK)], name="setup text")
+    bridge(s, "Before testing any cue, we counted how much independent evidence there actually is.")
+    number(s, k)
+    notes(s, "Every corpus goes through an adapter into one table. The method side sees text, group and author only; true time is split "
+             "off and read only by the scoring code. Rows are shuffled first. Moltbook was the development corpus, collusion.wiki the "
+             "held-out one, and every rule was written down before the run.")
 
 
 def s_concentration(prs, a: dict[str, Path], k: int) -> None:
     s = prs.slides.add_slide(prs.slide_layouts[6])
+    kicker(s, "Finding 1: the evidence")
     title(s, "Two clusters hold 98% of the evidence")
+    bridge(s, "If almost every pair comes from two clusters, what happens when pairs are scored as if independent?")
     stats = [("8.4M", "near-duplicate pairs in the Moltbook sample", INK),
              ("1,198", "clusters (connected groups of near-duplicates)", INK),
              ("98.4%", "of all pairs sit in the two largest clusters", ORANGE)]
     for i, (big, small, col) in enumerate(stats):
         sh = textbox(s, 0.6, 1.85 + 1.6 * i, 5.4, 1.4, [(big, 44, col, True, HEAD), (small, 16, MUTED)], name=f"stat {i + 1}")
         sh.text_frame.paragraphs[0].space_after = Pt(2)
-    image(s, a["R2A"], 7.3, 1.65, h=5.2, name="pair share figure")
+    image(s, a["R2A"], 7.4, 1.6, h=4.85, name="pair share figure")
     number(s, k)
     notes(s, "A family of n near-identical texts produces about n squared over two pairs. On Moltbook, two template families supply "
              "almost every pair. The median cluster has a single pair. So any average over pairs is in practice an average over two clusters.")
@@ -180,13 +211,15 @@ def s_concentration(prs, a: dict[str, Path], k: int) -> None:
 
 def s_inflation(prs, a: dict[str, Path], k: int) -> None:
     s = prs.slides.add_slide(prs.slide_layouts[6])
+    kicker(s, "Finding 2: the evaluation trap")
     title(s, "Counting pairs turns chance into 0.70")
+    bridge(s, "Scored the honest way, one cluster at a time: does any cue beat simply comparing lengths?")
     textbox(s, 0.6, 1.6, 5.9, 0.5, [("Same data, two answers", 18, INK, True)], name="left heading")
     image(s, a["R2B"], 1.05, 2.15, h=3.8, name="inflation figure")
-    textbox(s, 0.6, 6.15, 5.9, 0.8, [("Keep every pair and \"longer is later\" jumps from 0.50 to 0.70; count each cluster once and it stays at chance.", 14, MUTED)], name="left caption")
+    textbox(s, 0.6, 6.0, 5.9, 0.7, [("Keep every pair and \"longer is later\" jumps from 0.50 to 0.70; count each cluster once and it stays at chance.", 14, MUTED)], name="left caption")
     textbox(s, 6.9, 1.6, 5.9, 0.5, [("False alarms when there is no real order", 18, INK, True)], name="right heading")
     image(s, a["R2C"], 7.3, 2.15, h=3.8, name="null figure")
-    textbox(s, 6.9, 6.15, 5.9, 0.8, [("Shuffle true times within clusters: pair-level tests call 86% of draws significant, cluster-level tests 5%.", 14, MUTED)], name="right caption")
+    textbox(s, 6.9, 6.0, 5.9, 0.7, [("Shuffle true times within clusters: pair-level tests call 86% of draws significant, cluster-level tests 5%.", 14, MUTED)], name="right caption")
     number(s, k)
     notes(s, "Left: as we allow more pairs per cluster, pair-level accuracy stays at chance until every pair is kept, then jumps to 0.70, "
              "with an interval 81 times narrower. Right: we shuffled the true times inside each cluster, which keeps the clusters and removes "
@@ -195,7 +228,9 @@ def s_inflation(prs, a: dict[str, Path], k: int) -> None:
 
 def s_cues(prs, k: int) -> None:
     s = prs.slides.add_slide(prs.slide_layouts[6])
+    kicker(s, "Finding 3: what content tells")
     title(s, "No cue beats \"the longer text is later\"")
+    bridge(s, "But time order is not provenance. Where true parents are recorded, do the trees find them?")
     image(s, FIG / "R3_forest.png", 0.6, 1.55, w=8.6, name="forest figure")
     textbox(s, 9.6, 1.75, 3.2, 5.0, [
         ("Containment and insertion-versus-deletion are length comparisons in disguise.", 16, INK),
@@ -210,7 +245,9 @@ def s_cues(prs, k: int) -> None:
 
 def s_parents(prs, k: int) -> None:
     s = prs.slides.add_slide(prs.slide_layouts[6])
+    kicker(s, "Ground-truth check")
     title(s, "Against true parents, the tree adds nothing over length")
+    bridge(s, "Our own method once seemed to beat length. It did not, and how it fooled us matters.")
     textbox(s, 0.6, 1.75, 4.9, 4.9, [
         ("Time order is not provenance. The wiki records which revision each edit started from, so we scored the trees against those true parent links.", 17, INK),
         ("Trees recover 76% of true links per cluster (69% pooled), far above a random tree.", 17, INK),
@@ -245,9 +282,11 @@ def s_parents(prs, k: int) -> None:
 
 def s_leak(prs, a: dict[str, Path], k: int) -> None:
     s = prs.slides.add_slide(prs.slide_layouts[6])
+    kicker(s, "A trap we fell into")
     title(s, "Our own positive result was a row-order leak")
-    image(s, FIG / "A1_trees_stored_order.png", 0.6, 1.6, w=6.6, name="stored-order trees")
-    textbox(s, 0.6, 6.25, 6.6, 0.6, [("Largest Moltbook trees with rows in stored order; colour is true time. Leaves line up from early to late.", 12, MUTED)], name="trees caption")
+    bridge(s, "So we tried to break our own conclusions.")
+    image(s, FIG / "A1_trees_stored_order.png", 0.6, 1.55, w=6.1, name="stored-order trees")
+    textbox(s, 0.6, 5.85, 6.6, 0.6, [("Largest Moltbook trees with rows in stored order; colour is true time. Leaves line up from early to late.", 12, MUTED)], name="trees caption")
     image(s, a["R4A"], 8.3, 1.6, h=3.1, name="leak figure")
     textbox(s, 7.7, 4.95, 5.0, 1.9, [
         ("Stored order: depth tau 0.098 beat length 0.057, and the run passed its pre-registered rule.", 15, INK),
@@ -260,7 +299,9 @@ def s_leak(prs, a: dict[str, Path], k: int) -> None:
 
 def s_robust(prs, k: int) -> None:
     s = prs.slides.add_slide(prs.slide_layouts[6])
+    kicker(s, "Robustness")
     title(s, "What held up, and what did not")
+    bridge(s, "What this means for anyone building or judging swarm-forensic tools:")
     textbox(s, 0.6, 1.7, 5.9, 0.5, [("Held", 20, BLUE, True, HEAD)], name="held heading")
     bullets(s, 0.6, 2.3, 5.9, 4.4, [
         "Stricter similarity thresholds (Jaccard 0.6 to 0.8): same conclusions",
@@ -282,6 +323,7 @@ def s_robust(prs, k: int) -> None:
 def s_close(prs, k: int) -> None:
     s = prs.slides.add_slide(prs.slide_layouts[6])
     dark_bg(s)
+    kicker(s, "Takeaway", dark=True)
     title(s, "Evaluate swarm forensics per cluster", dark=True)
     items = ["Report clusters next to pairs, and score each cluster once",
              "Check significance against a null that keeps clusters fixed",
@@ -306,14 +348,15 @@ def main() -> None:
     prs.core_properties.title = "Counting Clusters, Not Pairs"
     prs.core_properties.author = "Mohammad Ahmadullah Khan"
     s_title(prs)
-    s_question(prs, 2)
-    s_concentration(prs, a, 3)
-    s_inflation(prs, a, 4)
-    s_cues(prs, 5)
-    s_parents(prs, 6)
-    s_leak(prs, a, 7)
-    s_robust(prs, 8)
-    s_close(prs, 9)
+    s_problem(prs, 2)
+    s_setup(prs, 3)
+    s_concentration(prs, a, 4)
+    s_inflation(prs, a, 5)
+    s_cues(prs, 6)
+    s_parents(prs, 7)
+    s_leak(prs, a, 8)
+    s_robust(prs, 9)
+    s_close(prs, 10)
     OUT.parent.mkdir(parents=True, exist_ok=True)
     prs.save(OUT)
     print(OUT)
