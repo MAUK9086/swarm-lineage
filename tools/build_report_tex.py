@@ -43,7 +43,7 @@ PREAMBLE = r"""\documentclass[11pt]{article}
 \usepackage[font=small, labelfont=bf, skip=4pt]{caption}
 \usepackage{titlesec}
 \titleformat{\section}{\fontsize{14}{18}\selectfont\bfseries\color{h2}}{}{0pt}{}
-\titlespacing*{\section}{0pt}{10pt}{2pt}
+\titlespacing*{\section}{0pt}{8pt}{2pt}
 \titleformat{\subsection}{\fontsize{13}{16}\selectfont\bfseries\color{h3}}{}{0pt}{}
 \titlespacing*{\subsection}{0pt}{8pt}{1pt}
 \usepackage[section]{placeins}
@@ -176,7 +176,11 @@ def build(draft: Path, out: Path) -> None:
     authors = [l for l in head_lines if not l.startswith("With ")]
     tex = [PREAMBLE]
     tex.append(r"\noindent\rule{\textwidth}{1.2pt}\par\vspace{10pt}")
-    tex.append(r"\begin{center}{\fontsize{20}{24}\selectfont\bfseries " + esc(title) + r"\par}\end{center}")
+    # Template: a footnote on the title, "Research conducted at the Swarm Alignment Hackathon, November 2026",
+    # with the hackathon name linked to the sprint page (10 pt, link colour 1155CC, underlined).
+    note = (r"\footnote{\fontsize{10}{12}\selectfont Research conducted at the \href{https://apartresearch.com/sprints/swarm-alignment-2026}"
+            r"{\textcolor[HTML]{1155CC}{\underline{Swarm Alignment Hackathon}}}, November 2026}")
+    tex.append(r"\begin{center}{\fontsize{20}{24}\selectfont\bfseries " + esc(title) + note + r"\par}\end{center}")
     tex.append(r"\vspace{2pt}\noindent\rule{\textwidth}{0.5pt}\par\vspace{8pt}")
     tex.append(r"\begin{center}\setstretch{1.0}")
     for a in authors:
@@ -230,7 +234,7 @@ def build(draft: Path, out: Path) -> None:
             num = re.findall(r"\d+", label)[0]
             if (REPO / path.replace(".png", ".pdf")).exists():
                 path = path.replace(".png", ".pdf")
-            width = r"0.72\textwidth" if "R1_pipeline" in path else (r"0.86\textwidth" if ("R3_" in path or "R4_" in path) else r"0.94\textwidth")
+            width = r"0.72\textwidth" if "R1_pipeline" in path else (r"0.82\textwidth" if ("R3_" in path or "R4_" in path) else r"0.9\textwidth")
             tex.append(r"\begin{figure}[htbp]\centering" + "\n" + r"\includegraphics[width=" + width + "]{../" + path + "}\n"
                        + r"\caption{" + esc(cap.strip("*")) + "}\\label{fig:" + num + "}\n" + r"\end{figure}")
         elif "[insert " in s and " table]" in s:
