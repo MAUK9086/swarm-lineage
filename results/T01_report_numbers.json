@@ -1,7 +1,7 @@
 {
   "experiment": "T01_report_numbers",
-  "run_at": "2026-11-09 14:38 IST",
-  "git_hash": "7e4413b",
+  "run_at": "2026-11-09 14:45 IST",
+  "git_hash": "474e715-dirty",
   "seed": 42,
   "params": {
     "inputs": "results/*.json only"
@@ -486,6 +486,13 @@
         "claim": "conclusions unchanged with 64-bit shingle hashes",
         "outcome": "unchanged",
         "key": "0 of 8,361,829 pairs changed; length 0.496",
+        "type": "robustness"
+      },
+      {
+        "exp": "E48",
+        "claim": "candidate partitions identical over 6 input orders; no GO in any order and scope",
+        "outcome": "not invariant",
+        "key": "partitions identical: True; GO in 1 of 18 runs; tree edges shared 22-23%",
         "type": "robustness"
       },
       {

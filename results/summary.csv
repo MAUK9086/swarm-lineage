@@ -161,3 +161,10 @@ E47,pairs_changed,0,d9f175e-dirty,2026-11-09 14:34 IST
 E47,pairs_leaving,0,d9f175e-dirty,2026-11-09 14:34 IST
 E47,len_64,0.4963589268864029,d9f175e-dirty,2026-11-09 14:34 IST
 E47,unchanged,True,d9f175e-dirty,2026-11-09 14:34 IST
+E48,partitions_identical,True,474e715,2026-11-09 14:44 IST
+E48,go_any,True,474e715,2026-11-09 14:44 IST
+E48,anchor_exact,True,474e715,2026-11-09 14:44 IST
+E50,anchor_exact,True,e46318f-dirty,2026-11-09 14:47 IST
+E50,f1_min,0.6905923545577185,e46318f-dirty,2026-11-09 14:47 IST
+E50,f1_max,0.7017640457206639,e46318f-dirty,2026-11-09 14:47 IST
+E50,stable,True,e46318f-dirty,2026-11-09 14:47 IST

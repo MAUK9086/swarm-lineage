@@ -249,9 +249,13 @@ def ledger() -> list[dict[str, Any]]:
                      "outcome": "unchanged" if e47["conclusions_unchanged"] else "changed (see log)",
                      "key": f"{cd['pairs_jaccard_changed']:,} of {cd['pairs_32bit']:,} pairs changed; length {cd['methods_64bit']['b_longer_is_later']['macro']:.3f}"})
     if e48:
-        rows.append({"exp": "E48", "claim": "candidate partitions identical over 6 input orders; no GO",
+        rows.append({"exp": "E48", "claim": "candidate partitions identical over 6 input orders; no GO in any order and scope",
                      "outcome": "invariant" if e48["invariant_by_rule"] else "not invariant",
-                     "key": f"partitions identical: {e48['partitions_identical_all']}; GO in any order: {e48['go_met_any']}"})
+                     "key": f"partitions identical: {e48['partitions_identical_all']}; GO in "
+                            f"{sum(v[sc]['go'] for v in e48['orders'].values() for sc in ('all', 'within_group', 'cross_group'))} of "
+                            f"{3 * len(e48['orders'])} runs; tree edges shared "
+                            f"{100 * min(v['all']['tree_edges_shared_with_42'] for k, v in e48['orders'].items() if k != '42'):.0f}-"
+                            f"{100 * max(v['all']['tree_edges_shared_with_42'] for k, v in e48['orders'].items() if k != '42'):.0f}%"})
     if e49:
         rows.append({"exp": "E49", "claim": "LSH recall of eligible pairs >= 0.8 (else limitation)",
                      "outcome": "below 0.8" if not e49["recall_ge_0.8"] else "met",

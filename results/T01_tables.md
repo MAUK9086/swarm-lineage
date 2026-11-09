@@ -41,6 +41,7 @@ Ledger
 | E45 | robustness | < 0.1% of distinct shingles in a 32-bit hash collision | not met | 0.60% of 25,612,365 |
 | E46 | confirmatory (added late) | wiki: MST recovers true parent links (F1 >= random + 10 pts); depth orients them better than length (+5 pts) | structure GO; direction NO-GO | F1 0.70 vs 0.31; orientation 0.92 vs 0.96 |
 | E47 | robustness | conclusions unchanged with 64-bit shingle hashes | unchanged | 0 of 8,361,829 pairs changed; length 0.496 |
+| E48 | robustness | candidate partitions identical over 6 input orders; no GO in any order and scope | not invariant | partitions identical: True; GO in 1 of 18 runs; tree edges shared 22-23% |
 | E49 | descriptive | LSH recall of eligible pairs >= 0.8 (else limitation) | below 0.8 | recall 0.51; J 0.5-0.6 0.49, J >= 0.7 at least 0.995 |
 
 Robustness
@@ -58,6 +59,7 @@ Robustness
 | Lineage, across submolts, 5 seeds (Kendall tau range) | - | 0.037 to 0.091 | depth 0.002 to 0.045; ties kept 0.014 to 0.077 |
 | 64-bit shingle hashes (8,361,829 pairs) | 547 | 0.496 (0.461-0.533) | 0.508 |
 | Lineage, all pairs, 64-bit hashes (Kendall tau) | - | 0.050 | depth 0.033 |
+| Lineage, all pairs, 6 input orders (Kendall tau range) | - | 0.046 to 0.059 | depth 0.007 to 0.037 |
 
 Parents
 

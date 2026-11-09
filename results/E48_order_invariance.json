@@ -1,0 +1,328 @@
+{
+  "experiment": "E48_order_invariance",
+  "run_at": "2026-11-09 14:44 IST",
+  "git_hash": "474e715",
+  "seed": 42,
+  "params": {
+    "config": {
+      "shingle_k_words": 5,
+      "num_perm": 128,
+      "lsh_threshold": 0.5,
+      "jaccard_window": [
+        0.5,
+        0.95
+      ],
+      "min_nodes": 5,
+      "max_nodes": 200,
+      "seed": 42,
+      "n_boot": 1000,
+      "n_null": 1000,
+      "node_key": "normalised text (whitespace collapsed, lower-cased)",
+      "node_time": "earliest post",
+      "tree": "minimum spanning tree on 1 - Jaccard over verified edges",
+      "root": "max mean containment C(node in other)",
+      "order": "hop depth from root, seeded random tie-break",
+      "baseline": "length (shorter earlier), seeded random tie-break",
+      "version": 2,
+      "row_shuffle": "pandas DataFrame.sample(frac=1, random_state=42), reset_index",
+      "row_shuffle_seed": 42,
+      "pair_scopes": [
+        "all",
+        "within_group",
+        "cross_group"
+      ],
+      "scope_rule": "edge within_group if the two nodes share any group_id; cross_group if none",
+      "primary_scope": "all"
+    },
+    "row_shuffle_seeds": [
+      42,
+      101,
+      102,
+      103,
+      104,
+      105
+    ]
+  },
+  "results": {
+    "orders": {
+      "42": {
+        "candidate_partition_identical_to_42": true,
+        "candidate_components_ge_min": 700,
+        "candidate_components_capped": 17,
+        "all": {
+          "lineage_components": 489,
+          "nodes": 8454,
+          "components_identical_to_42": 1.0,
+          "tree_edges_shared_with_42": 1.0,
+          "depth_tau": 0.033207203253865045,
+          "depth_ci": [
+            0.005949535554559812,
+            0.06296190654910164
+          ],
+          "length_tau": 0.05013409644013604,
+          "go": false
+        },
+        "within_group": {
+          "lineage_components": 453,
+          "nodes": 7993,
+          "components_identical_to_42": 1.0,
+          "tree_edges_shared_with_42": 1.0,
+          "depth_tau": 0.020106333025426824,
+          "depth_ci": [
+            -0.008974747994570343,
+            0.050792694948246585
+          ],
+          "length_tau": 0.03413454542377196,
+          "go": false
+        },
+        "cross_group": {
+          "lineage_components": 76,
+          "nodes": 1026,
+          "components_identical_to_42": 1.0,
+          "tree_edges_shared_with_42": 1.0,
+          "depth_tau": 0.02390974278777615,
+          "depth_ci": [
+            -0.04802313246814736,
+            0.09661762524336615
+          ],
+          "length_tau": 0.09050098761826361,
+          "go": false
+        }
+      },
+      "101": {
+        "candidate_partition_identical_to_42": true,
+        "candidate_components_ge_min": 700,
+        "candidate_components_capped": 17,
+        "all": {
+          "lineage_components": 490,
+          "nodes": 8426,
+          "components_identical_to_42": 0.8936605316973415,
+          "tree_edges_shared_with_42": 0.2191213677834854,
+          "depth_tau": 0.023229598862856114,
+          "depth_ci": [
+            -0.009036426693415417,
+            0.05192409312640728
+          ],
+          "length_tau": 0.05266843328109854,
+          "go": false
+        },
+        "within_group": {
+          "lineage_components": 455,
+          "nodes": 7975,
+          "components_identical_to_42": 0.8852097130242825,
+          "tree_edges_shared_with_42": 0.20769847634322375,
+          "depth_tau": -0.0012086570580593457,
+          "depth_ci": [
+            -0.030481427093281683,
+            0.030738986886048408
+          ],
+          "length_tau": 0.03695494603843103,
+          "go": false
+        },
+        "cross_group": {
+          "lineage_components": 76,
+          "nodes": 1002,
+          "components_identical_to_42": 0.9342105263157895,
+          "tree_edges_shared_with_42": 0.4748427672955975,
+          "depth_tau": 0.03117491027151846,
+          "depth_ci": [
+            -0.043764755205556054,
+            0.11379026888078213
+          ],
+          "length_tau": 0.07290518099146648,
+          "go": false
+        }
+      },
+      "102": {
+        "candidate_partition_identical_to_42": true,
+        "candidate_components_ge_min": 700,
+        "candidate_components_capped": 17,
+        "all": {
+          "lineage_components": 481,
+          "nodes": 8428,
+          "components_identical_to_42": 0.8936605316973415,
+          "tree_edges_shared_with_42": 0.21521307469069803,
+          "depth_tau": 0.006922850041869689,
+          "depth_ci": [
+            -0.02278408337657847,
+            0.03841909584074717
+          ],
+          "length_tau": 0.04850050519311651,
+          "go": false
+        },
+        "within_group": {
+          "lineage_components": 446,
+          "nodes": 7983,
+          "components_identical_to_42": 0.8852097130242825,
+          "tree_edges_shared_with_42": 0.20202503388344095,
+          "depth_tau": 0.02433278472136805,
+          "depth_ci": [
+            -0.0062800073068286204,
+            0.053163808420749206
+          ],
+          "length_tau": 0.03035912557209554,
+          "go": false
+        },
+        "cross_group": {
+          "lineage_components": 74,
+          "nodes": 973,
+          "components_identical_to_42": 0.9342105263157895,
+          "tree_edges_shared_with_42": 0.5421184320266889,
+          "depth_tau": 0.0075411524651031675,
+          "depth_ci": [
+            -0.06994130963704244,
+            0.0877917987831937
+          ],
+          "length_tau": 0.0780417074401798,
+          "go": false
+        }
+      },
+      "103": {
+        "candidate_partition_identical_to_42": true,
+        "candidate_components_ge_min": 700,
+        "candidate_components_capped": 17,
+        "all": {
+          "lineage_components": 486,
+          "nodes": 8415,
+          "components_identical_to_42": 0.8936605316973415,
+          "tree_edges_shared_with_42": 0.22120630042258932,
+          "depth_tau": 0.0341599608849224,
+          "depth_ci": [
+            0.006595700235596606,
+            0.06290646266894404
+          ],
+          "length_tau": 0.049668224856669246,
+          "go": false
+        },
+        "within_group": {
+          "lineage_components": 451,
+          "nodes": 7968,
+          "components_identical_to_42": 0.8852097130242825,
+          "tree_edges_shared_with_42": 0.20900915368556286,
+          "depth_tau": 0.011939673158993866,
+          "depth_ci": [
+            -0.017912312475122538,
+            0.03923562481854737
+          ],
+          "length_tau": 0.016959330196753303,
+          "go": false
+        },
+        "cross_group": {
+          "lineage_components": 74,
+          "nodes": 973,
+          "components_identical_to_42": 0.9342105263157895,
+          "tree_edges_shared_with_42": 0.478017585931255,
+          "depth_tau": 0.015459569815552032,
+          "depth_ci": [
+            -0.07827313514230934,
+            0.0973865902252827
+          ],
+          "length_tau": 0.056173397726514245,
+          "go": false
+        }
+      },
+      "104": {
+        "candidate_partition_identical_to_42": true,
+        "candidate_components_ge_min": 700,
+        "candidate_components_capped": 17,
+        "all": {
+          "lineage_components": 483,
+          "nodes": 8461,
+          "components_identical_to_42": 0.8936605316973415,
+          "tree_edges_shared_with_42": 0.22799044904875607,
+          "depth_tau": 0.03747047790714329,
+          "depth_ci": [
+            0.008992315317421598,
+            0.0665323448380423
+          ],
+          "length_tau": 0.05908107986641334,
+          "go": false
+        },
+        "within_group": {
+          "lineage_components": 447,
+          "nodes": 8009,
+          "components_identical_to_42": 0.8852097130242825,
+          "tree_edges_shared_with_42": 0.2148660606548146,
+          "depth_tau": 0.03641409139362571,
+          "depth_ci": [
+            0.008429841477430543,
+            0.0665449276920329
+          ],
+          "length_tau": 0.03068619837978275,
+          "go": true
+        },
+        "cross_group": {
+          "lineage_components": 76,
+          "nodes": 985,
+          "components_identical_to_42": 0.9342105263157895,
+          "tree_edges_shared_with_42": 0.5200327064595257,
+          "depth_tau": 0.012331843213829026,
+          "depth_ci": [
+            -0.06357259124314318,
+            0.09223357236849385
+          ],
+          "length_tau": 0.06868298392686877,
+          "go": false
+        }
+      },
+      "105": {
+        "candidate_partition_identical_to_42": true,
+        "candidate_components_ge_min": 700,
+        "candidate_components_capped": 17,
+        "all": {
+          "lineage_components": 487,
+          "nodes": 8441,
+          "components_identical_to_42": 0.8936605316973415,
+          "tree_edges_shared_with_42": 0.21751434034416825,
+          "depth_tau": 0.019648171875912827,
+          "depth_ci": [
+            -0.008853231602970909,
+            0.04930276862024561
+          ],
+          "length_tau": 0.045692862378008334,
+          "go": false
+        },
+        "within_group": {
+          "lineage_components": 452,
+          "nodes": 7991,
+          "components_identical_to_42": 0.8852097130242825,
+          "tree_edges_shared_with_42": 0.20632,
+          "depth_tau": 0.014734961872692678,
+          "depth_ci": [
+            -0.014340448335702326,
+            0.04560920085995777
+          ],
+          "length_tau": 0.03435278923700221,
+          "go": false
+        },
+        "cross_group": {
+          "lineage_components": 74,
+          "nodes": 1057,
+          "components_identical_to_42": 0.9342105263157895,
+          "tree_edges_shared_with_42": 0.4834996162701458,
+          "depth_tau": 0.009026001106884583,
+          "depth_ci": [
+            -0.06500161245400363,
+            0.08587769028651686
+          ],
+          "length_tau": 0.04081576242563763,
+          "go": false
+        }
+      }
+    },
+    "anchor_check_vs_E41v2": {
+      "depth": [
+        0.033207203253865045,
+        0.033207203253865045
+      ],
+      "length": [
+        0.05013409644013604,
+        0.05013409644013604
+      ],
+      "exact_1e-12": true
+    },
+    "partitions_identical_all": true,
+    "go_met_any": true,
+    "invariant_by_rule": false
+  }
+}

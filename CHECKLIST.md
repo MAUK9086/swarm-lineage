@@ -9,8 +9,10 @@ Each item names the experiment in this repository that applies it. Numbers are i
 2. **Keep time and order-bearing fields away from the method.** Pass a table without the
    time column; exclude sequence numbers, diff bases, collection times and composite ids.
    (`src/evaluate.py` is the only module that reads `t`; `assert_public` guards the rest.)
-3. **Test for row-order and id leakage.** Shuffle rows before processing and check that
-   results do not depend on the input order. (E41b found a leak; E48 checks invariance.)
+3. **Test for row-order and id leakage.** Shuffle rows before processing, then re-run under
+   several independent input orders and compare the outputs, not just the summary score.
+   Break ties by a stable content key. (E41b found a leak; E48 found that tree structure
+   still depends on input order through tied weights.)
 4. **Report documents, pairs and clusters separately.** A few clusters can hold almost all
    pairs. (T02: two clusters hold 98.4% of 8.4M Moltbook pairs.)
 5. **Measure candidate-retrieval recall.** Approximate near-duplicate search misses pairs,

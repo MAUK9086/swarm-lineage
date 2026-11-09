@@ -37,6 +37,8 @@ CHECKS = [
     ("E47_hash64", "conclusions_unchanged", True, 0),
     ("E47_hash64", "copy_direction.pairs_jaccard_changed", 0, 0),
     ("E49_lsh_recall", "bins.0.5-0.6.recall", 0.486, 0.0005),
+    ("E48_order_invariance", "partitions_identical_all", True, 0),
+    ("E48_order_invariance", "go_met_any", True, 0),
 ]
 
 
