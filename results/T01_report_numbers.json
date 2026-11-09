@@ -1,0 +1,386 @@
+{
+  "experiment": "T01_report_numbers",
+  "run_at": "2026-11-09 11:48 IST",
+  "git_hash": "5c52de5",
+  "seed": 42,
+  "params": {
+    "inputs": "results/*.json only"
+  },
+  "results": {
+    "corpora": {
+      "swarm_traces": {
+        "rows": 189579,
+        "rows_with_time": 0,
+        "kinds": {
+          "payload": 91037,
+          "recovered_text": 75534,
+          "response": 23008
+        },
+        "source": "E00, E01"
+      },
+      "moltbook": {
+        "posts": 3602713,
+        "agents": 181589,
+        "timestamped_share": 1.0,
+        "exact_duplicate_rate": 0.09354045032206705,
+        "sample": 300000,
+        "pairs_scored_v2": 8360718,
+        "components_v2": 1212,
+        "components_scored_v2": 559,
+        "source": "E30, E36v2"
+      },
+      "collusion_wiki": {
+        "revisions": 14591,
+        "pages": 4579,
+        "timestamped_share": 1.0,
+        "pairs_scored_v2": 36711,
+        "components_v2": 1179,
+        "components_scored_v2": 1140,
+        "source": "E20, E36v2"
+      }
+    },
+    "copy_cues": {
+      "margins_vs_length_points": {
+        "moltbook.all": {
+          "a_random": -6.520846768137078,
+          "c_containment": -0.8282628720911234,
+          "i_extension": -1.9689549637986858,
+          "ii_insertion_vs_deletion": -0.8509051338947082
+        },
+        "moltbook.within_group": {
+          "a_random": -5.105114992658244,
+          "c_containment": -0.6050801342629142,
+          "i_extension": -0.11334767975313964,
+          "ii_insertion_vs_deletion": 0.3926222250056899
+        },
+        "moltbook.cross_group": {
+          "a_random": -4.360140191342232,
+          "c_containment": -0.5193236714976068,
+          "i_extension": 7.2255375580183685,
+          "ii_insertion_vs_deletion": 6.702898550724634
+        },
+        "collusion_wiki.all": {
+          "a_random": -38.27393970597085,
+          "c_containment": -0.3077737803479308,
+          "i_extension": -1.3549307785498343,
+          "ii_insertion_vs_deletion": -0.3256662837280655
+        },
+        "collusion_wiki.within_group": {
+          "a_random": -43.805773297092756,
+          "c_containment": 0.0638981098622593,
+          "i_extension": -0.17858785459683446,
+          "ii_insertion_vs_deletion": 0.10778484096870544
+        },
+        "collusion_wiki.cross_group": {
+          "a_random": -11.383051105273335,
+          "c_containment": -2.4908270741604066,
+          "i_extension": -4.85567930012375,
+          "ii_insertion_vs_deletion": -1.8770170159059019
+        },
+        "moltbook.E32": {
+          "a_random": 1.4141695401777288,
+          "i_extension": 1.171653605383044,
+          "ii_insertion_vs_deletion": 0.9125335359339071
+        }
+      },
+      "within_group_share_of_pairs": {
+        "moltbook": 0.6865917496559506,
+        "collusion_wiki": 0.7492032360872763
+      },
+      "algebra": {
+        "containment_ties_share_E31": 0.521453858958369,
+        "insdel_vs_token_count_agreement_non_ties_E32": 1.0,
+        "token_count_ties_E32": 551,
+        "pairs_scored_E32": 1767,
+        "extension_ties_E32": 870,
+        "source": "E31, E32"
+      }
+    },
+    "evaluation": {
+      "E34_inflation_by_window": {
+        "0.5-0.95": {
+          "pair_none": 0.6960841940202317,
+          "macro_none": 0.5037584218859626,
+          "inflation_points": 19.232577213426904,
+          "ci_width_ratio": 80.98701602363731,
+          "pairs": 8361829,
+          "components": 1198,
+          "max_abs_gap_caps_le_100_points": 0.515503184919841
+        },
+        "0.7-0.95": {
+          "pair_none": 0.6982487296523915,
+          "macro_none": 0.44984802885267805,
+          "inflation_points": 24.840070079971344,
+          "ci_width_ratio": 24.748392324549695,
+          "pairs": 328847,
+          "components": 482,
+          "max_abs_gap_caps_le_100_points": 5.755837967073979
+        },
+        "0.9-0.95": {
+          "pair_none": 0.8579153854310253,
+          "macro_none": 0.6122424804953999,
+          "inflation_points": 24.567290493562545,
+          "ci_width_ratio": 12.726966784073637,
+          "pairs": 9431,
+          "components": 80,
+          "max_abs_gap_caps_le_100_points": 1.2798017435320608
+        }
+      },
+      "E36v2_pair_minus_component_length_points": {
+        "all": 13.071628515580825,
+        "within_group": 8.746279121352297,
+        "cross_group": 28.940956502124116
+      },
+      "E35": {
+        "pairs": 8361829,
+        "wald_se_at_0.5": 0.00017290970241686405,
+        "null_sd_pair_level": 0.00189657677873602,
+        "null_sd_over_wald_se": 10.968596627178309,
+        "fpr_pair_level": 0.863,
+        "fpr_pair_ci": [
+          0.8402949037824456,
+          0.8829268695133805
+        ],
+        "fpr_component_level": 0.053,
+        "fpr_component_ci": [
+          0.04074650516410494,
+          0.06867461697574555
+        ]
+      },
+      "source": "E34, E35, E36v2"
+    },
+    "lineage": {
+      "leak": {
+        "E41_depth": 0.09831772658976186,
+        "E41_length": 0.05704014068312691,
+        "E41b_depth": 0.033207203253865045,
+        "E41b_length": 0.05013409644013604,
+        "depth_drop_share": 0.6622460220991011
+      },
+      "moltbook_root_is_shortest_share": 0.5398773006134969,
+      "moltbook_within_share_of_edges": 0.9503461540348657,
+      "collusion_wiki_root_is_shortest_share": 0.8739946380697051,
+      "collusion_wiki_within_share_of_edges": 0.9364613010446344,
+      "E41v2_rows": {
+        "moltbook.all": {
+          "depth": {
+            "macro_tau": 0.033207203253865045,
+            "ci": [
+              0.005949535554559812,
+              0.06296190654910164
+            ],
+            "naive_tau": 0.00386807496171393
+          },
+          "length": {
+            "macro_tau": 0.05013409644013604,
+            "ci": [
+              0.020791034936403666,
+              0.08278400029422221
+            ],
+            "naive_tau": 0.047774672792434414
+          }
+        },
+        "moltbook.within_group": {
+          "depth": {
+            "macro_tau": 0.020106333025426824,
+            "ci": [
+              -0.008974747994570343,
+              0.050792694948246585
+            ],
+            "naive_tau": 0.01297634621653776
+          },
+          "length": {
+            "macro_tau": 0.03413454542377196,
+            "ci": [
+              0.004867086973368751,
+              0.0663070928697389
+            ],
+            "naive_tau": 0.06234150017569928
+          }
+        },
+        "moltbook.cross_group": {
+          "depth": {
+            "macro_tau": 0.02390974278777615,
+            "ci": [
+              -0.04802313246814736,
+              0.09661762524336615
+            ],
+            "naive_tau": -0.09881904143500675
+          },
+          "length": {
+            "macro_tau": 0.09050098761826361,
+            "ci": [
+              -0.0033383120182946136,
+              0.1840592910051196
+            ],
+            "naive_tau": -0.11277951381843265
+          }
+        },
+        "collusion_wiki.all": {
+          "depth": {
+            "macro_tau": 0.6939277402646945,
+            "ci": [
+              0.6535759465234976,
+              0.7311726629975842
+            ],
+            "naive_tau": 0.49536615778654003
+          },
+          "length": {
+            "macro_tau": 0.7644473312316591,
+            "ci": [
+              0.7273411208190276,
+              0.7996206287994494
+            ],
+            "naive_tau": 0.6847639268021433
+          }
+        },
+        "collusion_wiki.within_group": {
+          "depth": {
+            "macro_tau": 0.7969837947212406,
+            "ci": [
+              0.762016887167356,
+              0.8312486754611339
+            ],
+            "naive_tau": 0.5072191402085329
+          },
+          "length": {
+            "macro_tau": 0.8667666569821048,
+            "ci": [
+              0.8363560824714442,
+              0.8989430679017884
+            ],
+            "naive_tau": 0.706499936753465
+          }
+        },
+        "collusion_wiki.cross_group": {
+          "depth": {
+            "macro_tau": 0.13844429941565167,
+            "ci": [
+              0.07480458401086193,
+              0.20227785491785477
+            ],
+            "naive_tau": 0.015168331483536912
+          },
+          "length": {
+            "macro_tau": 0.37453056737040236,
+            "ci": [
+              0.29762952674475507,
+              0.45325274265587856
+            ],
+            "naive_tau": 0.4947835738068813
+          }
+        }
+      },
+      "null_fpr_naive_range": [
+        0.551,
+        0.734
+      ],
+      "null_fpr_macro_range": [
+        0.041,
+        0.069
+      ],
+      "source": "E41, E41b, E41v2"
+    },
+    "monitor": {
+      "steps": [
+        {
+          "label": "naive (E37)",
+          "auroc": 0.9604636737429922,
+          "ci": [
+            0.954864490736938,
+            0.9980025522023163
+          ]
+        },
+        {
+          "label": "post count only (E37)",
+          "auroc": 0.9482486945838693,
+          "ci": [
+            0.9292171244805952,
+            0.9857492814412002
+          ]
+        },
+        {
+          "label": "activity-matched (E37)",
+          "auroc": 0.721956741138468,
+          "ci": [
+            0.6605633839293016,
+            0.9891734634075741
+          ]
+        },
+        {
+          "label": "grouped CV, 13 positives (E38)",
+          "auroc": 0.6910762833839756,
+          "ci": [
+            0.5632615946468673,
+            0.8210175335654871
+          ]
+        },
+        {
+          "label": "held-out components (E38)",
+          "auroc": 0.5288265279199603,
+          "ci": null
+        }
+      ],
+      "recall_naive": 0.8594276094276094,
+      "recall_matched": 0.1396598030438675,
+      "recall_E38_cv": 0.07692307692307693,
+      "recall_E38_heldout": 0.07319029476639262,
+      "E38_cv_coordinated": 13,
+      "E38_heldout_coordinated": 4987,
+      "E38_largest_component": 4262,
+      "synchrony_only_cv": 0.4851991044298737,
+      "synchrony_only_heldout": 0.5365017466465443,
+      "source": "E37, E38"
+    },
+    "ledger": [
+      {
+        "exp": "E01-E02",
+        "claim": "public Swarm Traces rows carry time",
+        "outcome": "NO-GO",
+        "key": "0 of 189,579 rows timestamped"
+      },
+      {
+        "exp": "E31",
+        "claim": "containment beats length by >= 5 pts (pairs)",
+        "outcome": "NO-GO",
+        "key": "0.590 vs 0.696"
+      },
+      {
+        "exp": "E32",
+        "claim": "edit cue beats length by >= 5 pts (clusters)",
+        "outcome": "NO-GO",
+        "key": "length 0.496; best cue 0.508"
+      },
+      {
+        "exp": "E34",
+        "claim": "pair-level inflates by >= 5 pts",
+        "outcome": "confirmed",
+        "key": "19.2 pts"
+      },
+      {
+        "exp": "E35",
+        "claim": "naive FPR > 10% while cluster FPR <= 10%",
+        "outcome": "confirmed",
+        "key": "86.3% vs 5.3%"
+      },
+      {
+        "exp": "E37",
+        "claim": "metadata monitor AUROC >= 0.75 (unmatched)",
+        "outcome": "GO by rule, not adopted",
+        "key": "0.960; post count alone 0.948"
+      },
+      {
+        "exp": "E38",
+        "claim": "matched monitor AUROC >= 0.75 and recall >= 0.30",
+        "outcome": "NO-GO",
+        "key": "0.691, recall 0.077"
+      },
+      {
+        "exp": "E41",
+        "claim": "tree depth orders time, beats length",
+        "outcome": "GO, withdrawn (E41b)",
+        "key": "0.098 -> 0.033 after row shuffle"
+      }
+    ]
+  }
+}
