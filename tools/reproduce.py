@@ -39,6 +39,7 @@ CHECKS = [
     ("E49_lsh_recall", "bins.0.5-0.6.recall", 0.486, 0.0005),
     ("E48_order_invariance", "partitions_identical_all", True, 0),
     ("E48_order_invariance", "go_met_any", True, 0),
+    ("E50_parent_recovery_orders", "stable", True, 0),
 ]
 
 

@@ -36,7 +36,7 @@ src/copydir.py    shingles, MinHash/LSH pair finding, direction cues (never sees
 src/lineage.py    clusters, spanning trees, lineage order (never sees t)
 src/evaluate.py   the only module that reads t: accuracy, Kendall tau, bootstrap CIs, nulls
 src/monitor*.py   metadata-only monitor features and data loading
-experiments/      one script per experiment (E00 ... E49), report numbers (T01-T03), figures
+experiments/      one script per experiment (E00 ... E50), report numbers (T01-T03), figures
 configs/          frozen pipeline configurations (SHA-256 recorded in EXPERIMENT_LOG.md)
 results/          E##_*.json: aggregates and ids only, with params, seed and git hash
 figures/          report and experiment figures

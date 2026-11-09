@@ -260,10 +260,15 @@ def ledger() -> list[dict[str, Any]]:
         rows.append({"exp": "E49", "claim": "LSH recall of eligible pairs >= 0.8 (else limitation)",
                      "outcome": "below 0.8" if not e49["recall_ge_0.8"] else "met",
                      "key": f"recall {e49['recall_0.5_0.95']:.2f}; J 0.5-0.6 {e49['bins']['0.5-0.6']['recall']:.2f}, J >= 0.7 at least {min(e49['bins'][b]['recall'] for b in ('0.7-0.8', '0.8-0.9', '0.9-0.95')):.3f}"})
+    e50 = load("E50_parent_recovery_orders")
+    if e50:
+        lo, hi = e50["all_mst_f1_range"]
+        rows.append({"exp": "E50", "claim": "E46 outcomes and tree F1 (+/-0.05) stable over 6 input orders",
+                     "outcome": "stable" if e50["stable"] else "not stable", "key": f"tree F1 {lo:.3f}-{hi:.3f}"})
     kinds = {"E01-E02": "gating", "E20": "gating", "E30": "gating", "E33": "gating", "E41b": "check",
              "E36-v2": "check", "E42": "post-hoc", "E43": "robustness", "E44": "robustness", "E45": "robustness",
              "E41-v2": "confirmatory; scopes exploratory", "E46": "confirmatory (added late)", "E47": "robustness",
-             "E48": "robustness", "E49": "descriptive"}
+             "E48": "robustness", "E49": "descriptive", "E50": "robustness"}
     for r in rows:
         r["type"] = kinds.get(r["exp"], "confirmatory")
     return rows
@@ -321,8 +326,6 @@ def parents() -> list[str]:
         m = ev[k]
         cell = lambda x: f"{m[x]['macro']:.2f} ({m[x]['ci'][0]:.2f}-{m[x]['ci'][1]:.2f})" if x in m else "-"
         out.append(f"| {lab} | {cell('precision')} | {cell('recall')} | {cell('f1')} | {cell('orientation_by_method')} | {cell('root_has_no_true_parent')} |")
-    m = ev["mst_tree"]["orientation_by_length_same_edges"]
-    out.append(f"| length, on the tree's recovered links | - | - | - | {m['macro']:.2f} ({m['ci'][0]:.2f}-{m['ci'][1]:.2f}) | - |")
     return out
 
 

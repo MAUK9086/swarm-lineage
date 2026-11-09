@@ -140,13 +140,14 @@ def table_tex(rows: list[list[str]], caption: str, label: str) -> str:
     """
     n = len(rows[0])
     p = lambda w: r">{\raggedright\arraybackslash}p{" + w + "}"
-    specs = {"tab:ledger": p("1.9cm") + p("1.8cm") + "L" + p("2.6cm") + "L",
+    specs = {"tab:ledger": p("1.5cm") + p("1.7cm") + "L" + p("2.4cm") + "L",
              "tab:robustness": "L" + p("1.3cm") + p("3.0cm") + "L",
              "tab:parents": p("3.6cm") + "LLLLL"}
     spec = specs.get(label, "L" * n)
+    size = r"\centering\scriptsize\setstretch{1.0}\setlength{\tabcolsep}{3pt}" if label == "tab:ledger" else r"\centering\small"
     head = " & ".join(r"\textbf{" + _plain(c) + "}" for c in rows[0]) + r" \\"
     body = "\n".join(" & ".join(_plain(c) for c in r) + r" \\" for r in rows[1:])
-    return (r"\begin{table}[htbp]" + "\n" + r"\centering\small" + "\n" + r"\caption{" + esc(caption) + "}\\label{" + label + "}\n"
+    return (r"\begin{table}[htbp]" + "\n" + size + "\n" + r"\caption{" + esc(caption) + "}\\label{" + label + "}\n"
             + r"\begin{tabularx}{\textwidth}{" + spec + "}\n\\toprule\n" + head + "\n\\midrule\n" + body + "\n\\bottomrule\n"
             + r"\end{tabularx}" + "\n" + r"\end{table}" + "\n")
 

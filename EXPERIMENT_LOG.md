@@ -1592,5 +1592,25 @@ Global seed: 42.
   direction NO-GO) are the same in every order. Otherwise report the range.
 - Method: E46 code (imported) with the row-shuffle seed varied; everything else as E46.
   Executed by the author on the held-out wiki (same deviation as E46).
-- Code: experiments/E50_parent_recovery_orders.py @ (filled after run)
+- Code: experiments/E50_parent_recovery_orders.py @ 5ed65e5
 - Params: seeds 42, 101-105; n_boot 1000.
+- Results: (results/E50_parent_recovery_orders.json; order 42 reproduces E46 exactly)
+  All scope over six orders: tree F1 0.691-0.702; random tree 0.305-0.323; length parent
+  0.690-0.701; tree orientation 0.911-0.920; length orientation on the same links
+  0.954-0.960. Structure GO and direction NO-GO in every order. stable = true.
+- Interpretation: Unlike Moltbook (E48), parent recovery on wiki page histories is stable
+  under input order; the tree still adds nothing over "most similar shorter text".
+- Decision / next step: State the range in Section 4.5.
+
+### Report revision after third external review  (2026-11-09 IST)
+- New analyses E46-E50 (registered above before running) folded into the report:
+  Section 4.5 and Table 3 (revision-parent recovery, E46/E50); Section 4.4 adds hash width
+  (E47), input order (E48) and LSH recall (E49); the ledger (Table 4) and robustness table
+  (Table 5) include all five. The metadata monitor moved to Appendix C with Figure 4.
+- Wording: abstract states Moltbook length as "no stable advantage (0.495-0.565 over five
+  pair samples)" and that tree structure depends on input order; plain-language edits
+  requested by the reviewer; estimands stated in the evaluation paragraph.
+- Repository: CHECKLIST.md, DATA.md, tests/ (unit tests), pinned requirements.txt and
+  tools/reproduce.py (checks headline numbers against results and runs the tests).
+- E46 and E50 were run by the author on the held-out collusion.wiki data; stated in the
+  report's protocol paragraph.

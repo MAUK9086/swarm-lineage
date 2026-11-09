@@ -1,0 +1,236 @@
+{
+  "experiment": "E50_parent_recovery_orders",
+  "run_at": "2026-11-09 14:48 IST",
+  "git_hash": "5ed65e5",
+  "seed": 42,
+  "params": {
+    "config": {
+      "shingle_k_words": 5,
+      "num_perm": 128,
+      "lsh_threshold": 0.5,
+      "jaccard_window": [
+        0.5,
+        0.95
+      ],
+      "min_nodes": 5,
+      "max_nodes": 200,
+      "seed": 42,
+      "n_boot": 1000,
+      "n_null": 1000,
+      "node_key": "normalised text (whitespace collapsed, lower-cased)",
+      "node_time": "earliest post",
+      "tree": "minimum spanning tree on 1 - Jaccard over verified edges",
+      "root": "max mean containment C(node in other)",
+      "order": "hop depth from root, seeded random tie-break",
+      "baseline": "length (shorter earlier), seeded random tie-break",
+      "version": 2,
+      "row_shuffle": "pandas DataFrame.sample(frac=1, random_state=42), reset_index",
+      "row_shuffle_seed": 42,
+      "pair_scopes": [
+        "all",
+        "within_group",
+        "cross_group"
+      ],
+      "scope_rule": "edge within_group if the two nodes share any group_id; cross_group if none",
+      "primary_scope": "all"
+    },
+    "row_shuffle_seeds": [
+      42,
+      101,
+      102,
+      103,
+      104,
+      105
+    ]
+  },
+  "results": {
+    "orders": {
+      "42": {
+        "all": {
+          "eligible_node_edges": 3583,
+          "mst_f1": 0.6993165192071288,
+          "mst_f1_ci": [
+            0.6660723005498592,
+            0.7300321685306649
+          ],
+          "random_f1": 0.3051436486609117,
+          "length_parent_f1": 0.6998194862753858,
+          "mst_orientation": 0.9202289073091389,
+          "length_orientation_same_edges": 0.9586307080616213,
+          "structure_go": true,
+          "direction_go": false
+        },
+        "within_group": {
+          "eligible_node_edges": 3437,
+          "mst_f1": 0.7451629475697377,
+          "mst_f1_ci": [
+            0.7163696714422969,
+            0.7772364719709375
+          ],
+          "random_f1": 0.32548932188193813,
+          "length_parent_f1": 0.73534875778416,
+          "mst_orientation": 0.922632902451642,
+          "length_orientation_same_edges": 0.9650821944753631,
+          "structure_go": true,
+          "direction_go": false
+        }
+      },
+      "101": {
+        "all": {
+          "eligible_node_edges": 3587,
+          "mst_f1": 0.7017640457206639,
+          "mst_f1_ci": [
+            0.6698296472758972,
+            0.7307888944350628
+          ],
+          "random_f1": 0.3227772867129065,
+          "length_parent_f1": 0.7006247852292786,
+          "mst_orientation": 0.9148825270720373,
+          "length_orientation_same_edges": 0.9595073357410419,
+          "structure_go": true,
+          "direction_go": false
+        },
+        "within_group": {
+          "eligible_node_edges": 3438,
+          "mst_f1": 0.7477440354364913,
+          "mst_f1_ci": [
+            0.7162642597896096,
+            0.7760752816594985
+          ],
+          "random_f1": 0.33674788769010416,
+          "length_parent_f1": 0.7347264509846161,
+          "mst_orientation": 0.9160799856714525,
+          "length_orientation_same_edges": 0.9624011633852413,
+          "structure_go": true,
+          "direction_go": false
+        }
+      },
+      "102": {
+        "all": {
+          "eligible_node_edges": 3605,
+          "mst_f1": 0.6932743593093812,
+          "mst_f1_ci": [
+            0.6656456176323062,
+            0.7239171794501472
+          ],
+          "random_f1": 0.31770216403814044,
+          "length_parent_f1": 0.6930728030137747,
+          "mst_orientation": 0.9202380825726385,
+          "length_orientation_same_edges": 0.9542469472357609,
+          "structure_go": true,
+          "direction_go": false
+        },
+        "within_group": {
+          "eligible_node_edges": 3448,
+          "mst_f1": 0.7441798730698472,
+          "mst_f1_ci": [
+            0.711427769745162,
+            0.7742702901507815
+          ],
+          "random_f1": 0.3453474383913978,
+          "length_parent_f1": 0.731867819759591,
+          "mst_orientation": 0.9213961493384532,
+          "length_orientation_same_edges": 0.961741800424959,
+          "structure_go": true,
+          "direction_go": false
+        }
+      },
+      "103": {
+        "all": {
+          "eligible_node_edges": 3595,
+          "mst_f1": 0.701732982150277,
+          "mst_f1_ci": [
+            0.673485866422937,
+            0.7310779094780707
+          ],
+          "random_f1": 0.3135366179426595,
+          "length_parent_f1": 0.7003157354477361,
+          "mst_orientation": 0.9146448969861616,
+          "length_orientation_same_edges": 0.9579207672687442,
+          "structure_go": true,
+          "direction_go": false
+        },
+        "within_group": {
+          "eligible_node_edges": 3447,
+          "mst_f1": 0.7464324841139791,
+          "mst_f1_ci": [
+            0.7162672143361419,
+            0.7746430104056062
+          ],
+          "random_f1": 0.34491476712253427,
+          "length_parent_f1": 0.73478425724263,
+          "mst_orientation": 0.9177859636761319,
+          "length_orientation_same_edges": 0.9678356098911163,
+          "structure_go": true,
+          "direction_go": false
+        }
+      },
+      "104": {
+        "all": {
+          "eligible_node_edges": 3586,
+          "mst_f1": 0.6905923545577185,
+          "mst_f1_ci": [
+            0.6603351799781177,
+            0.7227267405416452
+          ],
+          "random_f1": 0.319472559551084,
+          "length_parent_f1": 0.6899409802154907,
+          "mst_orientation": 0.920483120065764,
+          "length_orientation_same_edges": 0.9585356696077846,
+          "structure_go": true,
+          "direction_go": false
+        },
+        "within_group": {
+          "eligible_node_edges": 3435,
+          "mst_f1": 0.7415220655683409,
+          "mst_f1_ci": [
+            0.7122569280164145,
+            0.7715220073570176
+          ],
+          "random_f1": 0.3283969180577526,
+          "length_parent_f1": 0.7285618262968763,
+          "mst_orientation": 0.9215369197116676,
+          "length_orientation_same_edges": 0.9626667779993456,
+          "structure_go": true,
+          "direction_go": false
+        }
+      },
+      "105": {
+        "all": {
+          "eligible_node_edges": 3588,
+          "mst_f1": 0.7001516205359525,
+          "mst_f1_ci": [
+            0.668850156403235,
+            0.728562302070188
+          ],
+          "random_f1": 0.31618749112355665,
+          "length_parent_f1": 0.6984373053900939,
+          "mst_orientation": 0.9112524959644501,
+          "length_orientation_same_edges": 0.9540791905823399,
+          "structure_go": true,
+          "direction_go": false
+        },
+        "within_group": {
+          "eligible_node_edges": 3437,
+          "mst_f1": 0.7454726642660237,
+          "mst_f1_ci": [
+            0.7158721766655229,
+            0.7737187454539357
+          ],
+          "random_f1": 0.3353473083910965,
+          "length_parent_f1": 0.7318017134087939,
+          "mst_orientation": 0.9132173180360577,
+          "length_orientation_same_edges": 0.9595873105713885,
+          "structure_go": true,
+          "direction_go": false
+        }
+      }
+    },
+    "anchor_exact": true,
+    "all_mst_f1_range": [
+      0.6905923545577185,
+      0.7017640457206639
+    ],
+    "stable": true
+  }
+}

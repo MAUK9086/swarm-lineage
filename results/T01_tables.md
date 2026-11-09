@@ -43,6 +43,7 @@ Ledger
 | E47 | robustness | conclusions unchanged with 64-bit shingle hashes | unchanged | 0 of 8,361,829 pairs changed; length 0.496 |
 | E48 | robustness | candidate partitions identical over 6 input orders; no GO in any order and scope | not invariant | partitions identical: True; GO in 1 of 18 runs; tree edges shared 22-23% |
 | E49 | descriptive | LSH recall of eligible pairs >= 0.8 (else limitation) | below 0.8 | recall 0.51; J 0.5-0.6 0.49, J >= 0.7 at least 0.995 |
+| E50 | robustness | E46 outcomes and tree F1 (+/-0.05) stable over 6 input orders | stable | tree F1 0.691-0.702 |
 
 Robustness
 
@@ -68,4 +69,3 @@ Parents
 | spanning tree (depth) | 0.68 (0.64-0.71) | 0.76 (0.73-0.79) | 0.70 (0.67-0.73) | 0.92 (0.90-0.94) | 0.91 (0.88-0.94) |
 | most similar shorter text | 0.70 (0.66-0.73) | 0.74 (0.71-0.77) | 0.70 (0.66-0.73) | 0.98 (0.97-0.99) | 0.97 (0.95-0.99) |
 | random spanning tree | 0.29 (0.27-0.32) | 0.34 (0.31-0.37) | 0.31 (0.28-0.33) | 0.46 (0.42-0.51) | 0.24 (0.20-0.28) |
-| length, on the tree's recovered links | - | - | - | 0.96 (0.94-0.97) | - |
