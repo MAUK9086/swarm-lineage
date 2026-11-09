@@ -10,7 +10,7 @@ File structure:
     assert_public         guard: refuse tables that carry the hidden time column
     shingles              5-gram word shingles of a text, as a set of strings
     norm_text_hash        hash of normalised text (for exact-duplicate detection)
-    shingle_hashes_csr    all documents' shingle hashes as (flat, offsets)
+    shingle_hashes_csr    all documents' shingle hashes (32- or 64-bit) as (flat, offsets)
     minhash_signatures    MinHash signature matrix from the CSR shingle hashes
     lsh_candidate_pairs   banded LSH candidate pairs (i < j) from signatures (small inputs)
     _splitmix64           deterministic 64-bit hash used for pair sampling
@@ -105,23 +105,39 @@ def _h32(s: str) -> int:
     return int.from_bytes(hashlib.blake2b(s.encode("utf-8"), digest_size=4).digest(), "little")
 
 
-def shingle_hashes_csr(texts: Iterable[str], n: int) -> tuple[np.ndarray, np.ndarray]:
-    """Sorted unique 32-bit shingle hashes for every document, in CSR layout.
+def _h64(s: str) -> int:
+    """64-bit hash of a shingle string (used for collision checks).
+
+    Args:
+        s: Shingle.
+
+    Returns:
+        Unsigned 64-bit integer.
+    """
+    return int.from_bytes(hashlib.blake2b(s.encode("utf-8"), digest_size=8).digest(), "little")
+
+
+def shingle_hashes_csr(texts: Iterable[str], n: int, bits: int = 32) -> tuple[np.ndarray, np.ndarray]:
+    """Sorted unique shingle hashes for every document, in CSR layout.
+
+    The frozen pipelines use bits=32; bits=64 is used by E47 to test collision effects.
 
     Args:
         texts: Document texts.
         n: Number of documents (for the progress bar and offsets array).
+        bits: 32 or 64.
 
     Returns:
-        (flat uint32 array, offsets int64 array of length n + 1)
+        (flat uint32 or uint64 array, offsets int64 array of length n + 1)
     """
+    h, dt = (_h32, np.uint32) if bits == 32 else (_h64, np.uint64)
     chunks: list[np.ndarray] = []
     offsets = np.zeros(n + 1, dtype=np.int64)
-    for d, text in enumerate(tqdm(texts, total=n, desc="shingle hashes", unit="doc")):
-        arr = np.unique(np.fromiter((_h32(s) for s in shingles(text)), dtype=np.uint32))
+    for d, text in enumerate(tqdm(texts, total=n, desc=f"shingle hashes ({bits}-bit)", unit="doc")):
+        arr = np.unique(np.fromiter((h(s) for s in shingles(text)), dtype=dt))
         chunks.append(arr)
         offsets[d + 1] = offsets[d] + arr.size
-    flat = np.concatenate(chunks) if chunks else np.zeros(0, dtype=np.uint32)
+    flat = np.concatenate(chunks) if chunks else np.zeros(0, dtype=dt)
     return flat, offsets
 
 

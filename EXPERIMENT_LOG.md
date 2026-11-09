@@ -1441,3 +1441,70 @@ Global seed: 42.
   missing CI. Appendix figure A1 dropped.
 - Not done: complete-linkage clustering of the largest cluster (24,793 posts), stated as a
   limitation; no re-run of the metadata monitor.
+
+### E46 - Revision-parent recovery on collusion.wiki (ground truth: diff_base)  (2026-11-09 14:30 IST)
+- Question: Time order is not provenance. Where true parent links exist (wiki revisions
+  record their diff base), do the text-only lineage trees recover them, and does tree depth
+  orient a recovered edge better than length?
+- Hypothesis / expected: The minimum spanning tree recovers many true parent edges within
+  pages (successive revisions are the most similar texts), well above a random spanning
+  tree on the same verified edges. Orientation by tree depth is not better than "shorter is
+  parent".
+- Go / no-go criterion (pre-registered): (a) structure: MST undirected edge F1 (macro over
+  components) exceeds the random-spanning-tree F1 by >= 10 points with the MST CI low above
+  the random point; (b) direction: on true edges recovered by the MST, depth orientation is
+  correct more often than length orientation by >= 5 points with the depth CI low above the
+  length point. Both reported whatever the outcome.
+- Method: E41-v2 pipeline on the standard wiki table (rows shuffled, seed 42), scopes all /
+  within page / across pages; the method never sees diff_base. Evaluator only: the
+  rev_id -> diff_base map from collusion_slim.parquet, mapped to nodes; a true edge is
+  eligible if both revisions are in the same scored lineage component and in different
+  nodes (exact-duplicate revisions collapse into one node; counted). Predicted edges: MST
+  parent links; baselines: random spanning tree of the verified-edge graph (seeded) and
+  "length parent" (each node's parent = most similar shorter neighbour among verified edges).
+  Metrics per component, macro with cluster bootstrap: undirected precision, recall, F1;
+  direction accuracy on recovered true edges; root has no true parent in its component;
+  coverage = eligible / all true edges.
+- Deviation: collusion.wiki is the held-out corpus; this run is executed by the author
+  (not the earlier user-run setup), after the frozen held-out runs. Stated in the report.
+- Code: experiments/E46_parent_recovery.py @ (filled after run)
+- Params: configs/E41_lineage_v2.json; n_boot 1000; seed 42.
+
+### E47 - 64-bit shingle hashes: do the conclusions change?  (2026-11-09 14:30 IST)
+- Question: E45 found 0.60% of distinct shingles in a 32-bit collision. Do the Moltbook
+  copy-direction and lineage conclusions change with 64-bit hashes in the exact stage?
+- Hypothesis / expected: No. Few pairs change Jaccard; cluster-level estimates move by
+  well under their CI half-width.
+- Go / no-go criterion (pre-registered): conclusions unchanged if every GO/NO-GO outcome
+  (E32 rule for copy direction, E41-v2 rule per scope for lineage) is the same and every
+  cluster-level estimate moves by less than half of its 32-bit CI half-width.
+- Method: (a) recompute exact Jaccard of all E31 pairs with 64-bit blake2b shingle hashes;
+  count changed pairs and pairs leaving 0.5-0.95; re-run the E32 component pipeline (as in
+  E43) on the corrected pair set. (b) E41-v2 Moltbook lineage with 64-bit hashes in the
+  exact verification stage; LSH candidate buckets keep the 32-bit MinHash signatures.
+- Code: experiments/E47_hash64.py @ (filled after run)
+- Params: as E32 / E41-v2; seed 42.
+
+### E48 - Input-order invariance of the v2 lineage pipeline (Moltbook)  (2026-11-09 14:30 IST)
+- Question: Does the v2 lineage result depend on the order in which rows arrive?
+- Hypothesis / expected: Candidate partitions are identical across input orders; lineage
+  taus vary within the E44 seed range.
+- Go / no-go criterion (pre-registered): invariant if the LSH candidate partition (as sets
+  of node hashes) is identical for all five shuffles; E41-v2's GO rule must fail in every
+  shuffle and scope. Tau differences reported as they are.
+- Method: five row-shuffle seeds 101-105; all other seeds 42. Compare candidate partitions,
+  lineage component membership, share of identical tree edges (by node hash pairs), macro
+  tau for depth and length.
+- Code: experiments/E48_order_invariance.py @ (filled after run)
+- Params: configs/E41_lineage_v2.json; n_boot 1000.
+
+### E49 - LSH retrieval recall on a Moltbook subsample  (2026-11-09 14:30 IST)
+- Question: What share of truly eligible near-duplicate pairs does the banded LSH stage find?
+- Hypothesis / expected: High recall above J 0.7, lower in 0.5-0.6 (S-curve of 25x5 bands).
+- Go / no-go criterion (pre-registered): descriptive; recall reported per Jaccard bin.
+  Flagged as a limitation if overall recall in 0.5-0.95 is below 0.8.
+- Method: seeded sample of 20,000 posts; exact all-pairs Jaccard by sparse matrix product
+  over 64-bit shingle ids; truth = different-author, non-identical pairs with J in
+  [0.5, 0.95]; candidates = pairs sharing a band bucket (128 perms, 25x5, seed 42).
+- Code: experiments/E49_lsh_recall.py @ (filled after run)
+- Params: sample 20,000, seed 42.

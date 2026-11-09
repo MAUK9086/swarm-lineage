@@ -16,6 +16,8 @@ File structure:
     node_time_codes        earliest post time per collapsed node
     lineage_evaluation     Kendall tau (macro, pooled) and within-component null for lineage orders
     lineage_tau_summary    macro Kendall tau-b with ties allowed in the inferred order, no null
+    revision_parents       true parent revision per revision (wiki diff_base), evaluation only
+    parent_edge_evaluation predicted vs true parent links per component
     node_time_ranks        true time rank of nodes, for plotting only
 """
 
@@ -487,6 +489,108 @@ def lineage_tau_summary(truth: pd.Series, node_docs: list[np.ndarray], comp_node
         mean, lo, hi = _macro_ci(tau, n_boot, np.random.default_rng(seed))
         out[m] = {"macro_tau": mean, "macro_ci": [lo, hi], "components_with_tau": int((~np.isnan(tau)).sum()),
                   "share_pairs_tied_in_order": float((sx == 0).mean())}
+    return out
+
+
+def revision_parents(slim_path: str) -> dict[str, str]:
+    """True parent revision per revision (collusion.wiki diff_base), for evaluation only.
+
+    Args:
+        slim_path: Path to collusion_slim.parquet.
+
+    Returns:
+        rev_id -> diff_base rev_id, for revisions whose diff base is in the export.
+    """
+    d = pd.read_parquet(slim_path, columns=["rev_id", "diff_base"]).dropna()
+    d = d[d["diff_base"].isin(set(d["rev_id"]))]
+    return dict(zip(d["rev_id"].astype(str), d["diff_base"].astype(str)))
+
+
+def parent_edge_evaluation(parent_of: dict[str, str], node_docs: list[np.ndarray], comp_nodes: list[np.ndarray],
+                           pred_parents: dict[str, list[np.ndarray]], node_len: np.ndarray,
+                           n_boot: int = 1000, seed: int = 42) -> dict[str, Any]:
+    """Compare predicted parent links with true revision-parent links, per component.
+
+    A true link (doc -> parent doc) becomes a node edge when both docs lie in the same
+    component and in different nodes. Predicted parents are local indices (-1 = root).
+
+    Args:
+        parent_of: True parent doc id per doc id.
+        node_docs: Doc ids per node (all nodes).
+        comp_nodes: Node indices per lineage component.
+        pred_parents: Method -> list of local parent arrays, one per component.
+        node_len: Text length per node (for the length orientation of true edges).
+        n_boot: Component-bootstrap resamples.
+        seed: Seed for the bootstrap and length ties.
+
+    Returns:
+        Dict with link coverage counts and, per method, macro / pooled edge metrics.
+    """
+    node_of = {str(d): v for v, docs in enumerate(node_docs) for d in docs}
+    comp_of = {int(v): c for c, nodes in enumerate(comp_nodes) for v in nodes}
+    cov = {"true_links": len(parent_of), "same_node": 0, "not_in_scored_component": 0,
+           "across_components": 0, "eligible_links": 0}
+    true_edges: list[set] = [set() for _ in comp_nodes]
+    for child, par in parent_of.items():
+        a, b = node_of.get(child), node_of.get(par)
+        if a is None or b is None or a not in comp_of or b not in comp_of:
+            cov["not_in_scored_component"] += 1
+        elif a == b:
+            cov["same_node"] += 1
+        elif comp_of[a] != comp_of[b]:
+            cov["across_components"] += 1
+        else:
+            cov["eligible_links"] += 1
+            true_edges[comp_of[a]].add((a, b))
+    cov["eligible_node_edges"] = int(sum(len(t) for t in true_edges))
+    cov["components_with_true_edges"] = int(sum(1 for t in true_edges if t))
+    rng_tie = np.random.default_rng(seed + 7)
+    out: dict[str, Any] = {"coverage": cov}
+    has = [c for c in range(len(comp_nodes)) if true_edges[c]]
+    len_dir = np.full(len(comp_nodes), np.nan)
+    for c in has:
+        ok = []
+        for a, b in true_edges[c]:
+            la, lb = node_len[a], node_len[b]
+            ok.append(float(rng_tie.random() < 0.5) if la == lb else float(lb < la))
+        len_dir[c] = np.mean(ok)
+    out["length_orientation_all_true_edges"] = dict(zip(("macro", "ci_low", "ci_high"),
+                                                        _macro_ci(len_dir[has], n_boot, np.random.default_rng(seed))))
+    for m, plist in pred_parents.items():
+        prec, rec, f1, dirm, dirl, root_ok = (np.full(len(comp_nodes), np.nan) for _ in range(6))
+        tp_all = pp_all = tt_all = 0
+        for c in has:
+            nodes = comp_nodes[c]
+            par = plist[c]
+            pred = {(int(nodes[v]), int(nodes[p])) for v, p in enumerate(par) if p >= 0}
+            tu = {frozenset(e) for e in true_edges[c]}
+            pu = {frozenset(e) for e in pred}
+            hit = pu & tu
+            prec[c] = len(hit) / len(pu) if pu else np.nan
+            rec[c] = len(hit) / len(tu)
+            f1[c] = 2 * prec[c] * rec[c] / (prec[c] + rec[c]) if pu and (prec[c] + rec[c]) > 0 else 0.0
+            tp_all, pp_all, tt_all = tp_all + len(hit), pp_all + len(pu), tt_all + len(tu)
+            if hit:
+                d_ok, l_ok = [], []
+                for e in pred:
+                    if frozenset(e) in hit:
+                        child, parent = e
+                        d_ok.append(float((child, parent) in true_edges[c]))
+                        tc, tp = (child, parent) if (child, parent) in true_edges[c] else (parent, child)
+                        l_ok.append(float(rng_tie.random() < 0.5) if node_len[tc] == node_len[tp] else float(node_len[tp] < node_len[tc]))
+                dirm[c], dirl[c] = np.mean(d_ok), np.mean(l_ok)
+            roots = [int(nodes[v]) for v, p in enumerate(par) if p < 0]
+            if len(roots) == 1:
+                root_ok[c] = float(not any(ch == roots[0] for ch, _ in true_edges[c]))
+        res: dict[str, Any] = {"pooled_precision": tp_all / pp_all if pp_all else None,
+                               "pooled_recall": tp_all / tt_all if tt_all else None}
+        for name, arr in (("precision", prec), ("recall", rec), ("f1", f1), ("orientation_by_method", dirm),
+                          ("orientation_by_length_same_edges", dirl), ("root_has_no_true_parent", root_ok)):
+            x = arr[~np.isnan(arr)]
+            if x.size:
+                mean, lo, hi = _macro_ci(x, n_boot, np.random.default_rng(seed))
+                res[name] = {"macro": mean, "ci": [lo, hi], "components": int(x.size)}
+        out[m] = res
     return out
 
 
