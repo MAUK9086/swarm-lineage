@@ -1288,3 +1288,19 @@ Global seed: 42.
 - Decision / next step: The report quotes only numbers present in results/*.json. The
   public Swarm Traces release appears in the report only as motivation (no timestamps),
   not as an evaluated corpus.
+
+### Report revision after external review  (2026-11-09 12:54 IST)
+- T03 (experiments/T03_appendix_trees.py): redraws E41's four largest stored-order trees
+  with the v2 figure layout (figures/A1_trees_stored_order.png) from the saved trees and
+  the unshuffled table; the per-tree taus (+0.29, +0.14, +0.02, +0.04) match E41's saved
+  values. No new analysis.
+- T01 tables: the corpora table now reports clusters scored after the template filter for
+  both corpora (Moltbook 547 from E32, collusion.wiki 1,140 from E36-v2) instead of a
+  median that was not computed for the wiki; the decision ledger now lists every
+  pre-registered outcome (adds E20, E30, E33, E41b, E36-v2 check, E41-v2 and both
+  held-out runs).
+- Not added: a collusion.wiki tree figure. Its four largest within-page trees are flat
+  stars with per-tree taus between -0.33 and +0.07; the within-page macro tau of 0.80
+  comes from the many small page histories, so the figure would mislead.
+- Checked and kept: the null spread ratio is 11.0 (sd 0.0019 vs Wald SE 0.000173 at
+  p = 0.5, E35); the lineage-root shares (54% Moltbook, 87% wiki) are from E41-v2.

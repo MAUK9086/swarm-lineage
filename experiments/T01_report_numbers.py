@@ -168,12 +168,21 @@ def ledger() -> list[dict[str, Any]]:
     e31, e32, e34, e35 = load("E31_copy_direction_pilot"), load("E32_copy_direction_v2"), load("E34_inflation_curve"), load("E35_null_simulation")
     e37, e38, e41, e41b = load("E37_metadata_monitor_pilot"), load("E38_monitor_matched"), load("E41_lineage_moltbook"), load("E41_lineage_moltbook_rowshuffled")
     e42 = load("E42_pair_sample_sensitivity")
+    e20, e30, e33 = load("E20_profile"), load("E30_profile"), load("E33_agents_fields")
     rows = [
         {"exp": "E01-E02", "claim": "public Swarm Traces rows carry time", "outcome": "NO-GO", "key": "0 of 189,579 rows timestamped"},
+        {"exp": "E20", "claim": "collusion.wiki: >= 5,000 timed revisions and >= 200 pages with >= 5 revisions",
+         "outcome": "GO" if e20["go_no_go"]["go"] else "NO-GO",
+         "key": f"{e20['go_no_go']['timed_revisions']:,} revisions; {e20['go_no_go']['pages_with_ge_5_revisions']} pages"},
+        {"exp": "E30", "claim": "Moltbook: >= 100k timed posts, >= 1,000 agents with >= 20 posts, >= 1% duplicates",
+         "outcome": "GO" if e30["go_no_go"]["go"] else "NO-GO",
+         "key": f"{e30['go_no_go']['timed_posts']:,} posts; {e30['go_no_go']['agents_ge_20_posts']:,} agents; {100*e30['go_no_go']['exact_duplicate_rate']:.2f}%"},
         {"exp": "E31", "claim": "containment beats length by >= 5 pts (pairs)", "outcome": "NO-GO" if not e31["go_no_go"]["go"] else "GO",
          "key": f"{e31['methods']['c_containment']['accuracy']:.3f} vs {e31['methods']['b_longer_is_later']['accuracy']:.3f}"},
         {"exp": "E32", "claim": "edit cue beats length by >= 5 pts (clusters)", "outcome": "NO-GO" if not e32["go_no_go"]["go"] else "GO",
          "key": f"length {e32['methods']['b_longer_is_later']['macro']:.3f}; best cue {max(e32['methods']['i_extension']['macro'], e32['methods']['ii_insertion_vs_deletion']['macro']):.3f}"},
+        {"exp": "E33", "claim": "owner handles link >= 100 multi-agent owners", "outcome": "GO" if e33["go_no_go"]["go"] else "NO-GO",
+         "key": f"{e33['go_no_go']['owners_with_ge_2_agents']} owners with >= 2 agents"},
         {"exp": "E34", "claim": "pair-level inflates by >= 5 pts", "outcome": "confirmed" if e34["criterion"]["material_ge_5_points"] else "not confirmed",
          "key": f"{e34['criterion']['inflation_points_full_window_cap_none']:.1f} pts"},
         {"exp": "E35", "claim": "naive FPR > 10% while cluster FPR <= 10%", "outcome": "confirmed" if e35["criterion"]["naive_miscalibrated"] else "not confirmed",
@@ -184,11 +193,32 @@ def ledger() -> list[dict[str, Any]]:
          "key": f"{e38['go_no_go']['pooled_auroc']:.3f}, recall {e38['go_no_go']['pooled_recall_at_1pct_fpr']:.3f}"},
         {"exp": "E41", "claim": "tree depth orders time, beats length", "outcome": "GO, withdrawn (E41b)",
          "key": f"{e41['go_no_go']['depth_macro_tau']:.3f} -> {e41b['go_no_go']['depth_macro_tau']:.3f} after row shuffle"},
+        {"exp": "E41b", "claim": "E41 survives a row shuffle (reading rule fixed before the check)", "outcome": "no: GO withdrawn",
+         "key": f"depth {e41b['go_no_go']['depth_macro_tau']:.3f} < length {e41b['go_no_go']['length_macro_tau']:.3f}"},
     ]
+    m36 = load("E36v2_replication_moltbook")
+    m41 = load("E41v2_lineage_moltbook")
+    chk = m36["row_order_check"]
+    rows.append({"exp": "E36-v2", "claim": "row shuffle leaves estimates unchanged (Moltbook)",
+                 "outcome": "fail (cluster level)" if not chk["passes"] else "pass",
+                 "key": f"exact items {'pass' if chk['passes_i_exact'] else 'fail'}; length {chk['component_level_inside_E32_ci']['b_longer_is_later']['v2_macro']:.3f} outside E32 CI"})
+    rows.append({"exp": "E41-v2", "claim": "lineage signal in any scope (Moltbook); reproduces E41b",
+                 "outcome": "NO-GO; reproduced exactly" if m41["check_vs_E41b"]["exact_1e-9"] else "NO-GO",
+                 "key": ", ".join(f"{sc} {e['evaluation']['depth']['macro_tau']:.3f}" for sc, e in m41["scopes"].items())})
     if e42:
         a = e42["across_seeds"]["b_longer_is_later"]
         rows.append({"exp": "E42", "claim": "length above chance on every pair sample", "outcome": e42["reading"],
                      "key": f"length {a['min']:.3f}-{a['max']:.3f} over {len(e42['seeds'])} samples"})
+    c36, c41 = load("E36v2_replication_collusion_wiki"), load("E41v2_lineage_collusion_wiki")
+    if c36 and c41:
+        cm = c36["scopes"]["all"]["component_level"]["methods"]
+        best = max((v["macro"], k) for k, v in cm.items() if k not in ("a_random", "b_longer_is_later"))
+        rows.append({"exp": "Held-out (E36-v2)", "claim": "collusion.wiki: edit cue beats length by >= 5 pts",
+                     "outcome": "NO-GO", "key": f"length {cm['b_longer_is_later']['macro']:.3f}; best cue {best[0]:.3f}"})
+        ce = c41["scopes"]["all"]["evaluation"]
+        rows.append({"exp": "Held-out (E41-v2)", "claim": "collusion.wiki: tree depth beats length",
+                     "outcome": "NO-GO" if not c41["scopes"]["all"]["go_no_go"]["go"] else "GO",
+                     "key": f"depth {ce['depth']['macro_tau']:.3f} vs length {ce['length']['macro_tau']:.3f}"})
     return rows
 
 
@@ -207,9 +237,10 @@ def main() -> None:
     save_result("T01_report_numbers", res, {"inputs": "results/*.json only"})
     c = res["corpora"]
     t02 = load("T02_cluster_concentration")
-    t1 = ["| Corpus | Role | Texts | Timestamped | Near-duplicate pairs | Clusters | Median pairs per cluster |", "|---|---|---|---|---|---|---|",
-          f"| Moltbook (sample of {c['moltbook']['posts']:,} posts) | development | {c['moltbook']['sample']:,} posts | {100*c['moltbook']['timestamped_share']:.0f}% | {t02['pairs']:,} | {t02['clusters']:,} | {t02['pairs_per_cluster']['median']:.0f} (largest: {t02['pairs_per_cluster']['max']:,}) |",
-          f"| collusion.wiki export | held-out | {c['collusion_wiki']['revisions']:,} revisions of {c['collusion_wiki']['pages']:,} pages | {100*c['collusion_wiki']['timestamped_share']:.0f}% | {c['collusion_wiki']['pairs_scored_v2']:,} | {c['collusion_wiki']['components_v2']:,} | - |"]
+    e32c = load("E32_copy_direction_v2")["counts"]
+    t1 = ["| Corpus | Role | Texts | Timestamped | Near-duplicate pairs | Clusters | Clusters scored (after template filter) |", "|---|---|---|---|---|---|---|",
+          f"| Moltbook (sample of {c['moltbook']['posts']:,} posts) | development | {c['moltbook']['sample']:,} posts | {100*c['moltbook']['timestamped_share']:.0f}% | {t02['pairs']:,} | {t02['clusters']:,} | {e32c['components_scored']:,} |",
+          f"| collusion.wiki export | held-out | {c['collusion_wiki']['revisions']:,} revisions of {c['collusion_wiki']['pages']:,} pages | {100*c['collusion_wiki']['timestamped_share']:.0f}% | {c['collusion_wiki']['pairs_scored_v2']:,} | {c['collusion_wiki']['components_v2']:,} | {c['collusion_wiki']['components_scored_v2']:,} |"]
     a = res["copy_cues"]["algebra"]
     e31 = load("E31_copy_direction_pilot")
     len_ties = e31["methods"]["b_longer_is_later"]["ties_broken_randomly"] / e31["counts"]["pairs_scored"]
@@ -219,7 +250,7 @@ def main() -> None:
           f"| Shingle containment | A's shingles are more fully contained in B | A has fewer distinct shingles | ties on {100*a['containment_ties_share_E31']:.1f}% of pairs |",
           f"| Insertion vs deletion | the diff A to B inserts more words than it deletes | A has fewer words | same prediction on {100*a['insdel_vs_token_count_agreement_non_ties_E32']:.0f}% of {a['non_tied_pairs_E32']:,} untied pairs |",
           f"| Extension | more of A survives as B's prefix and suffix | A has fewer words; coin flip if nothing shared | {a['extension_ties_E32']:,} of {a['pairs_scored_E32']:,} pairs tied |",
-          f"| Lineage root | A is the text most contained in the others | the shortest text is the root | root is shortest in {100*lin['moltbook_root_is_shortest_share']:.0f}% of clusters ({100*lin['collusion_wiki_root_is_shortest_share']:.0f}% on the wiki) |"]
+          f"| Lineage root | A is the text most contained in the others | the shortest text is the root | root is shortest in {100*lin['moltbook_root_is_shortest_share']:.0f}% of clusters ({100*lin['collusion_wiki_root_is_shortest_share']:.0f}% on the wiki; E41-v2, all scope) |"]
     t2 = ["| Exp. | Pre-registered claim | Outcome | Key number |", "|---|---|---|---|"] + \
          [f"| {r['exp']} | {r['claim']} | {r['outcome']} | {r['key']} |" for r in res["ledger"]]
     (RESULTS_DIR / "T01_tables.md").write_text("Corpora\n\n" + "\n".join(x for x in t1 if x) + "\n\nCues\n\n" + "\n".join(tc)

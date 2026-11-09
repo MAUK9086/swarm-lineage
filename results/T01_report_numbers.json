@@ -1,7 +1,7 @@
 {
   "experiment": "T01_report_numbers",
-  "run_at": "2026-11-09 12:34 IST",
-  "git_hash": "d0d66be-dirty",
+  "run_at": "2026-11-09 12:50 IST",
+  "git_hash": "d5afc5d-dirty",
   "seed": 42,
   "params": {
     "inputs": "results/*.json only"
@@ -341,6 +341,18 @@
         "key": "0 of 189,579 rows timestamped"
       },
       {
+        "exp": "E20",
+        "claim": "collusion.wiki: >= 5,000 timed revisions and >= 200 pages with >= 5 revisions",
+        "outcome": "GO",
+        "key": "14,591 revisions; 453 pages"
+      },
+      {
+        "exp": "E30",
+        "claim": "Moltbook: >= 100k timed posts, >= 1,000 agents with >= 20 posts, >= 1% duplicates",
+        "outcome": "GO",
+        "key": "3,602,713 posts; 23,513 agents; 9.35%"
+      },
+      {
         "exp": "E31",
         "claim": "containment beats length by >= 5 pts (pairs)",
         "outcome": "NO-GO",
@@ -351,6 +363,12 @@
         "claim": "edit cue beats length by >= 5 pts (clusters)",
         "outcome": "NO-GO",
         "key": "length 0.496; best cue 0.508"
+      },
+      {
+        "exp": "E33",
+        "claim": "owner handles link >= 100 multi-agent owners",
+        "outcome": "NO-GO",
+        "key": "10 owners with >= 2 agents"
       },
       {
         "exp": "E34",
@@ -383,10 +401,40 @@
         "key": "0.098 -> 0.033 after row shuffle"
       },
       {
+        "exp": "E41b",
+        "claim": "E41 survives a row shuffle (reading rule fixed before the check)",
+        "outcome": "no: GO withdrawn",
+        "key": "depth 0.033 < length 0.050"
+      },
+      {
+        "exp": "E36-v2",
+        "claim": "row shuffle leaves estimates unchanged (Moltbook)",
+        "outcome": "fail (cluster level)",
+        "key": "exact items pass; length 0.565 outside E32 CI"
+      },
+      {
+        "exp": "E41-v2",
+        "claim": "lineage signal in any scope (Moltbook); reproduces E41b",
+        "outcome": "NO-GO; reproduced exactly",
+        "key": "all 0.033, within_group 0.020, cross_group 0.024"
+      },
+      {
         "exp": "E42",
         "claim": "length above chance on every pair sample",
         "outcome": "unresolved; sample-dependent",
         "key": "length 0.495-0.528 over 4 samples"
+      },
+      {
+        "exp": "Held-out (E36-v2)",
+        "claim": "collusion.wiki: edit cue beats length by >= 5 pts",
+        "outcome": "NO-GO",
+        "key": "length 0.892; best cue 0.889"
+      },
+      {
+        "exp": "Held-out (E41-v2)",
+        "claim": "collusion.wiki: tree depth beats length",
+        "outcome": "NO-GO",
+        "key": "depth 0.694 vs length 0.764"
       }
     ],
     "E42_across_seeds": {

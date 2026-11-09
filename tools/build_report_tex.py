@@ -208,7 +208,7 @@ def build(draft: Path, out: Path) -> None:
         elif s.startswith("## "):
             name = s[3:]
             if name == "Appendix":
-                tex.append(r"\clearpage")
+                pass  # appendix follows references directly
             tex.append(r"\section{" + esc(name) + "}")
             if name == "References":
                 tex.append(r"\begingroup\small\setlength{\parskip}{2pt}")
@@ -225,7 +225,8 @@ def build(draft: Path, out: Path) -> None:
             num = re.findall(r"\d+", label)[0]
             if (REPO / path.replace(".png", ".pdf")).exists():
                 path = path.replace(".png", ".pdf")
-            tex.append(r"\begin{figure}[htbp]\centering" + "\n" + r"\includegraphics[width=\textwidth]{../" + path + "}\n"
+            width = r"0.82\textwidth" if "R1_pipeline" in path else r"\textwidth"
+            tex.append(r"\begin{figure}[htbp]\centering" + "\n" + r"\includegraphics[width=" + width + "]{../" + path + "}\n"
                        + r"\caption{" + esc(cap.strip("*")) + "}\\label{fig:" + num + "}\n" + r"\end{figure}")
         elif "[insert " in s and " table]" in s:
             name = s.split("[insert ", 1)[1].split(" table]")[0]
@@ -241,10 +242,12 @@ def build(draft: Path, out: Path) -> None:
                 if nxt < len(lines) and lines[nxt].strip().startswith("*Figure"):
                     cap = lines[nxt].strip().strip("*")
                     k = nxt + 1
-            cap = re.sub(r"^Figure A\d+\.\s*", "", cap)
+            m = re.match(r"^Figure (A\d+)\.\s*", cap)
+            lab = m.group(1) if m else "A1"
+            cap = cap[m.end():] if m else cap
             tex.append(r"\begin{figure}[htbp]\centering" + "\n" + "\n".join(
                 r"\includegraphics[width=0.92\textwidth]{../" + p + r"}\\[4pt]" for p in paths)
-                + "\n" + r"\renewcommand{\thefigure}{A1}\caption{" + esc(cap) + "}\n" + r"\end{figure}")
+                + "\n" + r"\renewcommand{\thefigure}{" + lab + r"}\caption{" + esc(cap) + "}\n" + r"\end{figure}")
         else:
             tex.append(esc(s) + "\n")
     if in_list:
