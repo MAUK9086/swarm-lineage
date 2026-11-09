@@ -27,7 +27,7 @@ Global seed: 42.
   ids in the file; whether the cite suffix equals a hash prefix of the text. Describe text
   storage with generic checks (empty, newlines, CRLF, non-ASCII, base64-only charset,
   length percentiles). Pass 2: write data/interim/corpus_slim.parquet.
-- Code: experiments/E00_profile.py @ 5d20b3e
+- Code: experiments/E00_profile.py @ eb1cb5d
 - Params: example truncation 150 chars, 3 examples per field; value counts kept for
   fields with <= 200 distinct values; no sampling; seed 42.
 - Results: (results/E00_profile.json)
@@ -77,7 +77,7 @@ Global seed: 42.
   unparseable values overall and per kind. List any column whose name suggests a time
   source or provenance. If any times parse: report min, max and span, and plot an hourly
   histogram to figures/E01_time_hist.png.
-- Code: experiments/E01_timestamps.py @ 7647235 (re-run at b8875d5 after a metadata-only
+- Code: experiments/E01_timestamps.py @ d190204 (re-run at d0695e7 after a metadata-only
   fix to the dirty flag in src/io_utils.py; numbers identical)
 - Params: GO threshold 100 rows; histogram bin 1 hour; seed 42 (no sampling).
 - Results: (results/E01_timestamps.json)
@@ -111,7 +111,7 @@ Global seed: 42.
   question stays open.
 - Method: From the slim Parquet take rows with both id_num and a parsed time_utc;
   Spearman rho and two-sided p-value overall and per kind (per kind only if n >= 30).
-- Code: experiments/E02_leakage.py @ 7647235 (re-run at b8875d5, see E01)
+- Code: experiments/E02_leakage.py @ d190204 (re-run at d0695e7, see E01)
 - Params: minimum n 30; thresholds |rho| >= 0.5, p < 0.01; seed 42 (no sampling).
 - Results: (results/E02_leakage.json)
 
@@ -170,7 +170,7 @@ Global seed: 42.
   verify the hash). Pages later deleted: share of held pages with a delete event after
   their first revision, cross-checked against pages.n_deletions. Write
   data/interim/collusion_slim.parquet.
-- Code: experiments/E20_profile.py @ 674419c
+- Code: experiments/E20_profile.py @ b34d280
 - Params: example truncation 80 chars; value counts only for low-cardinality categorical
   fields (<= 30 distinct, excluding names, labels, IPs, free text); GO thresholds 5,000
   revisions and 200 pages with >= 5 revisions; seed 42 (no sampling).
@@ -257,7 +257,7 @@ Global seed: 42.
   submolt, exact duplicate rate, and text length percentiles. Comments: row count, id
   dedup, timestamp parse rate and span only. Write data/interim/moltbook_slim.parquet with
   a 300,000-post random sample (seed 42) through src/adapters/moltbook.py.
-- Code: experiments/E30_profile.py @ 7879fa0 (first launch failed on a missing python-dateutil
+- Code: experiments/E30_profile.py @ 08a1b7e (first launch failed on a missing python-dateutil
   in the isolated interpreter before reading any data; dependency installed, same code re-run)
 - Params: sample 300,000 drawn without replacement from deduplicated posts with a
   parseable created_at, seed 42; adapter text = title + blank line + content; exact
@@ -315,12 +315,12 @@ Global seed: 42.
   used for GO). Secondary, not used for GO: a bootstrap over connected components of the
   pair graph, since pairs sharing documents are not independent; and the agreement rate
   between (b) and (c).
-- Code: experiments/E31_copy_direction_pilot.py, src/copydir.py @ 10d6367 (see implementation note)
+- Code: experiments/E31_copy_direction_pilot.py, src/copydir.py @ 3144a46 (see implementation note)
 - Params: shingle k = 5 words; num_perm 128; LSH threshold 0.5; Jaccard window
   [0.5, 0.95]; cap of 20,000,000 different-author candidate pairs (uniform subsample, seed
   42, only if exceeded); 1,000 bootstrap resamples; seed 42.
 - Implementation note (written 2026-11-07 23:03 IST, before any E31 result exists): the first launch
-  at 5349d4f was stopped by the environment's low-memory guard while computing MinHash; it
+  at 2f909c2 was stopped by the environment's low-memory guard while computing MinHash; it
   wrote no results. Diagnostics using text only (no times) showed the cause: shingles held
   as Python strings, plus large templated clusters (largest LSH bucket 8,882 posts; band
   sum of C(n,2) = 381,518,142). Changes, none to the method, window, cap or GO rule:
@@ -421,7 +421,7 @@ Global seed: 42.
   UUID audit: version nibble and variant of every post id in the full archive (3,602,713
   ids, raw id column only). If more than 50% are v7, also report Spearman rho between the
   48-bit embedded timestamp and t on the 300k sample, and add doc_id to the hidden list.
-- Code: experiments/E32_copy_direction_v2.py, src/copydir.py, src/evaluate.py @ 150a817
+- Code: experiments/E32_copy_direction_v2.py, src/copydir.py, src/evaluate.py @ a59faca
 - Params: pairs from E31; cap 20 pairs per component; template-filter rule as above;
   1,000 component bootstrap resamples; GO margin 5 points; minimum 200 components; v7
   threshold 50%; seed 42.
@@ -485,7 +485,7 @@ Global seed: 42.
   chars; the salt is 32 random bytes in data/interim/owner_salt.bin (untracked, not
   seeded, so the keys cannot be rebuilt from public handles). Before saving, the script
   checks that no result string equals any raw handle or agent name.
-- Code: experiments/E33_agents_fields.py, src/hf_download.py @ b9a761e (first run at 8da3bf9
+- Code: experiments/E33_agents_fields.py, src/hf_download.py @ aaf7e3c (first run at 6e14b07
   crashed while writing owner keys because missing handles arrived as NaN; nothing was
   saved or printed; fixed and re-run)
 - Params: example allow-list as above; truncation 80 chars; GO thresholds 10% and 100
@@ -580,7 +580,7 @@ Global seed: 42.
   is the label, built from content in src/labels.py; monitor features come from
   src/monitor.py, which never receives text. E37 reads all raw posts (not the 300k sample)
   through the Moltbook adapter's author_id / text helpers.
-- Code: experiments/E37_metadata_monitor_pilot.py, src/labels.py, src/monitor.py @ 03149e7
+- Code: experiments/E37_metadata_monitor_pilot.py, src/labels.py, src/monitor.py @ 19fe8af
 - Params: 24 h window, >= 3 authors; organic >= 20 posts; <= 10,000 authors per class;
   +/-60 s synchrony; 70/30 group split; 1,000 group-bootstrap resamples; jitter
   {0, 1, 5, 30, 120} min; scikit-learn 1.9.1; seed 42 everywhere.
@@ -688,7 +688,7 @@ Global seed: 42.
   timeline; their timeline features are recomputed and scored by the fold model in which
   they were test; pooled recall at the fixed J = 0 pooled organic threshold, with a
   group-bootstrap CI.
-- Code: experiments/E38_monitor_matched.py, src/monitor_data.py @ 01d35b4
+- Code: experiments/E38_monitor_matched.py, src/monitor_data.py @ fa88267
 - Params: >= 20 posts both classes; <= 5,000 per class; top 1% components held out; 5 folds;
   1,000 bootstrap resamples; jitter {0, 1, 5, 30, 120} min; seed 42.
 - Results: (results/E38_monitor_matched.json)
@@ -755,7 +755,7 @@ Global seed: 42.
   (effective n); CI-width ratio = component width / pair width. Headline figure:
   figures/E34_inflation_curve.png, pair-level vs component-level estimate against cap,
   one panel per window.
-- Code: experiments/E34_inflation_curve.py, src/clusters.py @ 01d35b4 (figure titles and
+- Code: experiments/E34_inflation_curve.py, src/clusters.py @ fa88267 (figure titles and
   legend fixed afterwards and the figure redrawn from the saved results; numbers unchanged)
 - Params: windows {0.5, 0.7, 0.9}-0.95; caps {1, 5, 20, 100, none}; 1,000 component-bootstrap
   resamples; seed 42.
@@ -818,8 +818,8 @@ Global seed: 42.
   resamples); significant if the CI excludes 0.5. Pairs with equal permuted times are
   dropped in that draw. False-positive rates are reported with Wilson 95% CIs, along with
   the spread of each estimate across draws.
-- Code: experiments/E35_null_simulation.py, src/clusters.py @ 01d35b4 (results file stamped
-  378f8c9: it ran in the same chain after E34, after an unrelated log/figure commit; E35
+- Code: experiments/E35_null_simulation.py, src/clusters.py @ fa88267 (results file stamped
+  e499ba6: it ran in the same chain after E34, after an unrelated log/figure commit; E35
   code unchanged)
 - Params: 1,000 draws; Wald CI (pair-level); 1,000 component-bootstrap resamples; seed 42 + r.
 - Results: (results/E35_null_simulation.json)
@@ -860,8 +860,8 @@ Global seed: 42.
   reproduction check. Run only on the Moltbook table; not run on any other corpus.
 - Config SHA-256 (configs/E36_pipeline.json, LF line endings enforced by .gitattributes):
   5ac6686ab5779f23bce7f0c296358873e15f8abfd0c33403ce133ae395e8f017
-- Code: experiments/E36_replication.py, configs/E36_pipeline.json @ 01d35b4 (results stamped
-  378f8c9-dirty: the run started after an unrelated commit, and the E34 plotting function
+- Code: experiments/E36_replication.py, configs/E36_pipeline.json @ fa88267 (results stamped
+  e499ba6-dirty: the run started after an unrelated commit, and the E34 plotting function
   had uncommitted edits when results were saved; E36 code and config unchanged)
 - Results: (results/E36_replication_moltbook.json)
   Config SHA-256 in results: 5ac6686ab5779f23bce7f0c296358873e15f8abfd0c33403ce133ae395e8f017
@@ -957,7 +957,7 @@ Global seed: 42.
   Figure: the 4 largest lineage components drawn as trees (root at top, depth downwards),
   nodes coloured by true time rank within the component (single-hue sequential scale),
   root marked: figures/E41_lineage_trees.png.
-- Code: experiments/E41_lineage.py, src/lineage.py, src/evaluate.py, configs/E41_lineage.json @ 13e4672
+- Code: experiments/E41_lineage.py, src/lineage.py, src/evaluate.py, configs/E41_lineage.json @ 0a6d6f0
 - Config SHA-256 (configs/E41_lineage.json, LF enforced): 5b6c45ef7d350bcb854e00ed567d13535d5a2f4db374644adebf502ddf45b6db
 - Params: see config; corpus = data/interim/moltbook_slim.parquet only; not run on any
   other corpus.
@@ -998,7 +998,7 @@ Global seed: 42.
   stays above the length baseline, E41's signal is not a row-order artifact. If the depth
   macro tau falls to the length baseline or to 0, E41's GO is attributed to a row-order
   leak and withdrawn.
-- Code: experiments/E41_lineage.py (unchanged) @ 13e4672; shuffle step recorded in results.
+- Code: experiments/E41_lineage.py (unchanged) @ 0a6d6f0; shuffle step recorded in results.
 - Results: (results/E41_lineage_moltbook_rowshuffled.json, figures/E41b_lineage_trees_rowshuffled.png)
   Shuffle: data/interim/moltbook_slim_rowshuffled.parquet = the same 300,000 rows,
   pandas sample(frac=1, random_state=42). Same config SHA-256. 489 lineage components,
@@ -1013,7 +1013,7 @@ Global seed: 42.
   Figure components: 200, 200, 195, 182 nodes; depth-vs-time tau-a +0.016, -0.014, +0.011,
   -0.023. The frozen script writes its figure to a fixed path, so the shuffled run's figure
   was renamed to E41b_lineage_trees_rowshuffled.png and the original was restored from
-  commit c40ef59.
+  commit fc7e973.
 - Interpretation: The depth signal is mostly a row-order artifact. With the rows in
   random order, depth's macro tau falls from 0.098 to 0.033 and goes below the length
   baseline (0.050), which barely moves (0.057 -> 0.050) because it does not depend on node
@@ -1072,7 +1072,7 @@ Global seed: 42.
   accuracies near chance for all cues. E41-v2 all reproduces E41b (depth 0.033 below
   length 0.050, NO-GO); within_group and cross_group near chance.
 - Code: experiments/E36_replication_v2.py, experiments/E41_lineage_v2.py,
-  src/lineage.py (new scoped function only) @ 76dac93
+  src/lineage.py (new scoped function only) @ 60ccf9d
 - Config SHA-256 (LF enforced): configs/E36_pipeline_v2.json =
   fe569c7fa2df1ee30a862fda44a7408d2a4d89fb10a9cd33b2778201375c32f7;
   configs/E41_lineage_v2.json =
@@ -1080,7 +1080,7 @@ Global seed: 42.
 - Corpus: data/interim/moltbook_slim.parquet only.
 - Results: (results/E41v2_lineage_moltbook.json, results/E36v2_replication_moltbook.json,
   figures/E41v2_trees_moltbook_{all,within_group,cross_group}.png)
-  Runs at 76dac93 (E36-v2 stamped 76dac93-dirty: src/adapters/collusion_wiki.py was being
+  Runs at 60ccf9d (E36-v2 stamped 60ccf9d-dirty: src/adapters/collusion_wiki.py was being
   edited by the user during the run; E36-v2 code and config unchanged). Config SHA-256 in
   both results files match the values above.
 
@@ -1144,7 +1144,7 @@ Global seed: 42.
   page_id, author_id <- label, with blank labels replaced by "blank_" + rev_id, t <- t_utc)
   and wrote data/interim/collusion_standard.parquet (14,591 rows). The adapter does not
   shuffle rows; the v2 scripts shuffle internally. Runs: E36 v1, E36-v2, E41 v1, E41-v2,
-  all at 76dac93 with the adapter edit uncommitted (stamped 76dac93-dirty); config SHA-256
+  all at 60ccf9d with the adapter edit uncommitted (stamped 60ccf9d-dirty); config SHA-256
   in the results match the frozen configs (v1 5ac6686a / 5b6c45ef, v2 fe569c7f / d3154784).
   E41 v1 carries the E41b row-order risk (revisions are stored in page / sequence order).
   The analysis below reads only the aggregate results files; no raw data was opened.
@@ -1221,7 +1221,7 @@ Global seed: 42.
   for random, length, containment with Wald CIs (no 8M-pair bootstrap, to save time); the
   frozen E32 component pipeline (template filter, cap 20, component bootstrap) for random,
   length, containment, extension, insertion vs deletion. Across seeds: mean, sd, range.
-- Code: experiments/E42_pair_sample_sensitivity.py @ 5c52de5 (results stamped a5cccce: report scripts were committed during the run; E42 code unchanged)
+- Code: experiments/E42_pair_sample_sensitivity.py @ 4e28b77 (results stamped 979f89c: report scripts were committed during the run; E42 code unchanged)
 - Params: seeds 42-45; config configs/E36_pipeline.json (v1); MinHash seed 42.
 - Results: (results/E42_pair_sample_sensitivity.json)
   Rate 0.0524 (band bound 381,518,142). Seed 42 reproduces E32 exactly (all compared
@@ -1249,3 +1249,10 @@ Global seed: 42.
 - Decision / next step: Report Moltbook cluster-level length as near chance and
   sample-dependent (0.49-0.57 over five samples), not as a robust signal. E32's
   conclusion stands; E36-v2's higher value is attributed to pair-sampling variation.
+
+### Repository note: history rewrite  (2026-11-09 12:40 IST)
+- Git history was rewritten once to remove a tool name from one log line (E31
+  implementation note) and from early .gitignore lines, before making the repository
+  public. File contents are otherwise unchanged. Commit hashes cited in this log were
+  updated to the new hashes; results files keep the hashes recorded at run time, and
+  results/hash_map.json maps old to new.
