@@ -1202,3 +1202,27 @@ Global seed: 42.
   lineage methods give NO-GO under the frozen rules; length alone orders wiki revisions
   well within pages and moderately across pages; the cluster-aware evaluation stays
   calibrated on a second corpus. The adapter change is committed with these results.
+
+### E42 - Pair-sample sensitivity of copy-direction estimates (Moltbook)  (2026-11-09 11:47 IST)
+- Question: How much do the component-level copy-direction estimates depend on which 5.2%
+  Bernoulli sample of candidate pairs is drawn? E32 (one sample) gave length 0.496, E36-v2
+  (another sample, via a row shuffle) gave 0.565 [0.530, 0.601]; the component bootstrap
+  CI does not include pair-sampling variance.
+- Hypothesis / expected: The spread across samples is comparable to the gap between E32
+  and E36-v2, so a single sample cannot settle whether length is above chance on Moltbook.
+- Reading rule (pre-registered): if all 4 seeds give a length component-level CI lower bound
+  above 0.5, report "length weakly orders Moltbook copies" with the across-seed range;
+  otherwise report "unresolved; sample-dependent" with the range. Anchor check: seed 42
+  reproduces E31's pair sample, so its component-level results must equal E32 within 1e-9.
+- Method: Moltbook 300k sample, rows in stored order (as E31). Shingle hashes, MinHash
+  (seed 42) and the LSH band bound computed once. For seeds 42, 43, 44, 45: different-author
+  Bernoulli pair sample at E31's fallback rate (20,000,000 / band bound), exact Jaccard,
+  exact duplicates excluded, window 0.5-0.95, equal-time pairs dropped; pair-level accuracy
+  for random, length, containment with Wald CIs (no 8M-pair bootstrap, to save time); the
+  frozen E32 component pipeline (template filter, cap 20, component bootstrap) for random,
+  length, containment, extension, insertion vs deletion. Across seeds: mean, sd, range.
+- Code: experiments/E42_pair_sample_sensitivity.py @ (filled after commit)
+- Params: seeds 42-45; config configs/E36_pipeline.json (v1); MinHash seed 42.
+- Results:
+- Interpretation:
+- Decision / next step:
