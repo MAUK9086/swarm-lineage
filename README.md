@@ -15,8 +15,15 @@ collusion.wiki export. Work for the Apart Swarm Alignment sprint (November 2026)
 - Near-duplicate pairs are highly clustered (on Moltbook the two largest clusters hold 98% of
   8.4M pairs). Scoring pairs instead of clusters inflates accuracy by 13-29 points and gives
   an 86% false-positive rate under a cluster-preserving null (5% when scoring per cluster).
+- Where true parent links exist (collusion.wiki revision history), the spanning trees
+  recover them well above a random tree, but a "most similar shorter text" rule does as
+  well, and length orients the recovered links better than tree depth (E46).
 - A lineage result that passed its pre-registered rule was a row-order leak; the frozen
   pipelines now shuffle rows before processing.
+
+`CHECKLIST.md` lists the evaluation checks we recommend for content-only forensic methods,
+each linked to the experiment that applies it. `DATA.md` describes every field and whether
+methods may see it.
 
 Every experiment is pre-registered in `EXPERIMENT_LOG.md` (question, hypothesis and go/no-go
 rule written before the run; results and decision after).
@@ -29,11 +36,12 @@ src/copydir.py    shingles, MinHash/LSH pair finding, direction cues (never sees
 src/lineage.py    clusters, spanning trees, lineage order (never sees t)
 src/evaluate.py   the only module that reads t: accuracy, Kendall tau, bootstrap CIs, nulls
 src/monitor*.py   metadata-only monitor features and data loading
-experiments/      one script per experiment (E00 ... E42), report numbers (T01, T02), figures
+experiments/      one script per experiment (E00 ... E49), report numbers (T01-T03), figures
 configs/          frozen pipeline configurations (SHA-256 recorded in EXPERIMENT_LOG.md)
 results/          E##_*.json: aggregates and ids only, with params, seed and git hash
 figures/          report and experiment figures
-tools/            report builders
+tools/            report builder; reproduce.py checks headline numbers and runs the tests
+tests/            unit tests (cue equivalences, time isolation, row-order invariance, metrics)
 ```
 
 ## Running the frozen pipelines on a new corpus
@@ -51,6 +59,8 @@ parameters from `configs/E36_pipeline_v2.json` and `configs/E41_lineage_v2.json`
 
 ```
 pip install -r requirements.txt
+python -m unittest discover -s tests     # unit tests, no data needed
+python tools/reproduce.py                # check report numbers against results/*.json
 ```
 
 Data are not included. Moltbook: Hugging Face `SimulaMet/moltbook-observatory-archive`

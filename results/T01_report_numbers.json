@@ -1,7 +1,7 @@
 {
   "experiment": "T01_report_numbers",
-  "run_at": "2026-11-09 13:33 IST",
-  "git_hash": "e7a22b3-dirty",
+  "run_at": "2026-11-09 14:34 IST",
+  "git_hash": "d9f175e-dirty",
   "seed": 42,
   "params": {
     "inputs": "results/*.json only"
@@ -473,6 +473,27 @@
         "outcome": "not met",
         "key": "0.60% of 25,612,365",
         "type": "robustness"
+      },
+      {
+        "exp": "E46",
+        "claim": "wiki: MST recovers true parent links (F1 >= random + 10 pts); depth orients them better than length (+5 pts)",
+        "outcome": "structure GO; direction NO-GO",
+        "key": "F1 0.70 vs 0.31; orientation 0.92 vs 0.96",
+        "type": "confirmatory (added late)"
+      },
+      {
+        "exp": "E47",
+        "claim": "conclusions unchanged with 64-bit shingle hashes",
+        "outcome": "unchanged",
+        "key": "0 of 8,361,829 pairs changed; length 0.496",
+        "type": "robustness"
+      },
+      {
+        "exp": "E49",
+        "claim": "LSH recall of eligible pairs >= 0.8 (else limitation)",
+        "outcome": "below 0.8",
+        "key": "recall 0.51; J 0.5-0.6 0.49, J >= 0.7 at least 0.995",
+        "type": "descriptive"
       }
     ],
     "E42_across_seeds": {

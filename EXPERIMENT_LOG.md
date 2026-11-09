@@ -1467,8 +1467,37 @@ Global seed: 42.
   coverage = eligible / all true edges.
 - Deviation: collusion.wiki is the held-out corpus; this run is executed by the author
   (not the earlier user-run setup), after the frozen held-out runs. Stated in the report.
-- Code: experiments/E46_parent_recovery.py @ (filled after run)
+- Code: experiments/E46_parent_recovery.py @ 08245e4 (first run @ 3dd6c6a had a bug in
+  src/evaluate.py revision_parents: links whose parent is a page's first revision were
+  dropped, 8,559 of 10,012 links loaded; fixed before any result was used; numbers below are
+  from the corrected run)
 - Params: configs/E41_lineage_v2.json; n_boot 1000; seed 42.
+- Results: (results/E46_parent_recovery.json; components reproduce E41-v2: 373 / 4,845 nodes)
+
+  Coverage (all scope): 10,012 true links; 3,590 eligible (3,583 node edges in 357
+  components); 23 within one node (identical text); 297 across components; 6,102 outside
+  scored lineage components (small page histories below 5 texts or outside candidate groups).
+
+  | predicted parent (all scope, macro over 357 components) | precision | recall | F1 | orientation correct | root has no true parent |
+  |---|---|---|---|---|---|
+  | spanning tree (depth) | 0.675 (0.640-0.707) | 0.761 (0.728-0.788) | 0.699 (0.666-0.730) | 0.920 (0.903-0.937) | 0.913 (0.882-0.944) |
+  | most similar shorter text | 0.695 (0.663-0.725) | 0.741 (0.708-0.771) | 0.700 (0.664-0.732) | 0.978 (0.966-0.990) | 0.973 (0.953-0.990) |
+  | random spanning tree | 0.293 (0.268-0.316) | 0.343 (0.314-0.371) | 0.305 (0.280-0.330) | 0.463 (0.421-0.505) | 0.238 (0.196-0.283) |
+  | length, on the tree's recovered links | | | | 0.959 (0.943-0.973) | |
+
+  Within page: tree F1 0.745 vs random 0.325; orientation 0.923 vs length 0.965. Across
+  pages: no true parent link can be a predicted edge (diff_base links are within a page),
+  so F1 is 0 for every rule; rule (a) not applicable there.
+  Rule (a) structure: GO (all and within page). Rule (b) direction: NO-GO (length 0.04
+  above depth).
+- Interpretation: Where provenance is known, the text-only trees recover about three
+  quarters of true parent links, far above a random tree on the same similarity graph, so
+  the structure step works. But the simple rule "parent = most similar shorter text" does
+  as well (F1 0.70 vs 0.70), and length orients recovered links better than tree depth.
+  This repeats the time-order result with ground-truth provenance: what the tree adds over
+  similarity plus length is nothing measurable. Only within-page histories are tested;
+  cross-agent copying across pages has no recorded parents.
+- Decision / next step: Report as a new results subsection with a table.
 
 ### E47 - 64-bit shingle hashes: do the conclusions change?  (2026-11-09 14:30 IST)
 - Question: E45 found 0.60% of distinct shingles in a 32-bit collision. Do the Moltbook
@@ -1482,8 +1511,20 @@ Global seed: 42.
   count changed pairs and pairs leaving 0.5-0.95; re-run the E32 component pipeline (as in
   E43) on the corrected pair set. (b) E41-v2 Moltbook lineage with 64-bit hashes in the
   exact verification stage; LSH candidate buckets keep the 32-bit MinHash signatures.
-- Code: experiments/E47_hash64.py @ (filled after run)
+- Code: experiments/E47_hash64.py @ d9f175e-dirty
 - Params: as E32 / E41-v2; seed 42.
+- Results: (results/E47_hash64.json)
+  (a) Copy direction: exact Jaccard changed for 0 of 8,361,829 E31 pairs (max change 0.0);
+  0 pairs leave 0.5-0.95. Clusters 1,198; scored 547; largest cluster 50.6% of pairs;
+  cluster-level length 0.4964 (identical to E32), extension 0.5081, ins/del 0.5055;
+  pair-level length 0.696; GO outcome unchanged (NO-GO).
+  (b) Lineage: verified edges 203,811 (all), 489 lineage components, 8,454 nodes, identical
+  to E41-v2; depth / length macro tau identical in all three scopes (all 0.0332 / 0.0501).
+  conclusions_unchanged = true.
+- Interpretation: The 76,411 colliding shingle values found in E45 never fall in the two
+  texts of the same scored pair, so no Jaccard value used by the pipelines changes. The
+  limitation is reduced to the candidate (MinHash) stage, which still hashes to 32 bits.
+- Decision / next step: Replace the collision limitation in the report with this result.
 
 ### E48 - Input-order invariance of the v2 lineage pipeline (Moltbook)  (2026-11-09 14:30 IST)
 - Question: Does the v2 lineage result depend on the order in which rows arrive?
@@ -1506,5 +1547,16 @@ Global seed: 42.
 - Method: seeded sample of 20,000 posts; exact all-pairs Jaccard by sparse matrix product
   over 64-bit shingle ids; truth = different-author, non-identical pairs with J in
   [0.5, 0.95]; candidates = pairs sharing a band bucket (128 perms, 25x5, seed 42).
-- Code: experiments/E49_lsh_recall.py @ (filled after run)
+- Code: experiments/E49_lsh_recall.py @ d9f175e
 - Params: sample 20,000, seed 42.
+- Results: (results/E49_lsh_recall.json) 24,933,525 pairs share a shingle; 1,329,876
+  eligible pairs (among 4,405 posts); 886,906 LSH candidate pairs. Recall 0.511 overall;
+  by Jaccard bin: 0.5-0.6 0.486 (1,255,860 pairs), 0.6-0.7 0.907 (48,299), 0.7-0.8 0.995
+  (16,707), 0.8-0.9 1.000 (8,496), 0.9-0.95 1.000 (514). Different-author candidates in
+  the eligible window: 0.769. Criterion (>= 0.8): not met.
+- Interpretation: LSH at threshold 0.5 misses about half of the pairs just above 0.5,
+  which are 94% of eligible pairs in this sample; above 0.6 it finds 91-100%. Pair-level
+  totals are therefore underestimates. The copy-direction conclusions do not rest on the
+  0.5-0.6 band: E43 found the same results with lower bounds 0.6-0.8, where recall is
+  0.91 or more.
+- Decision / next step: State the recall in the report's limitations and robustness text.

@@ -1,0 +1,45 @@
+{
+  "experiment": "E49_lsh_recall",
+  "run_at": "2026-11-09 14:30 IST",
+  "git_hash": "d9f175e",
+  "seed": 42,
+  "params": {
+    "sample": 20000,
+    "seed": 42,
+    "bands_rows": "25 x 5",
+    "num_perm": 128,
+    "truth": "different author, not exact duplicate, 0.5 <= J <= 0.95 (64-bit shingle ids)"
+  },
+  "results": {
+    "sample_posts": 20000,
+    "pairs_sharing_a_shingle": 24933525,
+    "eligible_pairs": 1329876,
+    "lsh_candidate_pairs": 886906,
+    "recall_0.5_0.95": 0.5107363393278772,
+    "bins": {
+      "0.5-0.6": {
+        "pairs": 1255860,
+        "recall": 0.48554138200117847
+      },
+      "0.6-0.7": {
+        "pairs": 48299,
+        "recall": 0.9069545953332367
+      },
+      "0.7-0.8": {
+        "pairs": 16707,
+        "recall": 0.9953312982582151
+      },
+      "0.8-0.9": {
+        "pairs": 8496,
+        "recall": 1.0
+      },
+      "0.9-0.95": {
+        "pairs": 514,
+        "recall": 1.0
+      }
+    },
+    "candidate_precision_different_author": 0.7688692273906605,
+    "posts_in_eligible_pairs": 4405,
+    "recall_ge_0.8": false
+  }
+}

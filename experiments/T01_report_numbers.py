@@ -237,9 +237,29 @@ def ledger() -> list[dict[str, Any]]:
         rows.append({"exp": "E45", "claim": "< 0.1% of distinct shingles in a 32-bit hash collision",
                      "outcome": "not met" if not e45["negligible_lt_0.1pct"] else "met",
                      "key": f"{100*e45['share_of_distinct_shingles_in_a_collision']:.2f}% of {e45['distinct_shingles_64bit']:,}"})
+    e46, e47, e48, e49 = load("E46_parent_recovery"), load("E47_hash64"), load("E48_order_invariance"), load("E49_lsh_recall")
+    if e46:
+        g = e46["scopes"]["all"]["go_no_go"]
+        rows.append({"exp": "E46", "claim": "wiki: MST recovers true parent links (F1 >= random + 10 pts); depth orients them better than length (+5 pts)",
+                     "outcome": f"structure {'GO' if g['a_structure']['passes'] else 'NO-GO'}; direction {'GO' if g['b_direction']['passes'] else 'NO-GO'}",
+                     "key": f"F1 {g['a_structure']['mst_f1']:.2f} vs {g['a_structure']['random_f1']:.2f}; orientation {g['b_direction']['depth']:.2f} vs {g['b_direction']['length']:.2f}"})
+    if e47:
+        cd = e47["copy_direction"]
+        rows.append({"exp": "E47", "claim": "conclusions unchanged with 64-bit shingle hashes",
+                     "outcome": "unchanged" if e47["conclusions_unchanged"] else "changed (see log)",
+                     "key": f"{cd['pairs_jaccard_changed']:,} of {cd['pairs_32bit']:,} pairs changed; length {cd['methods_64bit']['b_longer_is_later']['macro']:.3f}"})
+    if e48:
+        rows.append({"exp": "E48", "claim": "candidate partitions identical over 6 input orders; no GO",
+                     "outcome": "invariant" if e48["invariant_by_rule"] else "not invariant",
+                     "key": f"partitions identical: {e48['partitions_identical_all']}; GO in any order: {e48['go_met_any']}"})
+    if e49:
+        rows.append({"exp": "E49", "claim": "LSH recall of eligible pairs >= 0.8 (else limitation)",
+                     "outcome": "below 0.8" if not e49["recall_ge_0.8"] else "met",
+                     "key": f"recall {e49['recall_0.5_0.95']:.2f}; J 0.5-0.6 {e49['bins']['0.5-0.6']['recall']:.2f}, J >= 0.7 at least {min(e49['bins'][b]['recall'] for b in ('0.7-0.8', '0.8-0.9', '0.9-0.95')):.3f}"})
     kinds = {"E01-E02": "gating", "E20": "gating", "E30": "gating", "E33": "gating", "E41b": "check",
              "E36-v2": "check", "E42": "post-hoc", "E43": "robustness", "E44": "robustness", "E45": "robustness",
-             "E41-v2": "confirmatory; scopes exploratory"}
+             "E41-v2": "confirmatory; scopes exploratory", "E46": "confirmatory (added late)", "E47": "robustness",
+             "E48": "robustness", "E49": "descriptive"}
     for r in rows:
         r["type"] = kinds.get(r["exp"], "confirmatory")
     return rows
@@ -270,6 +290,35 @@ def robustness() -> list[str]:
         d, dt, ln = sm[f"{sc}.depth"], sm[f"{sc}.depth_ties_kept"], sm[f"{sc}.length"]
         out.append(f"| Lineage, {lab}, 5 seeds (Kendall tau range) | - | {ln['min']:.3f} to {ln['max']:.3f} | "
                    f"depth {d['min']:.3f} to {d['max']:.3f}; ties kept {dt['min']:.3f} to {dt['max']:.3f} |")
+    e47, e48 = load("E47_hash64"), load("E48_order_invariance")
+    if e47:
+        cd = e47["copy_direction"]
+        best = max(cd["methods_64bit"][c]["macro"] for c in cues)
+        out.append(f"| 64-bit shingle hashes ({cd['pairs_64bit']:,} pairs) | {cd['counts_64bit']['components_scored']} | "
+                   f"{f(cd['methods_64bit']['b_longer_is_later'])} | {best:.3f} |")
+        la = e47["lineage"]["scopes"]["all"]
+        out.append(f"| Lineage, all pairs, 64-bit hashes (Kendall tau) | - | {la['length']['macro_tau']:.3f} | depth {la['depth']['macro_tau']:.3f} |")
+    if e48:
+        dts = [v["all"]["depth_tau"] for v in e48["orders"].values()]
+        lts = [v["all"]["length_tau"] for v in e48["orders"].values()]
+        out.append(f"| Lineage, all pairs, 6 input orders (Kendall tau range) | - | {min(lts):.3f} to {max(lts):.3f} | depth {min(dts):.3f} to {max(dts):.3f} |")
+    return out
+
+
+def parents() -> list[str]:
+    """Rows of the revision-parent table (E46, wiki, all scope)."""
+    e46 = load("E46_parent_recovery")
+    if not e46:
+        return []
+    ev = e46["scopes"]["all"]
+    out = ["| Predicted parent | Precision | Recall | F1 | Orientation correct | Root has no true parent |", "|---|---|---|---|---|---|"]
+    labels = {"mst_tree": "spanning tree (depth)", "length_parent": "most similar shorter text", "random_spanning_tree": "random spanning tree"}
+    for k, lab in labels.items():
+        m = ev[k]
+        cell = lambda x: f"{m[x]['macro']:.2f} ({m[x]['ci'][0]:.2f}-{m[x]['ci'][1]:.2f})" if x in m else "-"
+        out.append(f"| {lab} | {cell('precision')} | {cell('recall')} | {cell('f1')} | {cell('orientation_by_method')} | {cell('root_has_no_true_parent')} |")
+    m = ev["mst_tree"]["orientation_by_length_same_edges"]
+    out.append(f"| length, on the tree's recovered links | - | - | - | {m['macro']:.2f} ({m['ci'][0]:.2f}-{m['ci'][1]:.2f}) | - |")
     return out
 
 
@@ -307,7 +356,8 @@ def main() -> None:
     t3 = robustness()
     (RESULTS_DIR / "T01_tables.md").write_text("Corpora\n\n" + "\n".join(x for x in t1 if x) + "\n\nCues\n\n" + "\n".join(tc)
                                                + "\n\nLedger\n\n" + "\n".join(t2)
-                                               + "\n\nRobustness\n\n" + "\n".join(t3) + "\n", encoding="utf-8")
+                                               + "\n\nRobustness\n\n" + "\n".join(t3)
+                                               + "\n\nParents\n\n" + "\n".join(parents()) + "\n", encoding="utf-8")
     t1 = t1 + [""] + tc
     print(json.dumps({"E35_ratio": res["evaluation"]["E35"]["null_sd_over_wald_se"],
                       "within_share": res["copy_cues"]["within_group_share_of_pairs"],

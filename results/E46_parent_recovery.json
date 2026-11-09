@@ -1,0 +1,579 @@
+{
+  "experiment": "E46_parent_recovery",
+  "run_at": "2026-11-09 14:29 IST",
+  "git_hash": "08245e4",
+  "seed": 42,
+  "params": {
+    "config": {
+      "shingle_k_words": 5,
+      "num_perm": 128,
+      "lsh_threshold": 0.5,
+      "jaccard_window": [
+        0.5,
+        0.95
+      ],
+      "min_nodes": 5,
+      "max_nodes": 200,
+      "seed": 42,
+      "n_boot": 1000,
+      "n_null": 1000,
+      "node_key": "normalised text (whitespace collapsed, lower-cased)",
+      "node_time": "earliest post",
+      "tree": "minimum spanning tree on 1 - Jaccard over verified edges",
+      "root": "max mean containment C(node in other)",
+      "order": "hop depth from root, seeded random tie-break",
+      "baseline": "length (shorter earlier), seeded random tie-break",
+      "version": 2,
+      "row_shuffle": "pandas DataFrame.sample(frac=1, random_state=42), reset_index",
+      "row_shuffle_seed": 42,
+      "pair_scopes": [
+        "all",
+        "within_group",
+        "cross_group"
+      ],
+      "scope_rule": "edge within_group if the two nodes share any group_id; cross_group if none",
+      "primary_scope": "all"
+    },
+    "truth": "collusion_slim.parquet diff_base (evaluator only)",
+    "f1_margin": 0.1,
+    "direction_margin": 0.05,
+    "baselines": [
+      "random spanning tree on verified edges (seed 44)",
+      "length parent: most similar shorter neighbour"
+    ]
+  },
+  "results": {
+    "counts": {
+      "candidate_components_ge_min": 392,
+      "candidate_components_capped": 3,
+      "nodes_in_candidates_ge_min": 6536,
+      "all_verified_edges": 33696,
+      "all_lineage_components": 373,
+      "all_nodes_in_lineage_components": 4845,
+      "within_group_verified_edges": 31555,
+      "within_group_lineage_components": 314,
+      "within_group_nodes_in_lineage_components": 4246,
+      "cross_group_verified_edges": 2141,
+      "cross_group_lineage_components": 80,
+      "cross_group_nodes_in_lineage_components": 866
+    },
+    "scopes": {
+      "all": {
+        "coverage": {
+          "true_links": 10012,
+          "same_node": 23,
+          "not_in_scored_component": 6102,
+          "across_components": 297,
+          "eligible_links": 3590,
+          "eligible_node_edges": 3583,
+          "components_with_true_edges": 357
+        },
+        "length_orientation_all_true_edges": {
+          "macro": 0.933823003147736,
+          "ci_low": 0.9151656038218804,
+          "ci_high": 0.9502307264031558
+        },
+        "mst_tree": {
+          "pooled_precision": 0.5676361957525392,
+          "pooled_recall": 0.6891816143497758,
+          "precision": {
+            "macro": 0.6754424869290028,
+            "ci": [
+              0.6397764827823414,
+              0.7072848072067633
+            ],
+            "components": 357
+          },
+          "recall": {
+            "macro": 0.760656147537753,
+            "ci": [
+              0.7282332136354477,
+              0.7882403310326493
+            ],
+            "components": 357
+          },
+          "f1": {
+            "macro": 0.6993165192071288,
+            "ci": [
+              0.6660723005498592,
+              0.7300321685306649
+            ],
+            "components": 357
+          },
+          "orientation_by_method": {
+            "macro": 0.9202289073091389,
+            "ci": [
+              0.9026820679030784,
+              0.936918070305806
+            ],
+            "components": 346
+          },
+          "orientation_by_length_same_edges": {
+            "macro": 0.9586307080616213,
+            "ci": [
+              0.9434886091117076,
+              0.9731091477997514
+            ],
+            "components": 346
+          },
+          "root_has_no_true_parent": {
+            "macro": 0.9131652661064426,
+            "ci": [
+              0.8823529411764706,
+              0.9439775910364145
+            ],
+            "components": 357
+          }
+        },
+        "random_spanning_tree": {
+          "pooled_precision": 0.18628808864265928,
+          "pooled_recall": 0.22617713004484305,
+          "precision": {
+            "macro": 0.2925745737833216,
+            "ci": [
+              0.26828923271259814,
+              0.31628198182384587
+            ],
+            "components": 357
+          },
+          "recall": {
+            "macro": 0.3427961537201493,
+            "ci": [
+              0.3140103855820725,
+              0.37074676084117325
+            ],
+            "components": 357
+          },
+          "f1": {
+            "macro": 0.3051436486609117,
+            "ci": [
+              0.28010904564929096,
+              0.3295683963315643
+            ],
+            "components": 357
+          },
+          "orientation_by_method": {
+            "macro": 0.4630802635519617,
+            "ci": [
+              0.4213778451632225,
+              0.5052957472297095
+            ],
+            "components": 318
+          },
+          "orientation_by_length_same_edges": {
+            "macro": 0.9542677448337825,
+            "ci": [
+              0.935293688230009,
+              0.9722798742138365
+            ],
+            "components": 318
+          },
+          "root_has_no_true_parent": {
+            "macro": 0.23809523809523808,
+            "ci": [
+              0.19607843137254902,
+              0.28291316526610644
+            ],
+            "components": 357
+          }
+        },
+        "length_parent": {
+          "pooled_precision": 0.5932203389830508,
+          "pooled_recall": 0.6768497757847534,
+          "precision": {
+            "macro": 0.6950860865089257,
+            "ci": [
+              0.6631505307539942,
+              0.7250528621441137
+            ],
+            "components": 353
+          },
+          "recall": {
+            "macro": 0.7413170710056344,
+            "ci": [
+              0.7075151177550483,
+              0.7712600728449576
+            ],
+            "components": 357
+          },
+          "f1": {
+            "macro": 0.6998194862753858,
+            "ci": [
+              0.6642259305419436,
+              0.7316962607526252
+            ],
+            "components": 357
+          },
+          "orientation_by_method": {
+            "macro": 0.9784967320261437,
+            "ci": [
+              0.9656437908496733,
+              0.9896789215686272
+            ],
+            "components": 340
+          },
+          "orientation_by_length_same_edges": {
+            "macro": 0.9784967320261437,
+            "ci": [
+              0.9656437908496733,
+              0.9896789215686272
+            ],
+            "components": 340
+          },
+          "root_has_no_true_parent": {
+            "macro": 0.9728813559322034,
+            "ci": [
+              0.9525423728813559,
+              0.9898305084745763
+            ],
+            "components": 295
+          }
+        },
+        "lineage_components": 373,
+        "nodes": 4845,
+        "go_no_go": {
+          "a_structure": {
+            "mst_f1": 0.6993165192071288,
+            "random_f1": 0.3051436486609117,
+            "passes": true
+          },
+          "b_direction": {
+            "depth": 0.9202289073091389,
+            "length": 0.9586307080616213,
+            "passes": false
+          }
+        }
+      },
+      "within_group": {
+        "coverage": {
+          "true_links": 10012,
+          "same_node": 22,
+          "not_in_scored_component": 6312,
+          "across_components": 234,
+          "eligible_links": 3444,
+          "eligible_node_edges": 3437,
+          "components_with_true_edges": 313
+        },
+        "length_orientation_all_true_edges": {
+          "macro": 0.9363227409519091,
+          "ci_low": 0.9197534000455794,
+          "ci_high": 0.9516362742816393
+        },
+        "mst_tree": {
+          "pooled_precision": 0.6027749229188079,
+          "pooled_recall": 0.6853637160385626,
+          "precision": {
+            "macro": 0.7372031147669025,
+            "ci": [
+              0.7080639445197268,
+              0.7691345592319249
+            ],
+            "components": 313
+          },
+          "recall": {
+            "macro": 0.764011513066571,
+            "ci": [
+              0.7337897685909689,
+              0.7938712742883741
+            ],
+            "components": 313
+          },
+          "f1": {
+            "macro": 0.7451629475697377,
+            "ci": [
+              0.7163696714422969,
+              0.7772364719709375
+            ],
+            "components": 313
+          },
+          "orientation_by_method": {
+            "macro": 0.922632902451642,
+            "ci": [
+              0.9038181073460491,
+              0.9395438620935403
+            ],
+            "components": 308
+          },
+          "orientation_by_length_same_edges": {
+            "macro": 0.9650821944753631,
+            "ci": [
+              0.9505716108743606,
+              0.9773195802646015
+            ],
+            "components": 308
+          },
+          "root_has_no_true_parent": {
+            "macro": 0.9137380191693291,
+            "ci": [
+              0.8849041533546326,
+              0.9424920127795527
+            ],
+            "components": 313
+          }
+        },
+        "random_spanning_tree": {
+          "pooled_precision": 0.2014388489208633,
+          "pooled_recall": 0.22903885480572597,
+          "precision": {
+            "macro": 0.32081034523389335,
+            "ci": [
+              0.2923559852833647,
+              0.34719739742185235
+            ],
+            "components": 313
+          },
+          "recall": {
+            "macro": 0.3382746273692731,
+            "ci": [
+              0.3075588597878571,
+              0.3679781533902673
+            ],
+            "components": 313
+          },
+          "f1": {
+            "macro": 0.32548932188193813,
+            "ci": [
+              0.2961393728992264,
+              0.3523495623401705
+            ],
+            "components": 313
+          },
+          "orientation_by_method": {
+            "macro": 0.4861250838363514,
+            "ci": [
+              0.4451810865191147,
+              0.5307870137491616
+            ],
+            "components": 284
+          },
+          "orientation_by_length_same_edges": {
+            "macro": 0.945774647887324,
+            "ci": [
+              0.923587147887324,
+              0.9656103286384975
+            ],
+            "components": 284
+          },
+          "root_has_no_true_parent": {
+            "macro": 0.1757188498402556,
+            "ci": [
+              0.134185303514377,
+              0.21725239616613418
+            ],
+            "components": 313
+          }
+        },
+        "length_parent": {
+          "pooled_precision": 0.6413255360623782,
+          "pooled_recall": 0.6728016359918201,
+          "precision": {
+            "macro": 0.748696149901143,
+            "ci": [
+              0.7177340626428442,
+              0.7775381137581693
+            ],
+            "components": 309
+          },
+          "recall": {
+            "macro": 0.7443525460660195,
+            "ci": [
+              0.7120197962528186,
+              0.777315263194772
+            ],
+            "components": 313
+          },
+          "f1": {
+            "macro": 0.73534875778416,
+            "ci": [
+              0.7047848851098385,
+              0.7683825609067261
+            ],
+            "components": 313
+          },
+          "orientation_by_method": {
+            "macro": 0.9840691685062545,
+            "ci": [
+              0.9727161515820457,
+              0.9943915562913906
+            ],
+            "components": 302
+          },
+          "orientation_by_length_same_edges": {
+            "macro": 0.9840691685062545,
+            "ci": [
+              0.9727161515820457,
+              0.9943915562913906
+            ],
+            "components": 302
+          },
+          "root_has_no_true_parent": {
+            "macro": 0.977859778597786,
+            "ci": [
+              0.955719557195572,
+              0.992619926199262
+            ],
+            "components": 271
+          }
+        },
+        "lineage_components": 314,
+        "nodes": 4246,
+        "go_no_go": {
+          "a_structure": {
+            "mst_f1": 0.7451629475697377,
+            "random_f1": 0.32548932188193813,
+            "passes": true
+          },
+          "b_direction": {
+            "depth": 0.922632902451642,
+            "length": 0.9650821944753631,
+            "passes": false
+          }
+        }
+      },
+      "cross_group": {
+        "coverage": {
+          "true_links": 10012,
+          "same_node": 6,
+          "not_in_scored_component": 9788,
+          "across_components": 29,
+          "eligible_links": 189,
+          "eligible_node_edges": 188,
+          "components_with_true_edges": 59
+        },
+        "length_orientation_all_true_edges": {
+          "macro": 0.8813559322033898,
+          "ci_low": 0.8266772598870056,
+          "ci_high": 0.9317831920903954
+        },
+        "mst_tree": {
+          "pooled_precision": 0.0,
+          "pooled_recall": 0.0,
+          "precision": {
+            "macro": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "components": 59
+          },
+          "recall": {
+            "macro": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "components": 59
+          },
+          "f1": {
+            "macro": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "components": 59
+          },
+          "root_has_no_true_parent": {
+            "macro": 0.9322033898305084,
+            "ci": [
+              0.864406779661017,
+              0.9830508474576272
+            ],
+            "components": 59
+          }
+        },
+        "random_spanning_tree": {
+          "pooled_precision": 0.0,
+          "pooled_recall": 0.0,
+          "precision": {
+            "macro": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "components": 59
+          },
+          "recall": {
+            "macro": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "components": 59
+          },
+          "f1": {
+            "macro": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "components": 59
+          },
+          "root_has_no_true_parent": {
+            "macro": 0.576271186440678,
+            "ci": [
+              0.4406779661016949,
+              0.711864406779661
+            ],
+            "components": 59
+          }
+        },
+        "length_parent": {
+          "pooled_precision": 0.0,
+          "pooled_recall": 0.0,
+          "precision": {
+            "macro": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "components": 59
+          },
+          "recall": {
+            "macro": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "components": 59
+          },
+          "f1": {
+            "macro": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "components": 59
+          },
+          "root_has_no_true_parent": {
+            "macro": 0.9285714285714286,
+            "ci": [
+              0.8214285714285714,
+              1.0
+            ],
+            "components": 28
+          }
+        },
+        "lineage_components": 80,
+        "nodes": 866,
+        "go_no_go": {
+          "a_structure": {
+            "mst_f1": 0.0,
+            "random_f1": 0.0,
+            "passes": false
+          }
+        }
+      }
+    },
+    "anchor_check_vs_E41v2": {
+      "components_all": [
+        373,
+        373
+      ],
+      "nodes_all": [
+        4845,
+        4845
+      ],
+      "exact": true
+    }
+  }
+}

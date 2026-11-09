@@ -39,6 +39,9 @@ Ledger
 | E43 | robustness | no cue beats length; length CI includes 0.5 (Jaccard 0.6-0.8, two-stage, author-merged) | robust | length 0.496-0.551; 113 author-merged units |
 | E44 | robustness | lineage NO-GO stable over 5 seeds; depth tau-b below length | NO-GO stable; tau-b rule fails | GO in 0 of 15 runs; tau-b below length in 13 of 15 |
 | E45 | robustness | < 0.1% of distinct shingles in a 32-bit hash collision | not met | 0.60% of 25,612,365 |
+| E46 | confirmatory (added late) | wiki: MST recovers true parent links (F1 >= random + 10 pts); depth orients them better than length (+5 pts) | structure GO; direction NO-GO | F1 0.70 vs 0.31; orientation 0.92 vs 0.96 |
+| E47 | robustness | conclusions unchanged with 64-bit shingle hashes | unchanged | 0 of 8,361,829 pairs changed; length 0.496 |
+| E49 | descriptive | LSH recall of eligible pairs >= 0.8 (else limitation) | below 0.8 | recall 0.51; J 0.5-0.6 0.49, J >= 0.7 at least 0.995 |
 
 Robustness
 
@@ -53,3 +56,14 @@ Robustness
 | Lineage, all pairs, 5 seeds (Kendall tau range) | - | 0.050 to 0.062 | depth 0.002 to 0.033; ties kept 0.016 to 0.038 |
 | Lineage, same submolt, 5 seeds (Kendall tau range) | - | 0.028 to 0.045 | depth 0.012 to 0.033; ties kept 0.017 to 0.034 |
 | Lineage, across submolts, 5 seeds (Kendall tau range) | - | 0.037 to 0.091 | depth 0.002 to 0.045; ties kept 0.014 to 0.077 |
+| 64-bit shingle hashes (8,361,829 pairs) | 547 | 0.496 (0.461-0.533) | 0.508 |
+| Lineage, all pairs, 64-bit hashes (Kendall tau) | - | 0.050 | depth 0.033 |
+
+Parents
+
+| Predicted parent | Precision | Recall | F1 | Orientation correct | Root has no true parent |
+|---|---|---|---|---|---|
+| spanning tree (depth) | 0.68 (0.64-0.71) | 0.76 (0.73-0.79) | 0.70 (0.67-0.73) | 0.92 (0.90-0.94) | 0.91 (0.88-0.94) |
+| most similar shorter text | 0.70 (0.66-0.73) | 0.74 (0.71-0.77) | 0.70 (0.66-0.73) | 0.98 (0.97-0.99) | 0.97 (0.95-0.99) |
+| random spanning tree | 0.29 (0.27-0.32) | 0.34 (0.31-0.37) | 0.31 (0.28-0.33) | 0.46 (0.42-0.51) | 0.24 (0.20-0.28) |
+| length, on the tree's recovered links | - | - | - | 0.96 (0.94-0.97) | - |

@@ -1,11 +1,12 @@
-pandas
-numpy
-scipy
-tqdm
-datasketch
-rapidfuzz
-networkx
-matplotlib
-orjson
-pyarrow
-scikit-learn
+# Tested with Python 3.11.18 on Windows 11 (CPU only).
+pandas==3.1.1
+numpy==2.4.6
+scipy==1.17.1
+tqdm==4.70.1
+datasketch==2.0.0
+rapidfuzz==3.14.6
+networkx==3.6.1
+matplotlib==3.11.2
+orjson==3.13.0
+pyarrow==26.0.1
+scikit-learn==1.9.1

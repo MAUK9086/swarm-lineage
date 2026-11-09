@@ -1,0 +1,311 @@
+{
+  "experiment": "E47_hash64",
+  "run_at": "2026-11-09 14:34 IST",
+  "git_hash": "d9f175e-dirty",
+  "seed": 42,
+  "params": {
+    "hash": "blake2b digest_size=8 for exact Jaccard; LSH stage unchanged (32-bit)",
+    "pairs": "E31_pairs.parquet",
+    "config": {
+      "shingle_k_words": 5,
+      "num_perm": 128,
+      "lsh_threshold": 0.5,
+      "jaccard_window": [
+        0.5,
+        0.95
+      ],
+      "min_nodes": 5,
+      "max_nodes": 200,
+      "seed": 42,
+      "n_boot": 1000,
+      "n_null": 1000,
+      "node_key": "normalised text (whitespace collapsed, lower-cased)",
+      "node_time": "earliest post",
+      "tree": "minimum spanning tree on 1 - Jaccard over verified edges",
+      "root": "max mean containment C(node in other)",
+      "order": "hop depth from root, seeded random tie-break",
+      "baseline": "length (shorter earlier), seeded random tie-break",
+      "version": 2,
+      "row_shuffle": "pandas DataFrame.sample(frac=1, random_state=42), reset_index",
+      "row_shuffle_seed": 42,
+      "pair_scopes": [
+        "all",
+        "within_group",
+        "cross_group"
+      ],
+      "scope_rule": "edge within_group if the two nodes share any group_id; cross_group if none",
+      "primary_scope": "all"
+    },
+    "n_boot": 1000
+  },
+  "results": {
+    "copy_direction": {
+      "pairs_32bit": 8361829,
+      "pairs_jaccard_changed": 0,
+      "max_abs_jaccard_change": 0.0,
+      "pairs_leaving_window": 0,
+      "pairs_64bit": 8361829,
+      "counts_64bit": {
+        "pairs": 8361829,
+        "components": 1198,
+        "components_dropped_all_equal_size": 651,
+        "pairs_in_dropped_components": 9167,
+        "pairs_after_cap": 1767,
+        "pairs_equal_time_dropped": 0,
+        "largest_cluster_share_of_pairs": 0.505797595239032,
+        "two_largest_share_of_pairs": 0.9840380615293616,
+        "pairs_scored": 1767,
+        "components_scored": 547
+      },
+      "methods_64bit": {
+        "a_random": {
+          "n_components": 547,
+          "n_pairs": 1767,
+          "macro": 0.5105006222881802,
+          "ci_low": 0.47626748065609104,
+          "ci_high": 0.5439499159716388,
+          "micro": 0.4946236559139785
+        },
+        "b_longer_is_later": {
+          "n_components": 547,
+          "n_pairs": 1767,
+          "macro": 0.4963589268864029,
+          "ci_low": 0.4607426160038,
+          "ci_high": 0.5332352130370734,
+          "micro": 0.5019807583474816
+        },
+        "c_containment": {
+          "n_components": 547,
+          "n_pairs": 1767,
+          "macro": 0.5069049063994757,
+          "ci_low": 0.47095667975964245,
+          "ci_high": 0.5415309192471387,
+          "micro": 0.48670062252405205
+        },
+        "i_extension": {
+          "n_components": 547,
+          "n_pairs": 1767,
+          "macro": 0.5080754629402333,
+          "ci_low": 0.471733410989245,
+          "ci_high": 0.5457112993671024,
+          "micro": 0.49349179400113186
+        },
+        "ii_insertion_vs_deletion": {
+          "n_components": 547,
+          "n_pairs": 1767,
+          "macro": 0.5054842622457419,
+          "ci_low": 0.46988937845649587,
+          "ci_high": 0.5406187147559876,
+          "micro": 0.47821165817770234
+        }
+      },
+      "go_rule_64bit": {
+        "c_containment": {
+          "margin_vs_length": 0.010545979513072845,
+          "passes_go": false
+        },
+        "i_extension": {
+          "margin_vs_length": 0.01171653605383044,
+          "passes_go": false
+        },
+        "ii_insertion_vs_deletion": {
+          "margin_vs_length": 0.00912533535933907,
+          "passes_go": false
+        },
+        "length_ci_includes_0.5": true,
+        "robust": true
+      },
+      "pair_level_length_64bit": {
+        "accuracy": 0.6960841940202317,
+        "ci": [
+          0.6957724450817803,
+          0.6963959429586831
+        ]
+      },
+      "comparison_vs_E32": {
+        "b_longer_is_later": {
+          "32bit": 0.4963589268864029,
+          "64bit": 0.4963589268864029,
+          "abs_diff": 0.0,
+          "half_ci_32": 0.036246298516636716,
+          "within_half_half_width": true
+        },
+        "i_extension": {
+          "32bit": 0.5080754629402333,
+          "64bit": 0.5080754629402333,
+          "abs_diff": 0.0,
+          "half_ci_32": 0.0369889441889287,
+          "within_half_half_width": true
+        },
+        "ii_insertion_vs_deletion": {
+          "32bit": 0.5054842622457419,
+          "64bit": 0.5054842622457419,
+          "abs_diff": 0.0,
+          "half_ci_32": 0.03536466814974584,
+          "within_half_half_width": true
+        },
+        "a_random": {
+          "32bit": 0.5105006222881802,
+          "64bit": 0.5105006222881802,
+          "abs_diff": 0.0,
+          "half_ci_32": 0.03384121765777387,
+          "within_half_half_width": true
+        }
+      },
+      "go_same_as_E32": true
+    },
+    "lineage": {
+      "counts_64bit": {
+        "candidate_components_ge_min": 700,
+        "candidate_components_capped": 17,
+        "nodes_in_candidates_ge_min": 86064,
+        "all_verified_edges": 203811,
+        "all_lineage_components": 489,
+        "all_nodes_in_lineage_components": 8454,
+        "within_group_verified_edges": 193691,
+        "within_group_lineage_components": 453,
+        "within_group_nodes_in_lineage_components": 7993,
+        "cross_group_verified_edges": 10120,
+        "cross_group_lineage_components": 76,
+        "cross_group_nodes_in_lineage_components": 1026
+      },
+      "counts_32bit": {
+        "candidate_components_ge_min": 700,
+        "candidate_components_capped": 17,
+        "nodes_in_candidates_ge_min": 86064,
+        "all_verified_edges": 203811,
+        "all_lineage_components": 489,
+        "all_nodes_in_lineage_components": 8454,
+        "within_group_verified_edges": 193691,
+        "within_group_lineage_components": 453,
+        "within_group_nodes_in_lineage_components": 7993,
+        "cross_group_verified_edges": 10120,
+        "cross_group_lineage_components": 76,
+        "cross_group_nodes_in_lineage_components": 1026,
+        "posts": 300000,
+        "nodes": 284974,
+        "nodes_with_more_than_one_group": 156
+      },
+      "scopes": {
+        "all": {
+          "components": 489,
+          "nodes": 8454,
+          "within_component_pairs": 253356,
+          "depth": {
+            "macro_tau": 0.033207203253865045,
+            "macro_ci": [
+              0.005949535554559812,
+              0.06296190654910164
+            ],
+            "components_with_tau": 489,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "length": {
+            "macro_tau": 0.05013409644013604,
+            "macro_ci": [
+              0.020791034936403666,
+              0.08278400029422221
+            ],
+            "components_with_tau": 489,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "go_64bit": false,
+          "go_32bit": false,
+          "comparison": {
+            "depth": {
+              "32bit": 0.033207203253865045,
+              "64bit": 0.033207203253865045,
+              "abs_diff": 0.0,
+              "within_half_half_width": true
+            },
+            "length": {
+              "32bit": 0.05013409644013604,
+              "64bit": 0.05013409644013604,
+              "abs_diff": 0.0,
+              "within_half_half_width": true
+            }
+          }
+        },
+        "within_group": {
+          "components": 453,
+          "nodes": 7993,
+          "within_component_pairs": 236199,
+          "depth": {
+            "macro_tau": 0.020106333025426824,
+            "macro_ci": [
+              -0.008974747994570343,
+              0.050792694948246585
+            ],
+            "components_with_tau": 453,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "length": {
+            "macro_tau": 0.03413454542377196,
+            "macro_ci": [
+              0.004867086973368751,
+              0.0663070928697389
+            ],
+            "components_with_tau": 453,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "go_64bit": false,
+          "go_32bit": false,
+          "comparison": {
+            "depth": {
+              "32bit": 0.020106333025426824,
+              "64bit": 0.020106333025426824,
+              "abs_diff": 0.0,
+              "within_half_half_width": true
+            },
+            "length": {
+              "32bit": 0.03413454542377196,
+              "64bit": 0.03413454542377196,
+              "abs_diff": 0.0,
+              "within_half_half_width": true
+            }
+          }
+        },
+        "cross_group": {
+          "components": 76,
+          "nodes": 1026,
+          "within_component_pairs": 24641,
+          "depth": {
+            "macro_tau": 0.02390974278777615,
+            "macro_ci": [
+              -0.04802313246814736,
+              0.09661762524336615
+            ],
+            "components_with_tau": 76,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "length": {
+            "macro_tau": 0.09050098761826361,
+            "macro_ci": [
+              -0.0033383120182946136,
+              0.1840592910051196
+            ],
+            "components_with_tau": 76,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "go_64bit": false,
+          "go_32bit": false,
+          "comparison": {
+            "depth": {
+              "32bit": 0.02390974278777615,
+              "64bit": 0.02390974278777615,
+              "abs_diff": 0.0,
+              "within_half_half_width": true
+            },
+            "length": {
+              "32bit": 0.09050098761826361,
+              "64bit": 0.09050098761826361,
+              "abs_diff": 0.0,
+              "within_half_half_width": true
+            }
+          }
+        }
+      }
+    },
+    "conclusions_unchanged": true
+  }
+}
