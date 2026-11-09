@@ -1072,12 +1072,133 @@ Global seed: 42.
   accuracies near chance for all cues. E41-v2 all reproduces E41b (depth 0.033 below
   length 0.050, NO-GO); within_group and cross_group near chance.
 - Code: experiments/E36_replication_v2.py, experiments/E41_lineage_v2.py,
-  src/lineage.py (new scoped function only) @ (filled after commit)
+  src/lineage.py (new scoped function only) @ 76dac93
 - Config SHA-256 (LF enforced): configs/E36_pipeline_v2.json =
   fe569c7fa2df1ee30a862fda44a7408d2a4d89fb10a9cd33b2778201375c32f7;
   configs/E41_lineage_v2.json =
   d315478469faf5999d69aa304c12975d09f0f8ef1d3bc6172d60cb26197254ba
 - Corpus: data/interim/moltbook_slim.parquet only.
-- Results:
+- Results: (results/E41v2_lineage_moltbook.json, results/E36v2_replication_moltbook.json,
+  figures/E41v2_trees_moltbook_{all,within_group,cross_group}.png)
+  Runs at 76dac93 (E36-v2 stamped 76dac93-dirty: src/adapters/collusion_wiki.py was being
+  edited by the user during the run; E36-v2 code and config unchanged). Config SHA-256 in
+  both results files match the values above.
+
+  E41-v2 (Moltbook): 700 candidate components, 17 capped; verified edges all 203,811,
+  within 193,691, cross 10,120; 156 nodes carry more than one group.
+
+  | scope | components / nodes | depth macro tau [CI] | length macro tau [CI] | depth naive tau [CI] | null FPR macro / naive (depth) | GO |
+  |---|---|---|---|---|---|---|
+  | all | 489 / 8,454 | 0.033 [0.006, 0.063] | 0.050 [0.021, 0.083] | 0.004 [-0.000, 0.008] | 0.049 / 0.714 | no |
+  | within_group | 453 / 7,993 | 0.020 [-0.009, 0.051] | 0.034 [0.005, 0.066] | 0.013 [0.009, 0.017] | 0.054 / 0.711 | no |
+  | cross_group | 76 / 1,026 | 0.024 [-0.048, 0.097] | 0.091 [-0.003, 0.184] | -0.099 [-0.111, -0.086] | 0.048 / 0.704 | no |
+
+  Check vs E41b: all-scope depth and length macro and naive tau identical (difference
+  0.0), 489 components in both: exact reproduction, passes.
+
+  E36-v2 (Moltbook): pairs scored 8,360,718 (E31: 8,361,829); within_group 5,740,400;
+  cross_group 2,620,318; no missing groups.
+
+  | scope | pairs / components scored | pair-level (b) | component (a) | component (b) [CI] | component (c) | component (i) | component (ii) [CI] |
+  |---|---|---|---|---|---|---|---|
+  | all | 8,360,718 / 559 | 0.696 | 0.500 | 0.565 [0.530, 0.601] | 0.557 | 0.546 | 0.557 [0.523, 0.595] |
+  | within_group | 5,740,400 / 578 | 0.645 | 0.507 | 0.558 [0.525, 0.592] | 0.552 | 0.557 | 0.562 [0.531, 0.596] |
+  | cross_group | 2,620,318 / 69 | 0.807 | 0.474 | 0.518 [0.423, 0.624] | 0.5125 | 0.590 | 0.585 [0.485, 0.692] |
+
+  Row-order check (scope all vs E31 / E32): (i) exact items all match (docs 300,000; 299,959
+  with shingles; band-sum bound 381,518,142; bernoulli_fallback; exact-duplicate pairs
+  2,115,898 and 1,983,717): PASS. (ii) pair-level within 2 points of E31: (a) +0.003,
+  (b) +0.009, (c) +0.037 points: pass; component-level inside E32's CIs: (a) 0.500 inside;
+  (b) 0.565 outside [0.461, 0.533]; (i) 0.5458 outside [0.4717, 0.5457]; (ii) 0.557 outside
+  [0.470, 0.541]: FAIL. Overall: FAIL.
 - Interpretation:
-- Decision / next step:
+  E41-v2 behaves as pre-registered: the all scope reproduces E41b exactly and no scope
+  shows a lineage signal (NO-GO in all three). In the cross_group scope the naive pooled
+  tau is significantly negative (-0.099) while the macro tau is near 0, another case of
+  naive pooling giving a confident wrong-signed answer.
+  E36-v2 fails its pre-registered row-order check on the component-level estimates. The
+  pair-level estimates and all row-order-free quantities agree with E31, but E32's
+  component-level length accuracy (0.496) becomes 0.565 [0.530, 0.601] after the shuffle.
+  The likely cause is the Bernoulli pair sample, not a systematic order effect: on
+  Moltbook only about 5% of candidate pairs are kept, and the kept set (hashed on row
+  indices) changes with row order. That changes which components exist and which pairs
+  represent them, and the component bootstrap CI does not include that sampling
+  variation. Supporting evidence (from the user's collusion.wiki runs below, which use the
+  exact pair path with no sampling): v1 and v2 give the same counts and component-level
+  length accuracy 0.8924 vs 0.8925. This is not proven by one shuffle on Moltbook.
+  Consequences: (1) E32's NO-GO stands under v2: the edit cues do not beat length by 5
+  points ((ii) 0.557 vs (b) 0.565). (2) The statement "length is at chance at the cluster
+  level on Moltbook" (E32, E34) is not robust: under v2 it is 0.565, CI excluding 0.5.
+  (3) The inflation lesson stands but its size depends on the pair sample: pair-level 0.696
+  vs component-level 0.565 under v2 (13 points), vs 19 points with E31's sample (E34).
+- Decision / next step: v2 scripts and configs are the frozen versions going forward
+  (E41 v1 should not be used). The E36-v2 check failure is reported as is. To separate
+  pair-sampling variance from order effects would need a new pre-registration: several
+  shuffle seeds (or several Bernoulli salts) on Moltbook, reporting the spread of the
+  component-level estimates. Not run here.
+
+### Held-out runs on collusion.wiki (run by the user)  (2026-11-09 11:17 IST)
+- Provenance: run by the user outside this session, as planned in "Corpus change #2".
+  The user extended src/adapters/collusion_wiki.py (stub replaced: reads
+  data/interim/collusion_slim.parquet from E20; doc_id <- rev_id, text <- body, group_id <-
+  page_id, author_id <- label, with blank labels replaced by "blank_" + rev_id, t <- t_utc)
+  and wrote data/interim/collusion_standard.parquet (14,591 rows). The adapter does not
+  shuffle rows; the v2 scripts shuffle internally. Runs: E36 v1, E36-v2, E41 v1, E41-v2,
+  all at 76dac93 with the adapter edit uncommitted (stamped 76dac93-dirty); config SHA-256
+  in the results match the frozen configs (v1 5ac6686a / 5b6c45ef, v2 fe569c7f / d3154784).
+  E41 v1 carries the E41b row-order risk (revisions are stored in page / sequence order).
+  The analysis below reads only the aggregate results files; no raw data was opened.
+- Pre-registered rules applied (fixed earlier, unchanged): copy-direction GO (E32): an edit
+  cue beats "longer is later" by >= 5 points at component level with its CI lower bound
+  above the length point estimate. Lineage GO (E41): depth macro tau CI excludes 0 AND
+  depth macro tau > length macro tau.
+- Results: (results/E36_replication_collusion_wiki.json, results/E36v2_replication_collusion_wiki.json,
+  results/E41_lineage_collusion_wiki.json, results/E41v2_lineage_collusion_wiki.json)
+  Pair finding (identical in v1 and v2): 14,591 docs (14,514 with shingles); exact pair path
+  (no sampling); 276,415 different-author candidate pairs; 221,509 exact-duplicate pairs
+  excluded; 36,735 in window, 24 with equal times, 36,711 scored over 8,214 docs.
+
+  E36 copy direction (component level, cap 20, template filter):
+
+  | run / scope | pairs / components | pair-level (b) | (a) random | (b) length [CI] | (c) containment | (i) extension | (ii) ins/del |
+  |---|---|---|---|---|---|---|---|
+  | v1 all | 36,711 / 1,140 | 0.774 | 0.5125 | 0.8924 [0.878, 0.907] | 0.887 | 0.879 | 0.889 |
+  | v2 all | 36,711 / 1,140 | 0.771 | 0.510 | 0.8925 [0.878, 0.907] | 0.889 | 0.879 | 0.889 |
+  | v2 within_group | 27,504 / 1,115 | 0.837 | 0.503 | 0.941 [0.929, 0.952] | 0.942 | 0.9395 | 0.942 |
+  | v2 cross_group | 9,207 / 297 | 0.5747 | 0.545 | 0.659 [0.614, 0.703] | 0.634 | 0.6105 | 0.640 |
+
+  E41 lineage (macro Kendall tau [component-bootstrap CI]):
+
+  | run / scope | components / nodes | depth | length | depth naive pooled | null FPR macro / naive (depth) | GO |
+  |---|---|---|---|---|---|---|
+  | v1 all | 379 / 4,883 | 0.692 [0.652, 0.731] | 0.757 [0.717, 0.793] | 0.472 | 0.048 / 0.581 | no |
+  | v2 all | 373 / 4,845 | 0.694 [0.654, 0.731] | 0.764 [0.727, 0.800] | 0.495 | 0.041 / 0.593 | no |
+  | v2 within_group | 314 / 4,246 | 0.797 [0.762, 0.831] | 0.867 [0.836, 0.899] | 0.507 | 0.069 / 0.589 | no |
+  | v2 cross_group | 80 / 866 | 0.138 [0.075, 0.202] | 0.3745 [0.298, 0.453] | 0.015 | 0.059 / 0.670 | no |
+
+  E41 nodes: 11,819 (465 with more than one post; 77 empty posts); root was the shortest
+  text in 325 of 379 (v1) and 326 of 373 (v2, all) components.
+- Interpretation:
+  Copy direction: NO-GO under the pre-registered rule; no edit cue beats length (within
+  1.4 points of it overall and within pages; 1.9 to 4.9 points below it across pages). But unlike Moltbook, "longer is later" is strongly right on
+  collusion.wiki: 0.89 at component level overall and 0.94 within a page. Within a page this
+  mostly reflects how a wiki works: successive saves of one page usually add text, so it is
+  page growth, not copying between agents. Across pages (the closer analogue of copying),
+  length is right in 0.659 [0.614, 0.703] of components, clearly above chance; the edit cues
+  are no better. The algebraic equivalence of (c), (ii) and length (E31 / E32 notes) shows
+  again: they track (b) closely.
+  Lineage: NO-GO in every run and scope, because depth is below the length baseline, but
+  both are strongly positive within pages (depth 0.80, length 0.87) and weaker but still
+  positive across pages (depth 0.14, length 0.37). The tree adds nothing beyond length.
+  Evaluation lesson again: the null keeps the macro analysis near 5% false positives while
+  the naive pooled analysis is at 55-67%; and the naive pooled tau differs from the macro
+  tau by up to 0.29 (within-page depth: 0.507 vs 0.797), in both directions (cross-page
+  length: naive 0.495 above macro 0.3745).
+  Robustness: v1 and v2 agree closely here (same pair counts; component-level length 0.8924
+  vs 0.8925; lineage depth 0.692 vs 0.694), so the E41 v1 row-order risk did not materially
+  affect this corpus, and with no pair sampling the copy-direction pipeline is effectively
+  order-independent (see the E36-v2 discussion above).
+- Decision / next step: Report collusion.wiki as the held-out corpus: copy-direction and
+  lineage methods give NO-GO under the frozen rules; length alone orders wiki revisions
+  well within pages and moderately across pages; the cluster-aware evaluation stays
+  calibrated on a second corpus. The adapter change is committed with these results.

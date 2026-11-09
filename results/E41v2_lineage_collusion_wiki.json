@@ -1,0 +1,414 @@
+{
+  "experiment": "E41v2_lineage_collusion_wiki",
+  "run_at": "2026-11-09 10:46 IST",
+  "git_hash": "76dac93-dirty",
+  "seed": 42,
+  "params": {
+    "config": {
+      "shingle_k_words": 5,
+      "num_perm": 128,
+      "lsh_threshold": 0.5,
+      "jaccard_window": [
+        0.5,
+        0.95
+      ],
+      "min_nodes": 5,
+      "max_nodes": 200,
+      "seed": 42,
+      "n_boot": 1000,
+      "n_null": 1000,
+      "node_key": "normalised text (whitespace collapsed, lower-cased)",
+      "node_time": "earliest post",
+      "tree": "minimum spanning tree on 1 - Jaccard over verified edges",
+      "root": "max mean containment C(node in other)",
+      "order": "hop depth from root, seeded random tie-break",
+      "baseline": "length (shorter earlier), seeded random tie-break",
+      "version": 2,
+      "row_shuffle": "pandas DataFrame.sample(frac=1, random_state=42), reset_index",
+      "row_shuffle_seed": 42,
+      "pair_scopes": [
+        "all",
+        "within_group",
+        "cross_group"
+      ],
+      "scope_rule": "edge within_group if the two nodes share any group_id; cross_group if none",
+      "primary_scope": "all"
+    },
+    "config_sha256": "d315478469faf5999d69aa304c12975d09f0f8ef1d3bc6172d60cb26197254ba",
+    "table": "data/interim/collusion_standard.parquet"
+  },
+  "results": {
+    "table": "collusion_wiki",
+    "config_sha256": "d315478469faf5999d69aa304c12975d09f0f8ef1d3bc6172d60cb26197254ba",
+    "counts": {
+      "candidate_components_ge_min": 392,
+      "candidate_components_capped": 3,
+      "nodes_in_candidates_ge_min": 6536,
+      "all_verified_edges": 33696,
+      "all_lineage_components": 373,
+      "all_nodes_in_lineage_components": 4845,
+      "within_group_verified_edges": 31555,
+      "within_group_lineage_components": 314,
+      "within_group_nodes_in_lineage_components": 4246,
+      "cross_group_verified_edges": 2141,
+      "cross_group_lineage_components": 80,
+      "cross_group_nodes_in_lineage_components": 866,
+      "posts": 14591,
+      "nodes": 11819,
+      "nodes_with_more_than_one_group": 301
+    },
+    "scopes": {
+      "all": {
+        "lineage_components": 373,
+        "component_nodes": {
+          "min": 5,
+          "median": 8.0,
+          "max": 110
+        },
+        "tree_max_depth": {
+          "min": 1,
+          "median": 5.0,
+          "max": 39
+        },
+        "components_where_root_is_shortest_text": 326,
+        "evaluation": {
+          "components": 373,
+          "nodes": 4845,
+          "within_component_pairs": 59370,
+          "nodes_with_unknown_time": 0,
+          "depth": {
+            "macro_tau": 0.6939277402646945,
+            "macro_ci": [
+              0.6535759465234976,
+              0.7311726629975842
+            ],
+            "components_with_tau": 373,
+            "naive_pooled_tau": 0.49536615778654003,
+            "naive_ci": [
+              0.48837716924746566,
+              0.5023551463256144
+            ],
+            "naive_untied_pairs": 59346,
+            "per_component_tau": {
+              "p25": 0.4444444444444444,
+              "median": 0.9014778325123153,
+              "p75": 1.0
+            },
+            "null": {
+              "draws": 1000,
+              "macro_fpr": 0.041,
+              "macro_fpr_ci": [
+                0.030364971010377058,
+                0.05514799333457009
+              ],
+              "naive_fpr": 0.593,
+              "naive_fpr_ci": [
+                0.562251371229695,
+                0.6230368516808058
+              ],
+              "macro_tau_null_mean_sd": [
+                -0.000046702157018489954,
+                0.014800883430570254
+              ]
+            }
+          },
+          "length": {
+            "macro_tau": 0.7644473312316591,
+            "macro_ci": [
+              0.7273411208190276,
+              0.7996206287994494
+            ],
+            "components_with_tau": 373,
+            "naive_pooled_tau": 0.6847639268021433,
+            "naive_ci": [
+              0.6789006573865166,
+              0.6906271962177699
+            ],
+            "naive_untied_pairs": 59346,
+            "per_component_tau": {
+              "p25": 0.6,
+              "median": 1.0,
+              "p75": 1.0
+            },
+            "null": {
+              "draws": 1000,
+              "macro_fpr": 0.043,
+              "macro_fpr_ci": [
+                0.03207865333774185,
+                0.05741900397302252
+              ],
+              "naive_fpr": 0.551,
+              "naive_fpr_ci": [
+                0.5200351371242172,
+                0.5815745335041221
+              ],
+              "macro_tau_null_mean_sd": [
+                0.00045721543044143506,
+                0.014926029911423265
+              ]
+            }
+          }
+        },
+        "figure": "figures/E41v2_trees_collusion_wiki_all.png",
+        "figure_component_sizes": [
+          110,
+          94,
+          92,
+          80
+        ],
+        "figure_taus_tau_a": [
+          -0.08090075062552127,
+          0.009380004575611988,
+          0.13139034878165312,
+          -0.002531645569620253
+        ],
+        "go_no_go": {
+          "depth_macro_tau": 0.6939277402646945,
+          "depth_macro_ci": [
+            0.6535759465234976,
+            0.7311726629975842
+          ],
+          "ci_excludes_0": true,
+          "length_macro_tau": 0.7644473312316591,
+          "depth_above_length": false,
+          "ci_entirely_below_0": false,
+          "go": false
+        }
+      },
+      "within_group": {
+        "lineage_components": 314,
+        "component_nodes": {
+          "min": 5,
+          "median": 8.0,
+          "max": 110
+        },
+        "tree_max_depth": {
+          "min": 1,
+          "median": 6.0,
+          "max": 39
+        },
+        "components_where_root_is_shortest_text": 296,
+        "evaluation": {
+          "components": 314,
+          "nodes": 4246,
+          "within_component_pairs": 55363,
+          "nodes_with_unknown_time": 0,
+          "depth": {
+            "macro_tau": 0.7969837947212406,
+            "macro_ci": [
+              0.762016887167356,
+              0.8312486754611339
+            ],
+            "components_with_tau": 314,
+            "naive_pooled_tau": 0.5072191402085329,
+            "naive_ci": [
+              0.5000387580897208,
+              0.514399522327345
+            ],
+            "naive_untied_pairs": 55339,
+            "per_component_tau": {
+              "p25": 0.7373680241327301,
+              "median": 0.9557189542483661,
+              "p75": 1.0
+            },
+            "null": {
+              "draws": 1000,
+              "macro_fpr": 0.069,
+              "macro_fpr_ci": [
+                0.054883945486595816,
+                0.08641472037979248
+              ],
+              "naive_fpr": 0.589,
+              "naive_fpr_ci": [
+                0.5582210565468382,
+                0.6190977804320281
+              ],
+              "macro_tau_null_mean_sd": [
+                0.0002960012639621945,
+                0.01703787667490339
+              ]
+            }
+          },
+          "length": {
+            "macro_tau": 0.8667666569821048,
+            "macro_ci": [
+              0.8363560824714442,
+              0.8989430679017884
+            ],
+            "components_with_tau": 314,
+            "naive_pooled_tau": 0.706499936753465,
+            "naive_ci": [
+              0.7006034995351247,
+              0.7123963739718053
+            ],
+            "naive_untied_pairs": 55339,
+            "per_component_tau": {
+              "p25": 0.9285714285714286,
+              "median": 1.0,
+              "p75": 1.0
+            },
+            "null": {
+              "draws": 1000,
+              "macro_fpr": 0.054,
+              "macro_fpr_ci": [
+                0.04162131363758084,
+                0.06979215498517825
+              ],
+              "naive_fpr": 0.567,
+              "naive_fpr_ci": [
+                0.5360910859990532,
+                0.5973961283558237
+              ],
+              "macro_tau_null_mean_sd": [
+                0.0002817028526210665,
+                0.016692072950927984
+              ]
+            }
+          }
+        },
+        "figure": "figures/E41v2_trees_collusion_wiki_within_group.png",
+        "figure_component_sizes": [
+          110,
+          93,
+          92,
+          80
+        ],
+        "figure_taus_tau_a": [
+          -0.2457047539616347,
+          0.07012622720897616,
+          0.08361204013377926,
+          0.029746835443037974
+        ],
+        "go_no_go": {
+          "depth_macro_tau": 0.7969837947212406,
+          "depth_macro_ci": [
+            0.762016887167356,
+            0.8312486754611339
+          ],
+          "ci_excludes_0": true,
+          "length_macro_tau": 0.8667666569821048,
+          "depth_above_length": false,
+          "ci_entirely_below_0": false,
+          "go": false
+        }
+      },
+      "cross_group": {
+        "lineage_components": 80,
+        "component_nodes": {
+          "min": 5,
+          "median": 7.0,
+          "max": 109
+        },
+        "tree_max_depth": {
+          "min": 1,
+          "median": 2.0,
+          "max": 7
+        },
+        "components_where_root_is_shortest_text": 50,
+        "evaluation": {
+          "components": 80,
+          "nodes": 866,
+          "within_component_pairs": 13515,
+          "nodes_with_unknown_time": 0,
+          "depth": {
+            "macro_tau": 0.13844429941565167,
+            "macro_ci": [
+              0.07480458401086193,
+              0.20227785491785477
+            ],
+            "components_with_tau": 80,
+            "naive_pooled_tau": 0.015168331483536912,
+            "naive_ci": [
+              -0.0016890495257081417,
+              0.03202571249278208
+            ],
+            "naive_untied_pairs": 13515,
+            "per_component_tau": {
+              "p25": -0.020556976768370042,
+              "median": 0.10476190476190475,
+              "p75": 0.38636363636363635
+            },
+            "null": {
+              "draws": 1000,
+              "macro_fpr": 0.059,
+              "macro_fpr_ci": [
+                0.04601429812249838,
+                0.07536090291480377
+              ],
+              "naive_fpr": 0.67,
+              "naive_fpr_ci": [
+                0.6402544423963843,
+                0.6984444596980799
+              ],
+              "macro_tau_null_mean_sd": [
+                -0.002323613888703453,
+                0.035315924121882857
+              ]
+            }
+          },
+          "length": {
+            "macro_tau": 0.37453056737040236,
+            "macro_ci": [
+              0.29762952674475507,
+              0.45325274265587856
+            ],
+            "components_with_tau": 80,
+            "naive_pooled_tau": 0.4947835738068813,
+            "naive_ci": [
+              0.48013255050773385,
+              0.5094345971060288
+            ],
+            "naive_untied_pairs": 13515,
+            "per_component_tau": {
+              "p25": 0.07158119658119658,
+              "median": 0.4,
+              "p75": 0.7123737373737373
+            },
+            "null": {
+              "draws": 1000,
+              "macro_fpr": 0.052,
+              "macro_fpr_ci": [
+                0.03987303620029011,
+                0.06755573945665176
+              ],
+              "naive_fpr": 0.624,
+              "naive_fpr_ci": [
+                0.5935575897152563,
+                0.6534933741654116
+              ],
+              "macro_tau_null_mean_sd": [
+                -0.0007229754506625918,
+                0.035484822140426246
+              ]
+            }
+          }
+        },
+        "figure": "figures/E41v2_trees_collusion_wiki_cross_group.png",
+        "figure_component_sizes": [
+          109,
+          94,
+          27,
+          26
+        ],
+        "figure_taus_tau_a": [
+          -0.010533469249065579,
+          -0.027682452528025623,
+          0.06552706552706553,
+          0.24307692307692308
+        ],
+        "go_no_go": {
+          "depth_macro_tau": 0.13844429941565167,
+          "depth_macro_ci": [
+            0.07480458401086193,
+            0.20227785491785477
+          ],
+          "ci_excludes_0": true,
+          "length_macro_tau": 0.37453056737040236,
+          "depth_above_length": false,
+          "ci_entirely_below_0": false,
+          "go": false
+        }
+      }
+    }
+  }
+}

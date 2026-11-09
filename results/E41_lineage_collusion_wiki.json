@@ -1,0 +1,162 @@
+{
+  "experiment": "E41_lineage_collusion_wiki",
+  "run_at": "2026-11-09 10:47 IST",
+  "git_hash": "76dac93-dirty",
+  "seed": 42,
+  "params": {
+    "config": {
+      "shingle_k_words": 5,
+      "num_perm": 128,
+      "lsh_threshold": 0.5,
+      "jaccard_window": [
+        0.5,
+        0.95
+      ],
+      "min_nodes": 5,
+      "max_nodes": 200,
+      "seed": 42,
+      "n_boot": 1000,
+      "n_null": 1000,
+      "node_key": "normalised text (whitespace collapsed, lower-cased)",
+      "node_time": "earliest post",
+      "tree": "minimum spanning tree on 1 - Jaccard over verified edges",
+      "root": "max mean containment C(node in other)",
+      "order": "hop depth from root, seeded random tie-break",
+      "baseline": "length (shorter earlier), seeded random tie-break"
+    },
+    "config_sha256": "5b6c45ef7d350bcb854e00ed567d13535d5a2f4db374644adebf502ddf45b6db",
+    "table": "data/interim/collusion_standard.parquet"
+  },
+  "results": {
+    "table": "collusion_wiki",
+    "config_sha256": "5b6c45ef7d350bcb854e00ed567d13535d5a2f4db374644adebf502ddf45b6db",
+    "counts": {
+      "candidate_components_ge_min": 392,
+      "candidate_components_capped": 3,
+      "nodes_in_candidates_ge_min": 6536,
+      "lineage_components": 379,
+      "nodes_in_lineage_components": 4883,
+      "posts": 14591,
+      "posts_with_empty_text": 77,
+      "nodes": 11819,
+      "nodes_with_more_than_one_post": 465,
+      "component_nodes": {
+        "min": 5,
+        "median": 8.0,
+        "max": 110
+      },
+      "tree_max_depth": {
+        "min": 1,
+        "median": 5.0,
+        "max": 39
+      },
+      "components_where_root_is_shortest_text": 325,
+      "node_post_count_in_components": {
+        "total_posts": 5249
+      }
+    },
+    "evaluation": {
+      "components": 379,
+      "nodes": 4883,
+      "within_component_pairs": 59454,
+      "nodes_with_unknown_time": 0,
+      "depth": {
+        "macro_tau": 0.6920379375654034,
+        "macro_ci": [
+          0.6517504154864309,
+          0.7311667583881775
+        ],
+        "components_with_tau": 379,
+        "naive_pooled_tau": 0.4721857647652701,
+        "naive_ci": [
+          0.46509868883387306,
+          0.4792728406966671
+        ],
+        "naive_untied_pairs": 59430,
+        "per_component_tau": {
+          "p25": 0.4666666666666667,
+          "median": 0.8863636363636364,
+          "p75": 1.0
+        },
+        "null": {
+          "draws": 1000,
+          "macro_fpr": 0.048,
+          "macro_fpr_ci": [
+            0.036393300941434725,
+            0.06306608878387271
+          ],
+          "naive_fpr": 0.581,
+          "naive_fpr_ci": [
+            0.5501666259094502,
+            0.6112134392061472
+          ],
+          "macro_tau_null_mean_sd": [
+            -0.00041255485325733743,
+            0.015170192363751429
+          ]
+        }
+      },
+      "length": {
+        "macro_tau": 0.7566812827596535,
+        "macro_ci": [
+          0.7172309785831716,
+          0.792752939811747
+        ],
+        "components_with_tau": 379,
+        "naive_pooled_tau": 0.6746424364798924,
+        "naive_ci": [
+          0.6687079010217971,
+          0.6805769719379877
+        ],
+        "naive_untied_pairs": 59430,
+        "per_component_tau": {
+          "p25": 0.6,
+          "median": 1.0,
+          "p75": 1.0
+        },
+        "null": {
+          "draws": 1000,
+          "macro_fpr": 0.058,
+          "macro_fpr_ci": [
+            0.045133278145642095,
+            0.07424957640875146
+          ],
+          "naive_fpr": 0.566,
+          "naive_fpr_ci": [
+            0.5350866435708425,
+            0.5964082243011258
+          ],
+          "macro_tau_null_mean_sd": [
+            -0.000513765861325149,
+            0.015698611549355604
+          ]
+        }
+      }
+    },
+    "figure": "figures/E41_lineage_trees.png",
+    "figure_component_sizes": [
+      110,
+      94,
+      92,
+      78
+    ],
+    "figure_taus_tau_a": [
+      -0.23269391159299416,
+      -0.04095172729352551,
+      -0.00716674629718108,
+      0.000999000999000999
+    ],
+    "go_no_go": {
+      "depth_macro_tau": 0.6920379375654034,
+      "depth_macro_ci": [
+        0.6517504154864309,
+        0.7311667583881775
+      ],
+      "ci_excludes_0": true,
+      "length_macro_tau": 0.7566812827596535,
+      "depth_above_length": false,
+      "ci_entirely_below_0": false,
+      "go": false
+    }
+  }
+}
