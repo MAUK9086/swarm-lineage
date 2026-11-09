@@ -120,7 +120,7 @@ def fig_pipeline() -> None:
     ax.text(4.95, 0.74, "t goes only to scoring", ha="center", fontsize=7, color=ORANGE)
     ax.annotate("", xy=(8.6, 1.27), xytext=(7.82, 2.6),
                 arrowprops=dict(arrowstyle="-|>", color=TEXT2, lw=1, connectionstyle="arc3,rad=-0.25"))
-    ax.text(8.85, 2.35, "predicted order\n+ cluster ids", ha="left", fontsize=7, color=TEXT2, va="center")
+    ax.text(9.1, 2.35, "predicted order\n+ cluster ids", ha="center", fontsize=7, color=TEXT2, va="center")
     save(fig, "R1_pipeline.png")
 
 
