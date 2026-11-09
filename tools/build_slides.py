@@ -145,19 +145,15 @@ def notes(slide, text: str) -> None:
 
 def s_title(prs, a: dict[str, Path]) -> None:
     s = prs.slides.add_slide(prs.slide_layouts[6])
-    textbox(s, 0.6, 0.55, 7.0, 0.3, [("APART RESEARCH  \u00b7  SWARM ALIGNMENT SPRINT  \u00b7  NOVEMBER 2026", 12, BLUE, True)], name="venue")
-    textbox(s, 0.6, 1.3, 7.6, 1.9, [("Counting Clusters, Not Pairs", 40, INK, True, HEAD)], anchor=MSO_ANCHOR.BOTTOM, name="title")
-    textbox(s, 0.6, 3.3, 7.6, 0.9, [("Evaluating content-only forensics on agent-swarm text", 20, MUTED, False, HEAD)], name="subtitle")
-    textbox(s, 0.6, 4.35, 6.8, 1.0, [("On agent text, copy-direction tools are easy to overrate: the cues add nothing beyond length, "
-                                      "and pair-level scoring flatters them.", 16, INK)], name="claim")
-    textbox(s, 0.6, 5.75, 7.0, 1.1, [("Mohammad Ahmadullah Khan", 18, INK, True),
-                                     ("Independent researcher  \u00b7  Track 4: Multi-Agent Oversight and Control", 14, MUTED),
-                                     (REPO_URL, 14, MUTED)], name="byline")
-    image(s, a["R2B"], 8.55, 1.6, h=4.0, name="key result")
-    textbox(s, 8.55, 5.7, 4.2, 0.8, [("The same data, scored per pair (orange) and per cluster (blue).", 12, MUTED)], name="key result caption")
+    textbox(s, 1.0, 1.25, 11.3, 0.35, [("APART RESEARCH  ·  SWARM ALIGNMENT SPRINT  ·  NOVEMBER 2026", 13, BLUE, True)], name="venue")
+    textbox(s, 1.0, 1.85, 11.3, 1.5, [("Counting Clusters, Not Pairs", 54, INK, True, HEAD)], anchor=MSO_ANCHOR.BOTTOM, name="title")
+    textbox(s, 1.0, 3.5, 11.3, 0.7, [("Evaluating content-only forensics on agent-swarm text", 26, MUTED, False, HEAD)], name="subtitle")
+    textbox(s, 1.0, 5.15, 11.3, 1.2, [("Mohammad Ahmadullah Khan", 20, INK, True),
+                                      ("Independent researcher  ·  Track 4: Multi-Agent Oversight and Control", 15, MUTED),
+                                      (REPO_URL, 15, MUTED)], name="byline")
     notes(s, "This project asks whether the text that agents copy from each other can tell us which copy came first, "
-             "and how we should evaluate any tool that claims to do that. The chart on the right is the whole talk in one picture: "
-             "the same data gives 0.70 when every pair is counted and chance when each cluster counts once.")
+             "and how we should evaluate any tool that claims to do that. The short answer: the cues we tested add nothing "
+             "beyond text length, and scoring them per pair makes chance-level methods look strong.")
 
 
 def s_problem(prs, k: int) -> None:
