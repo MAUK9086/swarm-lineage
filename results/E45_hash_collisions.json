@@ -1,0 +1,24 @@
+{
+  "experiment": "E45_hash_collisions",
+  "run_at": "2026-11-09 13:27 IST",
+  "git_hash": "3820059-dirty",
+  "seed": 42,
+  "params": {
+    "shingle_k_words": 5,
+    "hash32": "blake2b digest_size=4",
+    "hash64": "blake2b digest_size=8",
+    "table": "moltbook_slim.parquet"
+  },
+  "results": {
+    "posts": 300000,
+    "shingle_occurrences_per_doc_sets": 30242605,
+    "distinct_shingles_64bit": 25612365,
+    "distinct_32bit_values": 25535954,
+    "lost_to_collisions": 76411,
+    "32bit_values_with_collision": 76263,
+    "distinct_shingles_in_a_collision": 152674,
+    "share_of_distinct_shingles_in_a_collision": 0.005960948940092022,
+    "expected_lost_n2_over_2pow33": 76367.66425487876,
+    "negligible_lt_0.1pct": false
+  }
+}

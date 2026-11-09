@@ -1,0 +1,757 @@
+{
+  "experiment": "E44_lineage_robustness",
+  "run_at": "2026-11-09 13:27 IST",
+  "git_hash": "3820059-dirty",
+  "seed": 42,
+  "params": {
+    "config": {
+      "shingle_k_words": 5,
+      "num_perm": 128,
+      "lsh_threshold": 0.5,
+      "jaccard_window": [
+        0.5,
+        0.95
+      ],
+      "min_nodes": 5,
+      "max_nodes": 200,
+      "seed": 42,
+      "n_boot": 1000,
+      "n_null": 1000,
+      "node_key": "normalised text (whitespace collapsed, lower-cased)",
+      "node_time": "earliest post",
+      "tree": "minimum spanning tree on 1 - Jaccard over verified edges",
+      "root": "max mean containment C(node in other)",
+      "order": "hop depth from root, seeded random tie-break",
+      "baseline": "length (shorter earlier), seeded random tie-break",
+      "version": 2,
+      "row_shuffle": "pandas DataFrame.sample(frac=1, random_state=42), reset_index",
+      "row_shuffle_seed": 42,
+      "pair_scopes": [
+        "all",
+        "within_group",
+        "cross_group"
+      ],
+      "scope_rule": "edge within_group if the two nodes share any group_id; cross_group if none",
+      "primary_scope": "all"
+    },
+    "seeds": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ],
+    "seed_controls": "node sample of capped components, tree and length tie-breaks, bootstrap"
+  },
+  "results": {
+    "seeds": {
+      "42": {
+        "counts": {
+          "candidate_components_ge_min": 700,
+          "candidate_components_capped": 17,
+          "nodes_in_candidates_ge_min": 86064,
+          "all_verified_edges": 203811,
+          "all_lineage_components": 489,
+          "all_nodes_in_lineage_components": 8454,
+          "within_group_verified_edges": 193691,
+          "within_group_lineage_components": 453,
+          "within_group_nodes_in_lineage_components": 7993,
+          "cross_group_verified_edges": 10120,
+          "cross_group_lineage_components": 76,
+          "cross_group_nodes_in_lineage_components": 1026
+        },
+        "all": {
+          "components": 489,
+          "nodes": 8454,
+          "within_component_pairs": 253356,
+          "depth": {
+            "macro_tau": 0.033207203253865045,
+            "macro_ci": [
+              0.005949535554559812,
+              0.06296190654910164
+            ],
+            "components_with_tau": 489,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "depth_ties_kept": {
+            "macro_tau": 0.02701050724160877,
+            "macro_ci": [
+              -0.0026726175298261764,
+              0.057029711800317226
+            ],
+            "components_with_tau": 489,
+            "share_pairs_tied_in_order": 0.47722572190909235
+          },
+          "length": {
+            "macro_tau": 0.05013409644013604,
+            "macro_ci": [
+              0.020791034936403666,
+              0.08278400029422221
+            ],
+            "components_with_tau": 489,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "e41v2_go_rule": false,
+          "depth_ties_kept_below_length": true
+        },
+        "within_group": {
+          "components": 453,
+          "nodes": 7993,
+          "within_component_pairs": 236199,
+          "depth": {
+            "macro_tau": 0.020106333025426824,
+            "macro_ci": [
+              -0.008974747994570343,
+              0.050792694948246585
+            ],
+            "components_with_tau": 453,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "depth_ties_kept": {
+            "macro_tau": 0.01944177503959527,
+            "macro_ci": [
+              -0.010381875712087775,
+              0.05111066147701358
+            ],
+            "components_with_tau": 453,
+            "share_pairs_tied_in_order": 0.47749143730498433
+          },
+          "length": {
+            "macro_tau": 0.03413454542377196,
+            "macro_ci": [
+              0.004867086973368751,
+              0.0663070928697389
+            ],
+            "components_with_tau": 453,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "e41v2_go_rule": false,
+          "depth_ties_kept_below_length": true
+        },
+        "cross_group": {
+          "components": 76,
+          "nodes": 1026,
+          "within_component_pairs": 24641,
+          "depth": {
+            "macro_tau": 0.02390974278777615,
+            "macro_ci": [
+              -0.04802313246814736,
+              0.09661762524336615
+            ],
+            "components_with_tau": 76,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "depth_ties_kept": {
+            "macro_tau": 0.05420293772794429,
+            "macro_ci": [
+              -0.02673521011936509,
+              0.13461486526849978
+            ],
+            "components_with_tau": 76,
+            "share_pairs_tied_in_order": 0.4925936447384441
+          },
+          "length": {
+            "macro_tau": 0.09050098761826361,
+            "macro_ci": [
+              -0.0033383120182946136,
+              0.1840592910051196
+            ],
+            "components_with_tau": 76,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "e41v2_go_rule": false,
+          "depth_ties_kept_below_length": true
+        }
+      },
+      "43": {
+        "counts": {
+          "candidate_components_ge_min": 700,
+          "candidate_components_capped": 17,
+          "nodes_in_candidates_ge_min": 86064,
+          "all_verified_edges": 204093,
+          "all_lineage_components": 491,
+          "all_nodes_in_lineage_components": 8416,
+          "within_group_verified_edges": 194149,
+          "within_group_lineage_components": 456,
+          "within_group_nodes_in_lineage_components": 7971,
+          "cross_group_verified_edges": 9944,
+          "cross_group_lineage_components": 74,
+          "cross_group_nodes_in_lineage_components": 1045
+        },
+        "all": {
+          "components": 491,
+          "nodes": 8416,
+          "within_component_pairs": 252685,
+          "depth": {
+            "macro_tau": 0.016406924386375733,
+            "macro_ci": [
+              -0.011478029161493219,
+              0.046970897094739734
+            ],
+            "components_with_tau": 491,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "depth_ties_kept": {
+            "macro_tau": 0.021708970601224363,
+            "macro_ci": [
+              -0.00985491121347269,
+              0.05606263609267936
+            ],
+            "components_with_tau": 491,
+            "share_pairs_tied_in_order": 0.4715594514909868
+          },
+          "length": {
+            "macro_tau": 0.05210576549860138,
+            "macro_ci": [
+              0.023103965473228773,
+              0.08266537110690235
+            ],
+            "components_with_tau": 491,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "e41v2_go_rule": false,
+          "depth_ties_kept_below_length": true
+        },
+        "within_group": {
+          "components": 456,
+          "nodes": 7971,
+          "within_component_pairs": 235837,
+          "depth": {
+            "macro_tau": 0.01200601331829257,
+            "macro_ci": [
+              -0.01696024824366064,
+              0.04029901706320106
+            ],
+            "components_with_tau": 456,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "depth_ties_kept": {
+            "macro_tau": 0.016598492374262433,
+            "macro_ci": [
+              -0.016052742491981072,
+              0.047698093455668306
+            ],
+            "components_with_tau": 456,
+            "share_pairs_tied_in_order": 0.4721014938283645
+          },
+          "length": {
+            "macro_tau": 0.0284707037459358,
+            "macro_ci": [
+              -0.003189812690465445,
+              0.06213427935285625
+            ],
+            "components_with_tau": 456,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "e41v2_go_rule": false,
+          "depth_ties_kept_below_length": true
+        },
+        "cross_group": {
+          "components": 74,
+          "nodes": 1045,
+          "within_component_pairs": 28445,
+          "depth": {
+            "macro_tau": 0.019761785813683142,
+            "macro_ci": [
+              -0.0551857992875404,
+              0.09488986486657618
+            ],
+            "components_with_tau": 74,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "depth_ties_kept": {
+            "macro_tau": 0.04673893387054931,
+            "macro_ci": [
+              -0.0329110449227193,
+              0.11862364482226377
+            ],
+            "components_with_tau": 74,
+            "share_pairs_tied_in_order": 0.563754614167692
+          },
+          "length": {
+            "macro_tau": 0.0717472609342082,
+            "macro_ci": [
+              -0.021166860102620415,
+              0.16595979134501546
+            ],
+            "components_with_tau": 74,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "e41v2_go_rule": false,
+          "depth_ties_kept_below_length": true
+        }
+      },
+      "44": {
+        "counts": {
+          "candidate_components_ge_min": 700,
+          "candidate_components_capped": 17,
+          "nodes_in_candidates_ge_min": 86064,
+          "all_verified_edges": 202745,
+          "all_lineage_components": 485,
+          "all_nodes_in_lineage_components": 8418,
+          "within_group_verified_edges": 192952,
+          "within_group_lineage_components": 450,
+          "within_group_nodes_in_lineage_components": 7972,
+          "cross_group_verified_edges": 9793,
+          "cross_group_lineage_components": 75,
+          "cross_group_nodes_in_lineage_components": 1068
+        },
+        "all": {
+          "components": 485,
+          "nodes": 8418,
+          "within_component_pairs": 252089,
+          "depth": {
+            "macro_tau": 0.0023337679945489203,
+            "macro_ci": [
+              -0.025900108845276524,
+              0.03259667972208923
+            ],
+            "components_with_tau": 485,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "depth_ties_kept": {
+            "macro_tau": 0.015539129093800426,
+            "macro_ci": [
+              -0.014420421554894553,
+              0.048526421040278926
+            ],
+            "components_with_tau": 485,
+            "share_pairs_tied_in_order": 0.4824208910345156
+          },
+          "length": {
+            "macro_tau": 0.059989789736597146,
+            "macro_ci": [
+              0.027084176709339453,
+              0.0920761961854415
+            ],
+            "components_with_tau": 485,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "e41v2_go_rule": false,
+          "depth_ties_kept_below_length": true
+        },
+        "within_group": {
+          "components": 450,
+          "nodes": 7972,
+          "within_component_pairs": 235313,
+          "depth": {
+            "macro_tau": 0.03278933334805983,
+            "macro_ci": [
+              0.003928450508320762,
+              0.06258303389160902
+            ],
+            "components_with_tau": 450,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "depth_ties_kept": {
+            "macro_tau": 0.030680680082370047,
+            "macro_ci": [
+              -0.0002558510826801763,
+              0.0605816858893103
+            ],
+            "components_with_tau": 450,
+            "share_pairs_tied_in_order": 0.4831734753286049
+          },
+          "length": {
+            "macro_tau": 0.04330882861994422,
+            "macro_ci": [
+              0.011215057880804936,
+              0.07530368048701216
+            ],
+            "components_with_tau": 450,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "e41v2_go_rule": false,
+          "depth_ties_kept_below_length": true
+        },
+        "cross_group": {
+          "components": 75,
+          "nodes": 1068,
+          "within_component_pairs": 28580,
+          "depth": {
+            "macro_tau": 0.045247436117736184,
+            "macro_ci": [
+              -0.027479313696561397,
+              0.12981873603117325
+            ],
+            "components_with_tau": 75,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "depth_ties_kept": {
+            "macro_tau": 0.07748044018042899,
+            "macro_ci": [
+              -0.0020028212585526733,
+              0.15365886395235698
+            ],
+            "components_with_tau": 75,
+            "share_pairs_tied_in_order": 0.5541987403778866
+          },
+          "length": {
+            "macro_tau": 0.03700438331565397,
+            "macro_ci": [
+              -0.056981287713064196,
+              0.12981502927534685
+            ],
+            "components_with_tau": 75,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "e41v2_go_rule": false,
+          "depth_ties_kept_below_length": false
+        }
+      },
+      "45": {
+        "counts": {
+          "candidate_components_ge_min": 700,
+          "candidate_components_capped": 17,
+          "nodes_in_candidates_ge_min": 86064,
+          "all_verified_edges": 205769,
+          "all_lineage_components": 480,
+          "all_nodes_in_lineage_components": 8422,
+          "within_group_verified_edges": 195727,
+          "within_group_lineage_components": 445,
+          "within_group_nodes_in_lineage_components": 7977,
+          "cross_group_verified_edges": 10042,
+          "cross_group_lineage_components": 75,
+          "cross_group_nodes_in_lineage_components": 1097
+        },
+        "all": {
+          "components": 480,
+          "nodes": 8422,
+          "within_component_pairs": 254228,
+          "depth": {
+            "macro_tau": 0.02803297408252581,
+            "macro_ci": [
+              -0.0019409104563700237,
+              0.0575702380724759
+            ],
+            "components_with_tau": 480,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "depth_ties_kept": {
+            "macro_tau": 0.0377514753340019,
+            "macro_ci": [
+              0.0064943369047584035,
+              0.06981951624763938
+            ],
+            "components_with_tau": 480,
+            "share_pairs_tied_in_order": 0.47442453230958037
+          },
+          "length": {
+            "macro_tau": 0.051001588259581856,
+            "macro_ci": [
+              0.02092036051975006,
+              0.08260738042443595
+            ],
+            "components_with_tau": 480,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "e41v2_go_rule": false,
+          "depth_ties_kept_below_length": true
+        },
+        "within_group": {
+          "components": 445,
+          "nodes": 7977,
+          "within_component_pairs": 237174,
+          "depth": {
+            "macro_tau": 0.019285108294659847,
+            "macro_ci": [
+              -0.011160170634174528,
+              0.04894247948775089
+            ],
+            "components_with_tau": 445,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "depth_ties_kept": {
+            "macro_tau": 0.0336187901942135,
+            "macro_ci": [
+              0.0016401326605818122,
+              0.06276685978909873
+            ],
+            "components_with_tau": 445,
+            "share_pairs_tied_in_order": 0.4735046843245887
+          },
+          "length": {
+            "macro_tau": 0.031003993333517083,
+            "macro_ci": [
+              -0.0013380380503281277,
+              0.06438616441270857
+            ],
+            "components_with_tau": 445,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "e41v2_go_rule": false,
+          "depth_ties_kept_below_length": false
+        },
+        "cross_group": {
+          "components": 75,
+          "nodes": 1097,
+          "within_component_pairs": 30994,
+          "depth": {
+            "macro_tau": 0.0015182453923349274,
+            "macro_ci": [
+              -0.07316481353941479,
+              0.08289146300010304
+            ],
+            "components_with_tau": 75,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "depth_ties_kept": {
+            "macro_tau": 0.013617270832709931,
+            "macro_ci": [
+              -0.07135785044028513,
+              0.09902665734858532
+            ],
+            "components_with_tau": 75,
+            "share_pairs_tied_in_order": 0.5801122797960896
+          },
+          "length": {
+            "macro_tau": 0.06951988833941558,
+            "macro_ci": [
+              -0.03589980705577523,
+              0.17224203522024542
+            ],
+            "components_with_tau": 75,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "e41v2_go_rule": false,
+          "depth_ties_kept_below_length": true
+        }
+      },
+      "46": {
+        "counts": {
+          "candidate_components_ge_min": 700,
+          "candidate_components_capped": 17,
+          "nodes_in_candidates_ge_min": 86064,
+          "all_verified_edges": 204877,
+          "all_lineage_components": 487,
+          "all_nodes_in_lineage_components": 8457,
+          "within_group_verified_edges": 195029,
+          "within_group_lineage_components": 452,
+          "within_group_nodes_in_lineage_components": 8004,
+          "cross_group_verified_edges": 9848,
+          "cross_group_lineage_components": 74,
+          "cross_group_nodes_in_lineage_components": 987
+        },
+        "all": {
+          "components": 487,
+          "nodes": 8457,
+          "within_component_pairs": 255107,
+          "depth": {
+            "macro_tau": 0.018338436676871725,
+            "macro_ci": [
+              -0.012078902593501698,
+              0.04824365620830129
+            ],
+            "components_with_tau": 487,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "depth_ties_kept": {
+            "macro_tau": 0.020864644160211457,
+            "macro_ci": [
+              -0.01312385211512837,
+              0.052339916435306964
+            ],
+            "components_with_tau": 487,
+            "share_pairs_tied_in_order": 0.47035557628759694
+          },
+          "length": {
+            "macro_tau": 0.06163718876511945,
+            "macro_ci": [
+              0.029578799483123506,
+              0.09163392167232032
+            ],
+            "components_with_tau": 487,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "e41v2_go_rule": false,
+          "depth_ties_kept_below_length": true
+        },
+        "within_group": {
+          "components": 452,
+          "nodes": 8004,
+          "within_component_pairs": 238127,
+          "depth": {
+            "macro_tau": 0.01230298808913634,
+            "macro_ci": [
+              -0.017589131415508406,
+              0.04263911755437026
+            ],
+            "components_with_tau": 452,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "depth_ties_kept": {
+            "macro_tau": 0.023474188237020997,
+            "macro_ci": [
+              -0.0072973754076015125,
+              0.0567826290659068
+            ],
+            "components_with_tau": 452,
+            "share_pairs_tied_in_order": 0.47133672368106094
+          },
+          "length": {
+            "macro_tau": 0.04533035554708977,
+            "macro_ci": [
+              0.013723037451207617,
+              0.07544961523448204
+            ],
+            "components_with_tau": 452,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "e41v2_go_rule": false,
+          "depth_ties_kept_below_length": true
+        },
+        "cross_group": {
+          "components": 74,
+          "nodes": 987,
+          "within_component_pairs": 23888,
+          "depth": {
+            "macro_tau": 0.02001307215221294,
+            "macro_ci": [
+              -0.05392070733426699,
+              0.09842799266905704
+            ],
+            "components_with_tau": 74,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "depth_ties_kept": {
+            "macro_tau": 0.018699334782853117,
+            "macro_ci": [
+              -0.07053966775671835,
+              0.10130993828338869
+            ],
+            "components_with_tau": 74,
+            "share_pairs_tied_in_order": 0.4688127930341594
+          },
+          "length": {
+            "macro_tau": 0.06900348355103049,
+            "macro_ci": [
+              -0.031427638783362605,
+              0.16899459339758646
+            ],
+            "components_with_tau": 74,
+            "share_pairs_tied_in_order": 0.0
+          },
+          "e41v2_go_rule": false,
+          "depth_ties_kept_below_length": true
+        }
+      }
+    },
+    "anchor_check_vs_E41v2": {
+      "all.depth": {
+        "E44": 0.033207203253865045,
+        "E41v2": 0.033207203253865045
+      },
+      "all.length": {
+        "E44": 0.05013409644013604,
+        "E41v2": 0.05013409644013604
+      },
+      "within_group.depth": {
+        "E44": 0.020106333025426824,
+        "E41v2": 0.020106333025426824
+      },
+      "within_group.length": {
+        "E44": 0.03413454542377196,
+        "E41v2": 0.03413454542377196
+      },
+      "cross_group.depth": {
+        "E44": 0.02390974278777615,
+        "E41v2": 0.02390974278777615
+      },
+      "cross_group.length": {
+        "E44": 0.09050098761826361,
+        "E41v2": 0.09050098761826361
+      },
+      "exact_1e-12": true
+    },
+    "summary": {
+      "all.depth": {
+        "min": 0.0023337679945489203,
+        "max": 0.033207203253865045,
+        "mean": 0.019663861278837447,
+        "sd": 0.01189706563099197
+      },
+      "all.depth_ties_kept": {
+        "min": 0.015539129093800426,
+        "max": 0.0377514753340019,
+        "mean": 0.024574945286169384,
+        "sd": 0.008413961993949766
+      },
+      "all.length": {
+        "min": 0.05013409644013604,
+        "max": 0.06163718876511945,
+        "mean": 0.05497368574000718,
+        "sd": 0.005408043115739272
+      },
+      "all.go_met_any_seed": false,
+      "all.ties_kept_below_length_all_seeds": true,
+      "all.share_pairs_tied_in_depth": [
+        0.47722572190909235,
+        0.4715594514909868,
+        0.4824208910345156,
+        0.47442453230958037,
+        0.47035557628759694
+      ],
+      "within_group.depth": {
+        "min": 0.01200601331829257,
+        "max": 0.03278933334805983,
+        "mean": 0.01929795521511508,
+        "sd": 0.008437607856700677
+      },
+      "within_group.depth_ties_kept": {
+        "min": 0.016598492374262433,
+        "max": 0.0336187901942135,
+        "mean": 0.024762785185492447,
+        "sd": 0.007247061695970911
+      },
+      "within_group.length": {
+        "min": 0.0284707037459358,
+        "max": 0.04533035554708977,
+        "mean": 0.03644968533405177,
+        "sd": 0.007493225797370173
+      },
+      "within_group.go_met_any_seed": false,
+      "within_group.ties_kept_below_length_all_seeds": false,
+      "within_group.share_pairs_tied_in_depth": [
+        0.47749143730498433,
+        0.4721014938283645,
+        0.4831734753286049,
+        0.4735046843245887,
+        0.47133672368106094
+      ],
+      "cross_group.depth": {
+        "min": 0.0015182453923349274,
+        "max": 0.045247436117736184,
+        "mean": 0.02209005645274867,
+        "sd": 0.015592543166246411
+      },
+      "cross_group.depth_ties_kept": {
+        "min": 0.013617270832709931,
+        "max": 0.07748044018042899,
+        "mean": 0.04214778347889713,
+        "sd": 0.026356317713124532
+      },
+      "cross_group.length": {
+        "min": 0.03700438331565397,
+        "max": 0.09050098761826361,
+        "mean": 0.06755520075171437,
+        "sd": 0.019257417206717444
+      },
+      "cross_group.go_met_any_seed": false,
+      "cross_group.ties_kept_below_length_all_seeds": false,
+      "cross_group.share_pairs_tied_in_depth": [
+        0.4925936447384441,
+        0.563754614167692,
+        0.5541987403778866,
+        0.5801122797960896,
+        0.4688127930341594
+      ],
+      "robust": false,
+      "cap_coverage": {
+        "candidate_components_ge_min": 700,
+        "candidate_components_capped": 17,
+        "nodes_in_candidates_ge_min": 86064,
+        "nodes_in_lineage_components_all": 8454
+      }
+    }
+  }
+}

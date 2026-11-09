@@ -1328,9 +1328,36 @@ Global seed: 42.
   inside each drawn cluster (hypergeometric on the correct count). (c) At 0.5: clusters
   that share any author are merged by union-find; the capped scored pairs are re-grouped by
   merged unit and re-bootstrapped. Truth only via src/evaluate.py.
-- Code: experiments/E43_robustness.py @ (filled after run)
+- Code: experiments/E43_robustness.py @ 3820059
 - Params: thresholds 0.5/0.6/0.7/0.8, upper 0.95, cap 20, template filter on, n_boot 1000,
   seed 42.
+- Results: (results/E43_robustness.json; anchor row reproduces E32 exactly, 1e-12)
+
+  | Jaccard >= | pairs | clusters scored | largest cluster share | length | containment | extension | ins/del |
+  |---|---|---|---|---|---|---|---|
+  | 0.5 | 8,361,829 | 547 | 50.6% | 0.496 (0.461-0.533) | 0.507 (0.471-0.542) | 0.508 (0.472-0.546) | 0.505 (0.470-0.541) |
+  | 0.6 | 888,672 | 360 | 95.3% | 0.504 (0.456-0.549) | 0.520 (0.470-0.564) | 0.518 (0.471-0.563) | 0.508 (0.462-0.552) |
+  | 0.7 | 328,847 | 237 | 96.8% | 0.536 (0.484-0.592) | 0.494 (0.440-0.551) | 0.486 (0.432-0.545) | 0.486 (0.431-0.545) |
+  | 0.8 | 115,036 | 92 | 84.2% | 0.551 (0.465-0.637) | 0.539 (0.453-0.627) | 0.510 (0.423-0.597) | 0.532 (0.448-0.622) |
+
+  | variant (Jaccard 0.5) | length | containment |
+  |---|---|---|
+  | two-stage bootstrap (clusters, then min(20, n) pairs), all 8,352,662 eligible pairs | 0.493 (0.456-0.527), width ratio 0.99 | 0.496 (0.461-0.531), width ratio 0.99 |
+  | author-merged units (547 clusters -> 113 units) | 0.507 (0.423-0.585) | 0.509 (0.424-0.592) |
+
+  Largest cue margin over length in any variant: +0.016 (containment, 0.6); author-merged
+  extension 0.504, ins/del 0.522 (0.440-0.604). No cue passes the GO rule in any variant;
+  the length CI includes 0.5 in every variant. robust_overall = true.
+- Interpretation: The Moltbook negative result is robust to the similarity threshold, to
+  re-sampling pairs within clusters and to merging clusters that share authors. Stricter
+  thresholds do not break up the concentration: one cluster still holds 84-97% of pairs,
+  so the concentration is not an artefact of chaining at 0.5. The two-stage CI is no wider
+  than the cluster bootstrap, so the choice of 20 pairs inside clusters adds little
+  variance; the larger spread in E42 comes from which pairs, and so which clusters, enter
+  the Bernoulli sample. Author merging leaves 113 units and widens the CI to about +/-0.08.
+- Decision / next step: Report as a robustness paragraph and appendix table. Replace the
+  draft's "the cluster bootstrap excludes pair-sampling variance" with the more precise
+  statement above.
 
 ### E44 - Lineage robustness: sampling and tie-break seeds, depth-only tau-b, depth ties, 200-node cap  (2026-11-09 13:25 IST)
 - Question: Is E41-v2's Moltbook lineage result (depth tau below length tau in all three
@@ -1348,8 +1375,30 @@ Global seed: 42.
   depth (random tie-break), depth-only (ties kept, tau-b) and length; share of
   within-component node pairs tied in depth. No null re-runs (E41-v2 calibrated them).
   Seed 42 must reproduce E41-v2 (all scope depth 0.0332, length 0.0501).
-- Code: experiments/E44_lineage_robustness.py @ (filled after run)
+- Code: experiments/E44_lineage_robustness.py @ 3820059
 - Params: seeds 42-46, n_boot 1000, other parameters from configs/E41_lineage_v2.json.
+- Results: (results/E44_lineage_robustness.json; seed 42 reproduces E41-v2 exactly, 1e-12)
+
+  | scope | depth, random tie-break (min-max over 5 seeds) | depth, ties kept (tau-b) | length | pairs tied in depth |
+  |---|---|---|---|---|
+  | all | 0.002-0.033 | 0.016-0.038 | 0.050-0.062 | 47-48% |
+  | within group | 0.012-0.033 | 0.017-0.034 | 0.028-0.045 | 47-48% |
+  | across groups | 0.002-0.045 | 0.014-0.077 | 0.037-0.091 | 47-58% |
+
+  E41-v2 GO rule met in 0 of 15 seed x scope runs. Depth tau-b below length in 13 of 15;
+  the exceptions are seed 45 within group (0.034 vs 0.031) and seed 44 across groups
+  (0.077, CI -0.002 to 0.154, vs 0.037, CI -0.057 to 0.130). Lineage components per seed
+  480-491 (all scope); 200-node cap: 17 of 700 candidate components capped, 8,454 of 86,064
+  candidate nodes in lineage components at seed 42. robust = false by the pre-registered
+  reading rule.
+- Interpretation: Trees never pass the pre-registered test, so the NO-GO decision stands.
+  The stricter reading "depth below length" fails in 2 of 15 runs, both with overlapping
+  intervals and both near zero. On Moltbook, depth and length are both close to zero and
+  cannot be separated; the report must not say that trees are below length on Moltbook,
+  only that they do not beat it. Seed 42's depth value (0.033) is the highest of five.
+- Decision / next step: Weaken the Moltbook lineage wording in the report accordingly.
+  The collusion.wiki statement (depth below length) rests on E41-v2 wiki results, which
+  were not re-run here.
 
 ### E45 - 32-bit shingle-hash collisions  (2026-11-09 13:25 IST)
 - Question: How many distinct shingles in the Moltbook 300k sample share a 32-bit hash?
@@ -1359,5 +1408,16 @@ Global seed: 42.
 - Method: For every shingle of every post, compute the 32-bit hash used by the pipeline
   and a 64-bit blake2b hash; count distinct 64-bit values (taken as distinct shingles) and
   distinct 32-bit values among them.
-- Code: experiments/E45_hash_collisions.py @ (filled after run)
+- Code: experiments/E45_hash_collisions.py @ 3820059
 - Params: k = 5 words, seed not used (deterministic).
+- Results: (results/E45_hash_collisions.json) 25,612,365 distinct shingles; 25,535,954
+  distinct 32-bit values; 76,411 lost to collisions (expected n^2/2^33 = 76,368);
+  152,674 distinct shingles (0.60%) share a 32-bit value with another. Criterion
+  (< 0.1%): not met.
+- Interpretation: Collisions occur at the rate expected for 32-bit hashes, and 0.6% of
+  distinct shingles are involved, above the pre-registered bar. A collision changes a
+  pair's Jaccard only when the two colliding shingles fall in the two texts of the same
+  pair, which this count does not measure.
+- Decision / next step: State in the limitations that the pipeline uses 32-bit shingle
+  hashes, with 0.6% of distinct shingles in a collision; 64-bit hashes are a one-line
+  change for future runs. No re-run of the frozen pipelines.

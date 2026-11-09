@@ -85,28 +85,42 @@ def save(fig, name: str) -> None:
 
 
 def fig_pipeline() -> None:
-    """Method and evaluation schematic."""
-    fig, ax = plt.subplots(figsize=(7.2, 2.3), facecolor=SURFACE)
+    """Two-lane schematic: the method lane never sees t; only the evaluator lane reads it."""
+    fig, ax = plt.subplots(figsize=(7.2, 2.9), facecolor=SURFACE)
     ax.set_xlim(0, 10)
-    ax.set_ylim(-0.4, 3.2)
+    ax.set_ylim(0, 4.05)
     ax.axis("off")
-    boxes = [(0.05, "Adapter", "any corpus ->\nstandard table\n(doc, text, group,\nauthor | t)"),
-             (2.05, "Pairs", "near-duplicates\nMinHash + LSH\nJaccard 0.5-0.95"),
-             (4.05, "Clusters", "connected\ncomponents\n(the real unit\nof evidence)"),
-             (6.05, "Predict order", "from text only:\nlength, contain-\nment, edit cues,\nlineage tree"),
-             (8.05, "Score", "per cluster,\nthen average;\nnull: shuffle time\nwithin clusters")]
-    for x, head, body in boxes:
-        ax.add_patch(FancyBboxPatch((x, 0.75), 1.8, 1.95, boxstyle="round,pad=0.02,rounding_size=0.12",
-                                    facecolor="#eef4fc" if head != "Score" else "#fdeee7", edgecolor=GRID))
-        ax.text(x + 0.9, 2.42, head, ha="center", va="center", fontsize=9, fontweight="bold", color=TEXT)
-        ax.text(x + 0.9, 1.55, body, ha="center", va="center", fontsize=7.4, color=TEXT2, linespacing=1.25)
-    for x in (1.87, 3.87, 5.87, 7.87):
-        ax.annotate("", xy=(x + 0.17, 1.72), xytext=(x, 1.72), arrowprops=dict(arrowstyle="-|>", color=TEXT2, lw=1))
-    ax.annotate("", xy=(8.95, 0.72), xytext=(0.95, 0.72),
-                arrowprops=dict(arrowstyle="-|>", color=ORANGE, lw=1.2, linestyle=(0, (3, 2)),
-                                connectionstyle="arc3,rad=0.12"))
-    ax.text(4.95, -0.33, "true time t bypasses the method: only the scoring step (src/evaluate.py) reads it",
-            ha="center", fontsize=7.4, color=ORANGE)
+    ax.add_patch(FancyBboxPatch((0.0, 1.78), 10.0, 2.22, boxstyle="round,pad=0,rounding_size=0.08",
+                                facecolor="#f3f7fd", edgecolor="none"))
+    ax.add_patch(FancyBboxPatch((0.0, 0.0), 10.0, 1.6, boxstyle="round,pad=0,rounding_size=0.08",
+                                facecolor="#fdf3ee", edgecolor="none"))
+    ax.text(0.08, 3.84, "A. Method: text only, never reads t", fontsize=8, fontweight="bold", color=BLUE, va="center")
+    ax.text(1.2, 1.44, "B. Evaluator only (src/evaluate.py)", fontsize=8, fontweight="bold", color=ORANGE, va="center")
+    top = [(0.08, "Adapter", "public table:\ndoc, text, group,\nauthor; rows\nshuffled"),
+           (2.08, "Pairs", "near-duplicates\nMinHash + LSH\nJaccard 0.5-0.95"),
+           (4.08, "Clusters", "connected\ncomponents: the\nunit of evidence"),
+           (6.08, "Predict order", "length, contain-\nment, edit cues,\nlineage tree")]
+    for x, head, body in top:
+        ax.add_patch(FancyBboxPatch((x, 1.98), 1.72, 1.6, boxstyle="round,pad=0.02,rounding_size=0.1",
+                                    facecolor="#ffffff", edgecolor=GRID))
+        ax.text(x + 0.86, 3.32, head, ha="center", va="center", fontsize=8.5, fontweight="bold", color=TEXT)
+        ax.text(x + 0.86, 2.55, body, ha="center", va="center", fontsize=7, color=TEXT2, linespacing=1.2)
+    for x in (1.84, 3.84, 5.84):
+        ax.annotate("", xy=(x + 0.22, 2.78), xytext=(x, 2.78), arrowprops=dict(arrowstyle="-|>", color=TEXT2, lw=1))
+    bottom = [(0.08, "Hidden time t", "split off by the\nadapter; not\npassed on"),
+              (8.08, "Score", "per cluster, then\naverage; null:\nshuffle t in clusters")]
+    for x, head, body in bottom:
+        ax.add_patch(FancyBboxPatch((x, 0.12), 1.72, 1.12, boxstyle="round,pad=0.02,rounding_size=0.1",
+                                    facecolor="#ffffff", edgecolor=GRID))
+        ax.text(x + 0.86, 1.0, head, ha="center", va="center", fontsize=8.5, fontweight="bold", color=TEXT)
+        ax.text(x + 0.86, 0.5, body, ha="center", va="center", fontsize=7, color=TEXT2, linespacing=1.2)
+    ax.annotate("", xy=(0.94, 1.27), xytext=(0.94, 1.96), arrowprops=dict(arrowstyle="-|>", color=ORANGE, lw=1.1))
+    ax.annotate("", xy=(8.06, 0.62), xytext=(1.84, 0.62),
+                arrowprops=dict(arrowstyle="-|>", color=ORANGE, lw=1.2, linestyle=(0, (3, 2))))
+    ax.text(4.95, 0.74, "t goes only to scoring", ha="center", fontsize=7, color=ORANGE)
+    ax.annotate("", xy=(8.6, 1.27), xytext=(7.82, 2.6),
+                arrowprops=dict(arrowstyle="-|>", color=TEXT2, lw=1, connectionstyle="arc3,rad=-0.25"))
+    ax.text(8.85, 2.35, "predicted order\n+ cluster ids", ha="left", fontsize=7, color=TEXT2, va="center")
     save(fig, "R1_pipeline.png")
 
 
@@ -139,7 +153,7 @@ def fig_naive_vs_cluster() -> None:
                    mec=SURFACE, mew=1.2, label=lab)
     a.axhline(0.5, color=TEXT2, lw=0.8, ls=(0, (3, 3)))
     a.set_xticks(x, ["1", "5", "20", "100", "all"])
-    a.set_xlabel("pairs kept per cluster", color=TEXT2)
+    a.set_xlabel("maximum pairs kept per cluster", color=TEXT2)
     a.set_ylabel('"longer is later" accuracy', color=TEXT2)
     a.set_ylim(0.42, 0.75)
     a.set_title("B. Same data, two answers", loc="left", fontsize=9, color=TEXT)
@@ -161,16 +175,20 @@ def fig_naive_vs_cluster() -> None:
         b.text(gx[k] + w / 2, 100 * macro + 2, f"{100*macro:.0f}%", ha="center", fontsize=7.5, color=TEXT)
     b.axhline(5, color=TEXT2, lw=0.8, ls=(0, (3, 3)))
     b.set_xticks(gx, [g[0] for g in groups], fontsize=7.5)
-    b.set_ylim(0, 100)
+    b.set_ylim(0, 128)
+    b.set_yticks([0, 25, 50, 75, 100])
     b.set_ylabel("% of 1,000 null draws\ncalled significant", color=TEXT2)
     b.set_title("C. False alarms under a null", loc="left", fontsize=9, color=TEXT)
+    b.legend(handles=[plt.Rectangle((0, 0), 1, 1, color=ORANGE, label="pair-pooled Wald CI"),
+                      plt.Rectangle((0, 0), 1, 1, color=BLUE, label="cluster bootstrap CI")],
+             frameon=False, fontsize=7, loc="upper right")
     style(b)
     fig.tight_layout()
     save(fig, "R2_naive_vs_cluster.png")
 
 
 def fig_forest() -> None:
-    """Cluster-level estimates for every cue (left) and lineage tau (right)."""
+    """Cluster-level estimates: length vs the other cues (left), tree depth vs length (right)."""
     m, c = load("E36v2_replication_moltbook"), load("E36v2_replication_collusion_wiki")
     lm, lc = load("E41v2_lineage_moltbook"), load("E41v2_lineage_collusion_wiki")
     e42 = load("E42_pair_sample_sensitivity")
@@ -181,12 +199,20 @@ def fig_forest() -> None:
            [(f"collusion.wiki: {wik[k]}", c["scopes"][sc]) for k, (sc, _) in enumerate(scopes)]
     fig, (a, b) = plt.subplots(1, 2, figsize=(7.4, 3.4), facecolor=SURFACE, gridspec_kw={"width_ratios": [1.45, 1]})
     ys = np.arange(len(rows))[::-1].astype(float)
-    offs = np.linspace(-0.28, 0.28, len(METHODS))
-    for (key, lab, col, mk), off in zip(METHODS, offs):
+    for ax in (a, b):
+        ax.axhspan(ys[-1] - 0.45, ys[-1] + 0.45, color="#fbe9df", zorder=0)
+    others = [("c_containment", "s"), ("i_extension", "^"), ("ii_insertion_vs_deletion", "D")]
+    for (key, mk), off in zip(others, (-0.22, -0.11, 0.0)):
         for y, (_, s) in zip(ys, rows):
             r = s["component_level"]["methods"][key]
             a.errorbar(r["macro"], y + off, xerr=[[r["macro"] - r["ci_low"]], [r["ci_high"] - r["macro"]]], fmt=mk,
-                       color=col, ms=4.2, elinewidth=1.1, mec=SURFACE, mew=0.6)
+                       color="#a9a8a3", ms=3.2, elinewidth=0.8, mec=SURFACE, mew=0.4, zorder=2)
+    for y, (_, s) in zip(ys, rows):
+        r = s["component_level"]["methods"]["a_random"]
+        a.plot(r["macro"], y - 0.33, "|", color="#c9c8c3", ms=6, zorder=2)
+        r = s["component_level"]["methods"]["b_longer_is_later"]
+        a.errorbar(r["macro"], y + 0.18, xerr=[[r["macro"] - r["ci_low"]], [r["ci_high"] - r["macro"]]], fmt="o",
+                   color=BLUE, ms=5.5, elinewidth=1.6, mec=SURFACE, mew=0.7, zorder=3)
     if e42:
         vals = e42["across_seeds"]["b_longer_is_later"]["macro_per_seed"]
         a.plot([min(vals), max(vals)], [ys[0] + 0.45] * 2, color=BLUE, lw=3, alpha=0.35, solid_capstyle="round")
@@ -197,23 +223,27 @@ def fig_forest() -> None:
     a.set_xlabel("accuracy, each cluster counted once (95% CI)", color=TEXT2)
     a.set_xlim(0.3, 1.0)
     a.set_title("A. Which post came first?", loc="left", fontsize=9, color=TEXT)
-    handles = [Line2D([], [], color=col, marker=mk, ls="", ms=5, label=lab) for _, lab, col, mk in METHODS]
-    a.legend(handles=handles, frameon=False, fontsize=6.8, loc="lower right", ncol=1)
+    handles = [Line2D([], [], color=BLUE, marker="o", ls="", ms=5.5, label="length (longer is later)"),
+               Line2D([], [], color="#a9a8a3", marker="s", ls="", ms=3.5,
+                      label="containment, extension,\ninsertion vs deletion"),
+               Line2D([], [], color="#c9c8c3", marker="|", ls="", ms=6, label="random")]
+    a.legend(handles=handles, frameon=False, fontsize=6.6, loc="upper right", bbox_to_anchor=(1.0, 0.9), ncol=1)
     style(a, "x")
     lrows = [(f"Moltbook: {lab}", lm["scopes"][sc]["evaluation"]) for sc, lab in scopes] + \
             [(f"collusion.wiki: {lab}", lc["scopes"][sc]["evaluation"]) for sc, lab in scopes]
-    for (key, lab, col, mk, off) in (("depth", "lineage-tree depth", ORANGE, "s", 0.12), ("length", "length", BLUE, "o", -0.12)):
+    for (key, col, mk, off) in (("depth", ORANGE, "s", 0.12), ("length", BLUE, "o", -0.12)):
         for y, (_, ev) in zip(ys, lrows):
             r = ev[key]
             b.errorbar(r["macro_tau"], y + off, xerr=[[r["macro_tau"] - r["macro_ci"][0]], [r["macro_ci"][1] - r["macro_tau"]]],
-                       fmt=mk, color=col, ms=4.5, elinewidth=1.1, mec=SURFACE, mew=0.6)
+                       fmt=mk, color=col, ms=4.5, elinewidth=1.1, mec=SURFACE, mew=0.6, zorder=3)
     b.axvline(0, color=TEXT2, lw=0.8, ls=(0, (3, 3)))
     b.axhline(2.5, color=GRID, lw=0.8)
     b.set_yticks(ys, [""] * len(ys))
     b.set_xlabel("Kendall tau with true time, per cluster (95% CI)", color=TEXT2)
     b.set_title("B. Does a lineage tree order them?", loc="left", fontsize=9, color=TEXT)
     b.legend(handles=[Line2D([], [], color=ORANGE, marker="s", ls="", ms=5, label="tree depth"),
-                      Line2D([], [], color=BLUE, marker="o", ls="", ms=5, label="length")], frameon=False, fontsize=6.8, loc="lower right")
+                      Line2D([], [], color=BLUE, marker="o", ls="", ms=5, label="length")], frameon=False, fontsize=6.8,
+             loc="upper right")
     style(b, "x")
     fig.tight_layout()
     save(fig, "R3_forest.png")
@@ -223,7 +253,7 @@ def fig_leak_monitor() -> None:
     """Row-order leak (left) and metadata-monitor AUROC steps (right)."""
     e41, e41b = load("E41_lineage_moltbook"), load("E41_lineage_moltbook_rowshuffled")
     t01 = load("T01_report_numbers")
-    fig, (a, b) = plt.subplots(1, 2, figsize=(7.4, 2.8), facecolor=SURFACE, gridspec_kw={"width_ratios": [0.8, 1.2]})
+    fig, (a, b) = plt.subplots(1, 2, figsize=(7.4, 2.9), facecolor=SURFACE, gridspec_kw={"width_ratios": [1.0, 1.15]})
     for k, (lab, ev) in enumerate((("rows in stored\n(time-like) order", e41["evaluation"]), ("rows shuffled", e41b["evaluation"]))):
         for key, col, mk, off in (("depth", ORANGE, "s", -0.12), ("length", BLUE, "o", 0.12)):
             r = ev[key]
@@ -233,7 +263,7 @@ def fig_leak_monitor() -> None:
     a.set_xlim(-0.5, 1.5)
     a.axhline(0, color=TEXT2, lw=0.8, ls=(0, (3, 3)))
     a.set_ylabel("Kendall tau with true time", color=TEXT2)
-    a.set_title("A. A leak through row order (E41)", loc="left", fontsize=9, color=TEXT)
+    a.set_title("A. Row-order leak (E41): tau with true time", loc="left", fontsize=9, color=TEXT)
     a.legend(handles=[Line2D([], [], color=ORANGE, marker="s", ls="", ms=5, label="tree depth"),
                       Line2D([], [], color=BLUE, marker="o", ls="", ms=5, label="length")], frameon=False, fontsize=7, loc="upper right")
     style(a)
@@ -246,6 +276,8 @@ def fig_leak_monitor() -> None:
                        elinewidth=1.4, mec=SURFACE, mew=0.8)
         else:
             b.plot(s["auroc"], yy, "o", color=col, ms=6, mec=SURFACE, mew=0.8)
+            b.text(s["auroc"] + 0.012, yy - 0.32, "no CI: one cluster holds most held-out authors",
+                   fontsize=6.3, color=TEXT2, style="italic")
         b.text(s["auroc"] + 0.012, yy + 0.22, f"{s['auroc']:.2f}", fontsize=7.2, color=TEXT)
     b.set_yticks(y, [s["label"] for s in steps], fontsize=7.2)
     b.axvline(0.5, color=TEXT2, lw=0.8, ls=(0, (3, 3)))
