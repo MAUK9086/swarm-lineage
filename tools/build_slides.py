@@ -331,11 +331,11 @@ def s_close(prs, k: int) -> None:
              "Test provenance against recorded parents where they exist"]
     paras = [[(f"{i + 1}   ", 18, BLUE, True), (t, 18, INK)] for i, t in enumerate(items)]
     textbox(s, 0.6, 1.8, 7.9, 3.4, paras, name="checklist")
-    for k, (big, small) in enumerate((("0.70", "chance-level accuracy, once every pair is counted"),
+    for j, (big, small) in enumerate((("0.70", "chance-level accuracy, once every pair is counted"),
                                       ("86%", "false alarms when pairs are pooled (5% per cluster)"),
                                       ("0.76", "of recorded parent links found by trees, no better than length"))):
-        sh = textbox(s, 8.9, 1.7 + 1.1 * k, 3.9, 1.05, [(big, 30, ORANGE if k < 2 else INK, True, HEAD), (small, 13, MUTED)],
-                     name=f"finding {k + 1}")
+        sh = textbox(s, 8.9, 1.7 + 1.1 * j, 3.9, 1.05, [(big, 30, ORANGE if j < 2 else INK, True, HEAD), (small, 13, MUTED)],
+                     name=f"finding {j + 1}")
         sh.text_frame.paragraphs[0].space_after = Pt(0)
     textbox(s, 0.6, 5.35, 12.1, 0.5, [("If oversight treats repeated templates as independent evidence, it will be overconfident about how coordination spreads through a swarm.", 15, INK, False, BODY, True)], name="implication")
     textbox(s, 0.6, 6.0, 11.9, 0.9, [("Paper, code, tests, pre-registration log and the full checklist", 14, MUTED),
