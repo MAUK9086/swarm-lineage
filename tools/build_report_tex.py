@@ -257,7 +257,7 @@ def build(draft: Path, out: Path) -> None:
     head, sep, tail = text.partition(r"\section{Appendix}")
     if sep:
         tail = tail.replace(r"\begin{table}[htbp]", r"\begin{table}[H]").replace(r"\begin{figure}[htbp]", r"\begin{figure}[H]")
-        tail = tail.replace(r"\centering\small", r"\centering\footnotesize\setstretch{1.0}").replace(r"width=0.92\textwidth", r"width=0.70\textwidth")
+        tail = tail.replace(r"\centering\small", r"\centering\footnotesize\setstretch{1.0}").replace(r"width=0.92\textwidth", r"width=0.62\textwidth")
         text = head + sep + tail
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(text, encoding="utf-8")
