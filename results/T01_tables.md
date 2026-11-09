@@ -18,3 +18,4 @@ Table 2
 | E37 | metadata monitor AUROC >= 0.75 (unmatched) | GO by rule, not adopted | 0.960; post count alone 0.948 |
 | E38 | matched monitor AUROC >= 0.75 and recall >= 0.30 | NO-GO | 0.691, recall 0.077 |
 | E41 | tree depth orders time, beats length | GO, withdrawn (E41b) | 0.098 -> 0.033 after row shuffle |
+| E42 | length above chance on every pair sample | unresolved; sample-dependent | length 0.495-0.528 over 4 samples |

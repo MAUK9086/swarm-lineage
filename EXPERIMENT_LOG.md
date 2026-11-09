@@ -1221,8 +1221,31 @@ Global seed: 42.
   for random, length, containment with Wald CIs (no 8M-pair bootstrap, to save time); the
   frozen E32 component pipeline (template filter, cap 20, component bootstrap) for random,
   length, containment, extension, insertion vs deletion. Across seeds: mean, sd, range.
-- Code: experiments/E42_pair_sample_sensitivity.py @ (filled after commit)
+- Code: experiments/E42_pair_sample_sensitivity.py @ 5c52de5 (results stamped a5cccce: report scripts were committed during the run; E42 code unchanged)
 - Params: seeds 42-45; config configs/E36_pipeline.json (v1); MinHash seed 42.
-- Results:
-- Interpretation:
-- Decision / next step:
+- Results: (results/E42_pair_sample_sensitivity.json)
+  Rate 0.0524 (band bound 381,518,142). Seed 42 reproduces E32 exactly (all compared
+  component-level values within 1e-9: pass).
+
+  | seed | pairs scored | components / scored | pair-level length | random | length [CI] | containment | extension | ins/del |
+  |---|---|---|---|---|---|---|---|---|
+  | 42 | 8,361,829 | 1,198 / 547 | 0.6961 | 0.5105 | 0.4964 [0.4607, 0.5332] | 0.5069 | 0.5081 | 0.5055 |
+  | 43 | 8,361,974 | 1,162 / 545 | 0.6960 | 0.4877 | 0.5277 [0.4941, 0.5616] | 0.5258 | 0.5285 | 0.5366 |
+  | 44 | 8,359,102 | 1,157 / 547 | 0.6961 | 0.4894 | 0.4946 [0.4560, 0.5305] | 0.5196 | 0.4987 | 0.5051 |
+  | 45 | 8,361,597 | 1,177 / 539 | 0.6959 | 0.4978 | 0.5048 [0.4687, 0.5382] | 0.5060 | 0.5303 | 0.5127 |
+
+  Across seeds (component level): length mean 0.5059, sd 0.0152, range 0.4946-0.5277, 0 of 4
+  seeds with CI lower bound above 0.5; containment mean 0.5146; extension 0.5164; ins/del
+  0.5150 (1 of 4 seeds with CI above 0.5); random mean 0.4964. Pair-level length mean
+  0.6960, sd 0.0001.
+  Reading (pre-registered rule): "unresolved; sample-dependent".
+- Interpretation: Across four fresh pair samples, cluster-level "longer is later" on
+  Moltbook is centred near chance (mean 0.506) and never significantly above it; E36-v2's
+  0.565 is the high end of a five-sample range of 0.495-0.565. The pair-sampling spread
+  (sd 0.015 over four samples, 7 points over five) is comparable to the component-bootstrap
+  CI half-width (about 0.035), so a single sample's CI understates the total uncertainty.
+  Pair-level accuracy is the same in every sample (0.696, sd 0.0001): stable, and wrong
+  about the cluster-level quantity. No cue is consistently above length.
+- Decision / next step: Report Moltbook cluster-level length as near chance and
+  sample-dependent (0.49-0.57 over five samples), not as a robust signal. E32's
+  conclusion stands; E36-v2's higher value is attributed to pair-sampling variation.

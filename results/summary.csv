@@ -129,3 +129,8 @@ E41_collusion_wiki,depth_macro_tau,0.6920379375654034,76dac93-dirty,2026-11-09 1
 E41_collusion_wiki,length_macro_tau,0.7566812827596535,76dac93-dirty,2026-11-09 10:47 IST
 E41_collusion_wiki,depth_naive_tau,0.4721857647652701,76dac93-dirty,2026-11-09 10:47 IST
 E41_collusion_wiki,go,False,76dac93-dirty,2026-11-09 10:47 IST
+E42,length_macro_mean,0.5058520740998297,a5cccce,2026-11-09 12:04 IST
+E42,length_macro_min,0.4945725162388244,a5cccce,2026-11-09 12:04 IST
+E42,length_macro_max,0.5276570544375951,a5cccce,2026-11-09 12:04 IST
+E42,seed42_reproduces_E32,True,a5cccce,2026-11-09 12:04 IST
+E42,reading,unresolved; sample-dependent,a5cccce,2026-11-09 12:04 IST

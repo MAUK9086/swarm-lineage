@@ -1,7 +1,7 @@
 {
   "experiment": "T01_report_numbers",
-  "run_at": "2026-11-09 11:48 IST",
-  "git_hash": "5c52de5",
+  "run_at": "2026-11-09 12:06 IST",
+  "git_hash": "a5cccce-dirty",
   "seed": 42,
   "params": {
     "inputs": "results/*.json only"
@@ -93,6 +93,7 @@
         "token_count_ties_E32": 551,
         "pairs_scored_E32": 1767,
         "extension_ties_E32": 870,
+        "non_tied_pairs_E32": 1216,
         "source": "E31, E32"
       }
     },
@@ -380,7 +381,103 @@
         "claim": "tree depth orders time, beats length",
         "outcome": "GO, withdrawn (E41b)",
         "key": "0.098 -> 0.033 after row shuffle"
+      },
+      {
+        "exp": "E42",
+        "claim": "length above chance on every pair sample",
+        "outcome": "unresolved; sample-dependent",
+        "key": "length 0.495-0.528 over 4 samples"
       }
-    ]
+    ],
+    "E42_across_seeds": {
+      "a_random": {
+        "macro_per_seed": [
+          0.5105006222881802,
+          0.4876932183112772,
+          0.4894060622378183,
+          0.4978340588498288
+        ],
+        "mean": 0.49635849042177616,
+        "sd": 0.01041793956459574,
+        "min": 0.4876932183112772,
+        "max": 0.5105006222881802,
+        "seeds_with_ci_low_above_0.5": 0
+      },
+      "b_longer_is_later": {
+        "macro_per_seed": [
+          0.4963589268864029,
+          0.5276570544375951,
+          0.4945725162388244,
+          0.5048197988364964
+        ],
+        "mean": 0.5058520740998297,
+        "sd": 0.015208232740911381,
+        "min": 0.4945725162388244,
+        "max": 0.5276570544375951,
+        "seeds_with_ci_low_above_0.5": 0
+      },
+      "c_containment": {
+        "macro_per_seed": [
+          0.5069049063994757,
+          0.525827621597781,
+          0.5195571442036117,
+          0.5060433382325775
+        ],
+        "mean": 0.5145832526083615,
+        "sd": 0.009713608488794653,
+        "min": 0.5060433382325775,
+        "max": 0.525827621597781,
+        "seeds_with_ci_low_above_0.5": 0
+      },
+      "i_extension": {
+        "macro_per_seed": [
+          0.5080754629402333,
+          0.5284720314826543,
+          0.4987494461483601,
+          0.5303085854570085
+        ],
+        "mean": 0.516401381507064,
+        "sd": 0.015492177105751674,
+        "min": 0.4987494461483601,
+        "max": 0.5303085854570085,
+        "seeds_with_ci_low_above_0.5": 0
+      },
+      "ii_insertion_vs_deletion": {
+        "macro_per_seed": [
+          0.5054842622457419,
+          0.5366067866357582,
+          0.5051375565503429,
+          0.5126899126435305
+        ],
+        "mean": 0.5149796295188434,
+        "sd": 0.014832454599033694,
+        "min": 0.5051375565503429,
+        "max": 0.5366067866357582,
+        "seeds_with_ci_low_above_0.5": 1
+      },
+      "pair_level_b": {
+        "per_seed": [
+          0.6960841940202317,
+          0.6959674832760782,
+          0.6961263303163426,
+          0.6958517613321953
+        ],
+        "mean": 0.6960074422362119,
+        "sd": 0.00012363720356725657
+      }
+    },
+    "E42_reading": "unresolved; sample-dependent",
+    "moltbook_length_five_samples": {
+      "values": [
+        0.4963589268864029,
+        0.5276570544375951,
+        0.4945725162388244,
+        0.5048197988364964,
+        0.5654592107764789
+      ],
+      "min": 0.4945725162388244,
+      "max": 0.5654592107764789,
+      "source": "E42 seeds 42-45 + E36v2 all"
+    }
   }
 }

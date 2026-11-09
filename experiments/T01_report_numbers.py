@@ -86,6 +86,7 @@ def copy_cues() -> dict[str, Any]:
         "token_count_ties_E32": e32["diagnostics"]["token_count_ties"],
         "pairs_scored_E32": e32["counts"]["pairs_scored"],
         "extension_ties_E32": e32["methods"]["i_extension"]["ties_broken_randomly"],
+        "non_tied_pairs_E32": e32["counts"]["pairs_scored"] - e32["diagnostics"]["token_count_ties"],
         "source": "E31, E32",
     }
     return out
@@ -199,6 +200,10 @@ def main() -> None:
     if e42:
         res["E42_across_seeds"] = e42["across_seeds"]
         res["E42_reading"] = e42["reading"]
+        v2 = load("E36v2_replication_moltbook")["scopes"]["all"]["component_level"]["methods"]["b_longer_is_later"]["macro"]
+        five = e42["across_seeds"]["b_longer_is_later"]["macro_per_seed"] + [v2]
+        res["moltbook_length_five_samples"] = {"values": five, "min": min(five), "max": max(five),
+                                               "source": "E42 seeds 42-45 + E36v2 all"}
     save_result("T01_report_numbers", res, {"inputs": "results/*.json only"})
     c = res["corpora"]
     t1 = ["| Corpus | Role | Documents | Timestamped | Near-duplicate pairs scored | Clusters (components) |", "|---|---|---|---|---|---|",
