@@ -163,7 +163,7 @@ def s_problem(prs, k: int) -> None:
     textbox(s, 0.6, 1.75, 6.6, 4.6, [
         ("About 1,200 agents coordinated on a message board before roughly 700 of them attacked Hugging Face. Another swarm used a public wiki as its message board for weeks.", 18, INK),
         ("What investigators are left with is text that agents copied and edited from one another, mostly without reliable timestamps.", 18, INK),
-        ("The forensic question: from content alone, which copy came first, and who copied whom?", 18, INK, True)],
+        ("The forensic question: using text alone, can we tell which copy came first, and which agents copied from whom?", 18, INK, True)],
         name="problem text")
     st = textbox(s, 8.0, 2.0, 4.7, 3.2, [("0", 96, ORANGE, True, HEAD),
                                          ("timestamps in the 189,579 rows of the public Swarm Traces release from the Hugging Face incident", 16, MUTED)],
@@ -182,8 +182,8 @@ def s_setup(prs, k: int) -> None:
     kicker(s, "Our setup")
     title(s, "We hid the clock from every method")
     image(s, FIG / "R1_pipeline.png", 1.9, 1.7, w=9.5, name="pipeline figure")
-    textbox(s, 1.9, 5.8, 9.5, 0.8, [("Developed on 300,000 Moltbook posts; the frozen rules were then run on the collusion.wiki export. "
-                                     "Every analysis had a go/no-go rule written before it ran.", 16, INK)], name="setup text")
+    textbox(s, 1.9, 5.8, 9.5, 0.8, [("Every method received shuffled text and metadata without timestamps; only the evaluator kept the true times. "
+                                     "Developed on 300,000 Moltbook posts, then run frozen on the collusion.wiki export, with every rule written before it ran.", 16, INK)], name="setup text")
     bridge(s, "Before testing any cue, we counted how much independent evidence there actually is.")
     number(s, k)
     notes(s, "Every corpus goes through an adapter into one table. The method side sees text, group and author only; true time is split "
@@ -198,7 +198,7 @@ def s_concentration(prs, a: dict[str, Path], k: int) -> None:
     bridge(s, "If almost every pair comes from two clusters, what happens when pairs are scored as if independent?")
     stats = [("8.4M", "near-duplicate pairs in the Moltbook sample", INK),
              ("1,198", "clusters (connected groups of near-duplicates)", INK),
-             ("98.4%", "of all pairs sit in the two largest clusters", ORANGE)]
+             ("98.4%", "of all near-duplicate pairs come from just two clusters", ORANGE)]
     for i, (big, small, col) in enumerate(stats):
         sh = textbox(s, 0.6, 1.85 + 1.6 * i, 5.4, 1.4, [(big, 44, col, True, HEAD), (small, 16, MUTED)], name=f"stat {i + 1}")
         sh.text_frame.paragraphs[0].space_after = Pt(2)
@@ -211,14 +211,14 @@ def s_concentration(prs, a: dict[str, Path], k: int) -> None:
 def s_inflation(prs, a: dict[str, Path], k: int) -> None:
     s = prs.slides.add_slide(prs.slide_layouts[6])
     kicker(s, "Finding 2: the evaluation trap")
-    title(s, "Counting pairs turns chance into 0.70")
+    title(s, "Pair-level scoring makes chance look like 0.70")
     bridge(s, "Scored the honest way, one cluster at a time: does any cue beat simply comparing lengths?")
     textbox(s, 0.6, 1.6, 5.9, 0.5, [("Same data, two answers", 18, INK, True)], name="left heading")
     image(s, a["R2B"], 1.05, 2.15, h=3.8, name="inflation figure")
     textbox(s, 0.6, 6.0, 5.9, 0.7, [("Keep every pair and \"longer is later\" jumps from 0.50 to 0.70; count each cluster once and it stays at chance.", 14, MUTED)], name="left caption")
     textbox(s, 6.9, 1.6, 5.9, 0.5, [("False alarms when there is no real order", 18, INK, True)], name="right heading")
     image(s, a["R2C"], 7.3, 2.15, h=3.8, name="null figure")
-    textbox(s, 6.9, 6.0, 5.9, 0.7, [("Shuffle true times within clusters: pair-level tests call 86% of draws significant, cluster-level tests 5%.", 14, MUTED)], name="right caption")
+    textbox(s, 6.9, 6.0, 5.9, 0.7, [("Null: true times shuffled within each cluster, clusters kept fixed. Pair-level tests call 86% of draws significant; cluster-level, 5%.", 14, MUTED)], name="right caption")
     number(s, k)
     notes(s, "Left: as we allow more pairs per cluster, pair-level accuracy stays at chance until every pair is kept, then jumps to 0.70, "
              "with an interval 81 times narrower. Right: we shuffled the true times inside each cluster, which keeps the clusters and removes "
@@ -228,7 +228,7 @@ def s_inflation(prs, a: dict[str, Path], k: int) -> None:
 def s_cues(prs, k: int) -> None:
     s = prs.slides.add_slide(prs.slide_layouts[6])
     kicker(s, "Finding 3: what content tells")
-    title(s, "No cue beats \"the longer text is later\"")
+    title(s, "No content cue reliably beats text length")
     bridge(s, "But time order is not provenance. Where true parents are recorded, do the trees find them?")
     image(s, FIG / "R3_forest.png", 0.6, 1.55, w=8.6, name="forest figure")
     textbox(s, 9.6, 1.75, 3.2, 5.0, [
@@ -250,7 +250,7 @@ def s_parents(prs, k: int) -> None:
     textbox(s, 0.6, 1.75, 4.9, 4.9, [
         ("Time order is not provenance. The wiki records which revision each edit started from, so we scored the trees against those true parent links.", 17, INK),
         ("Trees recover 76% of true links per cluster (69% pooled), far above a random tree.", 17, INK),
-        ("A one-line rule, \"parent = most similar shorter text\", does as well, and length orients the links the tree finds better than tree depth (0.96 vs 0.92).", 17, INK)],
+        ("A simpler baseline, choosing the most similar shorter text as the parent, reaches the same F1, and length orients the links the tree finds better than depth does (0.96 vs 0.92).", 17, INK)],
         name="parents text")
     rows = [("Predicted parent", "Recall", "F1", "Orientation"),
             ("Spanning tree (depth)", "0.76", "0.70", "0.92"),
@@ -271,7 +271,7 @@ def s_parents(prs, k: int) -> None:
             tf.paragraphs[0].alignment = PP_ALIGN.LEFT if j == 0 else PP_ALIGN.CENTER
             c.vertical_anchor = MSO_ANCHOR.MIDDLE
     textbox(s, 6.0, 4.75, 6.7, 1.2, [("collusion.wiki, 3,590 recorded links inside scored clusters; mean over 357 clusters. "
-                                      "Orientation: share of recovered links pointing from parent to child. Stable over six input orders.", 12, MUTED)],
+                                      "Orientation: share of recovered links pointing from parent to child. 0.98 is on the links the shorter-text rule selects; 0.96 (text) is length on the tree's links. Stable over six input orders.", 12, MUTED)],
             name="table caption")
     number(s, k)
     notes(s, "This test answers the objection that timestamps are only a proxy for who copied whom. Within wiki pages we know the true parent of each revision. "
@@ -287,9 +287,10 @@ def s_leak(prs, a: dict[str, Path], k: int) -> None:
     image(s, FIG / "A1_trees_stored_order.png", 0.6, 1.55, w=6.1, name="stored-order trees")
     textbox(s, 0.6, 5.85, 6.6, 0.6, [("Largest Moltbook trees with rows in stored order; colour is true time. Leaves line up from early to late.", 12, MUTED)], name="trees caption")
     image(s, a["R4A"], 8.3, 1.6, h=3.1, name="leak figure")
-    textbox(s, 7.7, 4.95, 5.0, 1.9, [
-        ("Stored order: depth tau 0.098 beat length 0.057, and the run passed its pre-registered rule.", 15, INK),
-        ("Shuffle the rows and change nothing else: depth 0.033, below length 0.050. We withdrew the result.", 15, INK)], name="leak text")
+    textbox(s, 7.7, 4.8, 5.0, 1.9, [
+        ("With rows in their stored order, tree depth appeared to beat length (tau 0.098 vs 0.057) and passed its pre-registered rule.", 15, INK),
+        ("After shuffling the rows, depth fell to 0.033, below length at 0.050. We withdrew the result.", 15, INK),
+        ("The rows were in rough time order, and tied similarity weights were broken by row index.", 15, MUTED)], name="leak text")
     number(s, k)
     notes(s, "The method never read time. But the stored table was sampled from files sorted by collection date, and tied similarity weights "
              "were broken by row index, so the row order carried time into the trees. A seeded shuffle removed the effect. "
@@ -305,14 +306,14 @@ def s_robust(prs, k: int) -> None:
     bullets(s, 0.6, 2.3, 5.9, 4.4, [
         "Stricter similarity thresholds (Jaccard 0.6 to 0.8): same conclusions",
         "Clusters that share an author merged into 113 units: same conclusions",
-        "64-bit exact similarity: 0 of 8.36M pair similarities changed",
         "Parent recovery on the wiki: stable over six input orders"], name="held list")
     textbox(s, 6.9, 1.7, 5.9, 0.5, [("Did not hold, or limits", 20, ORANGE, True, HEAD)], name="limits heading")
-    bullets(s, 6.9, 2.3, 5.9, 4.4, [
+    bullets(s, 6.9, 2.25, 5.9, 4.4, [
         "Moltbook tree structure depends on input order: about 22% of edges shared; 1 of 18 runs passed the rule",
         "Candidate search finds 49% of truly similar pairs at Jaccard 0.5 to 0.6 (91% or more above 0.6)",
         "Moltbook length moved 7 points across five pair samples",
-        "The held-out wiki was profiled first, so it was not fully blind"], name="limits list")
+        "The held-out wiki was profiled first, so it was not fully blind",
+        "Recorded parents exist only within wiki pages; copying across pages is untested"], name="limits list")
     number(s, k)
     notes(s, "Every check here was registered before it ran. The negative result survives the cluster-definition and hashing checks. "
              "Two findings weaken the method itself: lineage trees on Moltbook change with input order through tied weights and subsampling, "
@@ -329,12 +330,15 @@ def s_close(prs, k: int) -> None:
              "Separate growth within a page or thread from copying across them",
              "Test provenance against recorded parents where they exist"]
     paras = [[(f"{i + 1}   ", 18, BLUE, True), (t, 18, INK)] for i, t in enumerate(items)]
-    textbox(s, 0.6, 1.8, 7.6, 3.9, paras, name="checklist")
-    textbox(s, 8.9, 1.9, 3.8, 3.6, [("What we found", 16, INK, True, HEAD),
-                                    ("No content cue beat text length.", 15, INK),
-                                    ("Trees find true parents, but length orients them better.", 15, INK),
-                                    ("Pair-level scoring turned chance into 0.70 and 86% false alarms.", 15, INK)], name="summary")
-    textbox(s, 0.6, 5.85, 11.9, 0.9, [("Paper, code, tests, pre-registration log and the full checklist", 14, MUTED),
+    textbox(s, 0.6, 1.8, 7.9, 3.4, paras, name="checklist")
+    for k, (big, small) in enumerate((("0.70", "chance-level accuracy, once every pair is counted"),
+                                      ("86%", "false alarms when pairs are pooled (5% per cluster)"),
+                                      ("0.76", "of recorded parent links found by trees, no better than length"))):
+        sh = textbox(s, 8.9, 1.7 + 1.1 * k, 3.9, 1.05, [(big, 30, ORANGE if k < 2 else INK, True, HEAD), (small, 13, MUTED)],
+                     name=f"finding {k + 1}")
+        sh.text_frame.paragraphs[0].space_after = Pt(0)
+    textbox(s, 0.6, 5.35, 12.1, 0.5, [("If oversight treats repeated templates as independent evidence, it will be overconfident about how coordination spreads through a swarm.", 15, INK, False, BODY, True)], name="implication")
+    textbox(s, 0.6, 6.0, 11.9, 0.9, [("Paper, code, tests, pre-registration log and the full checklist", 14, MUTED),
                                       (REPO_URL, 18, INK, True)], name="links")
     number(s, k)
     notes(s, "Our recommendation for anyone building or judging swarm-forensic tools is short: count clusters, not pairs; calibrate with a "
