@@ -15,6 +15,7 @@ File structure:
     null_order_draws       pair order truth under within-group permutation nulls
     node_time_codes        earliest post time per collapsed node
     lineage_evaluation     Kendall tau (macro, pooled) and within-component null for lineage orders
+    lineage_tau_summary    macro Kendall tau-b with ties allowed in the inferred order, no null
     node_time_ranks        true time rank of nodes, for plotting only
 """
 
@@ -446,6 +447,46 @@ def lineage_evaluation(truth: pd.Series, node_docs: list[np.ndarray], comp_nodes
                           "macro_fpr": null[m]["macro_sig"] / n_null, "macro_fpr_ci": wilson_ci(null[m]["macro_sig"], n_null),
                           "naive_fpr": null[m]["naive_sig"] / n_null, "naive_fpr_ci": wilson_ci(null[m]["naive_sig"], n_null),
                           "macro_tau_null_mean_sd": [float(mm.mean()), float(mm.std())]}
+    return out
+
+
+def lineage_tau_summary(truth: pd.Series, node_docs: list[np.ndarray], comp_nodes: list[np.ndarray],
+                        ranks: dict[str, list[np.ndarray]], n_boot: int = 1000, seed: int = 42) -> dict[str, Any]:
+    """Macro Kendall tau-b (ties allowed in both the inferred order and time), no null.
+
+    With tie-free ranks this equals the macro tau of lineage_evaluation (same bootstrap
+    generator per method).
+
+    Args:
+        truth: t indexed by doc_id.
+        node_docs: Doc ids per node (all nodes).
+        comp_nodes: Node indices per lineage component.
+        ranks: Method name -> list of rank arrays (one per component; ties allowed).
+        n_boot: Component-bootstrap resamples.
+        seed: Seed for the bootstrap.
+
+    Returns:
+        Dict per method: macro_tau, macro_ci, share of pairs tied in the inferred order.
+    """
+    sizes = np.array([len(c) for c in comp_nodes])
+    allnodes = np.concatenate(comp_nodes)
+    t = node_time_codes(truth, [node_docs[v] for v in allnodes]).astype(np.float64)
+    i, j, c = _pair_index(sizes)
+    n_comp = len(sizes)
+    n0 = np.bincount(c, minlength=n_comp).astype(float)
+    sy = np.sign(t[i] - t[j])
+    ny = np.bincount(c, weights=(sy == 0).astype(float), minlength=n_comp)
+    out: dict[str, Any] = {"components": int(n_comp), "nodes": int(len(allnodes)), "within_component_pairs": int(len(i))}
+    for m, v in ranks.items():
+        r = np.concatenate(v).astype(np.float64)
+        sx = np.sign(r[i] - r[j])
+        s = np.bincount(c, weights=sx * sy, minlength=n_comp)
+        nx = np.bincount(c, weights=(sx == 0).astype(float), minlength=n_comp)
+        den = np.sqrt((n0 - nx) * (n0 - ny))
+        tau = np.where(den > 0, s / np.where(den > 0, den, 1), np.nan)
+        mean, lo, hi = _macro_ci(tau, n_boot, np.random.default_rng(seed))
+        out[m] = {"macro_tau": mean, "macro_ci": [lo, hi], "components_with_tau": int((~np.isnan(tau)).sum()),
+                  "share_pairs_tied_in_order": float((sx == 0).mean())}
     return out
 
 

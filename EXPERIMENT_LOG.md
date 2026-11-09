@@ -1304,3 +1304,60 @@ Global seed: 42.
   comes from the many small page histories, so the figure would mislead.
 - Checked and kept: the null spread ratio is 11.0 (sd 0.0019 vs Wald SE 0.000173 at
   p = 0.5, E35); the lineage-root shares (54% Moltbook, 87% wiki) are from E41-v2.
+
+### E43 - Copy-direction robustness: Jaccard threshold, two-stage bootstrap, author-merged clusters  (2026-11-09 13:25 IST)
+- Question: Does the Moltbook copy-direction result (E32: no cue beats length; cluster-level
+  length near chance) survive (a) stricter Jaccard lower bounds with components recomputed,
+  (b) a CI that also includes pair-sampling variance, and (c) merging clusters that share
+  an author?
+- Hypothesis / expected: Yes for all three. Stricter thresholds cut chaining but leave
+  every cue within a few points of length; the two-stage CI is wider than E32's
+  cluster-bootstrap CI by less than half; author merging reduces the number of units and
+  widens the CI.
+- Go / no-go criterion (pre-registered, robustness reading rule): the negative result is
+  called robust if, in every variant, (1) no cue (containment, extension, insertion/deletion)
+  passes E32's GO rule against length (margin >= 5 points and CI low above the length
+  point), and (2) the cluster-level length 95% CI includes 0.5. Any variant that breaks
+  (1) or (2) is reported as such and the report text is weakened accordingly.
+- Method: Reads E31's scored pairs. (a) For Jaccard lower bounds 0.5 (anchor), 0.6, 0.7,
+  0.8 (upper 0.95): recompute connected components on the kept pairs, apply E32's
+  template filter and cap of 20 pairs per cluster, score all cues with the cluster
+  bootstrap; record the largest cluster's share of pairs. The 0.5 row must reproduce E32.
+  (b) At 0.5: per cluster, all eligible pairs are scored by length and containment;
+  two-stage bootstrap = resample clusters, then draw min(20, n) pairs without replacement
+  inside each drawn cluster (hypergeometric on the correct count). (c) At 0.5: clusters
+  that share any author are merged by union-find; the capped scored pairs are re-grouped by
+  merged unit and re-bootstrapped. Truth only via src/evaluate.py.
+- Code: experiments/E43_robustness.py @ (filled after run)
+- Params: thresholds 0.5/0.6/0.7/0.8, upper 0.95, cap 20, template filter on, n_boot 1000,
+  seed 42.
+
+### E44 - Lineage robustness: sampling and tie-break seeds, depth-only tau-b, depth ties, 200-node cap  (2026-11-09 13:25 IST)
+- Question: Is E41-v2's Moltbook lineage result (depth tau below length tau in all three
+  scopes; GO not met) stable over the seeds that choose nodes in components over 200 nodes
+  and break depth ties, and does it hold when depth ties are kept (tau-b) instead of broken
+  at random?
+- Hypothesis / expected: Yes. Depth has many ties, so depth-only tau-b will be similar to
+  the random-tie-break value; the cap affects only 17 of 700 candidate components.
+- Go / no-go criterion (pre-registered, robustness reading rule): robust if, for every seed
+  and scope, E41-v2's GO rule fails (CI excludes 0 AND depth above length is not met), and
+  depth-only tau-b is below length tau. Any seed/scope that breaks this is reported.
+- Method: v2 pipeline (rows shuffled, seed 42 MinHash and LSH buckets unchanged). For seeds
+  42-46, the seed sets both the node sample of capped components and the tree/length
+  tie-break generators. Per seed and scope: macro Kendall tau and cluster-bootstrap CI for
+  depth (random tie-break), depth-only (ties kept, tau-b) and length; share of
+  within-component node pairs tied in depth. No null re-runs (E41-v2 calibrated them).
+  Seed 42 must reproduce E41-v2 (all scope depth 0.0332, length 0.0501).
+- Code: experiments/E44_lineage_robustness.py @ (filled after run)
+- Params: seeds 42-46, n_boot 1000, other parameters from configs/E41_lineage_v2.json.
+
+### E45 - 32-bit shingle-hash collisions  (2026-11-09 13:25 IST)
+- Question: How many distinct shingles in the Moltbook 300k sample share a 32-bit hash?
+- Hypothesis / expected: About n^2 / 2^33 for n distinct shingles; a negligible share.
+- Go / no-go criterion (pre-registered): negligible if fewer than 0.1% of distinct
+  shingles are involved in a collision; otherwise report and flag as a limitation.
+- Method: For every shingle of every post, compute the 32-bit hash used by the pipeline
+  and a 64-bit blake2b hash; count distinct 64-bit values (taken as distinct shingles) and
+  distinct 32-bit values among them.
+- Code: experiments/E45_hash_collisions.py @ (filled after run)
+- Params: k = 5 words, seed not used (deterministic).
