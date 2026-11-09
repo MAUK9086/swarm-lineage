@@ -1256,3 +1256,35 @@ Global seed: 42.
   public. File contents are otherwise unchanged. Commit hashes cited in this log were
   updated to the new hashes; results files keep the hashes recorded at run time, and
   results/hash_map.json maps old to new.
+
+### Report analyses: T01 report numbers, T02 cluster concentration, report figures  (2026-11-09 12:43 IST)
+- Purpose: compute every derived number quoted in the final report from saved results,
+  and describe how concentrated the Moltbook near-duplicate pairs are. These are
+  descriptive analyses with no hypothesis or go/no-go rule, and were not pre-registered.
+- Method: T02 reads E31's scored pairs, builds connected components exactly as E34/E35
+  do, and reports cluster sizes and the share of pairs held by the largest clusters.
+  T01 reads only results/*.json and derives ratios, shares, margins and the report tables
+  (results/T01_tables.md: corpora, cue equivalences, pre-registered decisions).
+  FIG_report draws the four report figures (figures/R1-R4, PNG and vector PDF).
+- Code: experiments/T02_cluster_concentration.py @ 88a1988; experiments/T01_report_numbers.py @ 88a1988;
+  experiments/FIG_report.py @ 88a1988
+- Results: (results/T02_cluster_concentration.json, results/T01_report_numbers.json)
+
+  | item | value |
+  |---|---|
+  | Moltbook pairs / clusters / posts in pairs | 8,361,829 / 1,198 / 62,111 |
+  | share of pairs in the largest 1 / 2 / 10 clusters | 50.6% / 98.4% / 99.86% |
+  | pairs per cluster | median 1, max 4,229,393; 793 clusters with one pair; 13 with >= 1,000 |
+  | posts per cluster | median 2, max 24,793 |
+  | E35 null: pair-level sd / Wald SE at 0.5 | 0.0019 / 0.000173 (ratio 11.0) |
+  | within-group share of scored pairs (E36-v2) | Moltbook 68.7%, collusion.wiki 74.9% |
+  | lineage null false-positive range (E41-v2, all corpora and scopes) | naive 55.1-73.4%, cluster-level 4.1-6.9% |
+  | Moltbook cluster-level length over five pair samples (E42 + E36-v2) | 0.495-0.565 |
+
+- Interpretation: The pair-level evidence on Moltbook is essentially two clusters, which
+  explains the inflation (E34), the false-positive rate (E35) and the sample dependence
+  (E42) in one fact. The earlier FIG1 (naive vs proper) is retired from the report: its
+  monitor point rested on E38's 13 positives; its message is carried by the new figures.
+- Decision / next step: The report quotes only numbers present in results/*.json. The
+  public Swarm Traces release appears in the report only as motivation (no timestamps),
+  not as an evaluated corpus.
