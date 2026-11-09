@@ -28,4 +28,4 @@ Each item names the experiment in this repository that applies it. Numbers are i
 11. **Compare against simple baselines.** Every direction cue here is compared with "the
     longer text is later". (E32, E36-v2, E41-v2, E46.)
 12. **Record every experiment before it runs, including failures and deviations.**
-    (`EXPERIMENT_LOG.md`; decision ledger in the report, Table 4.)
+    (`EXPERIMENT_LOG.md`; decision ledger in the report, Table 5.)

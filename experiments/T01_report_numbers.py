@@ -133,6 +133,8 @@ def lineage() -> dict[str, Any]:
                 fprs_macro.append(ev[m]["null"]["macro_fpr"])
         out[f"{corp}_root_is_shortest_share"] = (r["scopes"]["all"]["components_where_root_is_shortest_text"]
                                                  / r["scopes"]["all"]["lineage_components"])
+        out[f"{corp}_root_is_shortest_counts"] = [r["scopes"]["all"]["components_where_root_is_shortest_text"],
+                                                  r["scopes"]["all"]["lineage_components"]]
         out[f"{corp}_within_share_of_edges"] = r["counts"]["within_group_verified_edges"] / r["counts"]["all_verified_edges"]
     out["E41v2_rows"] = rows
     out["null_fpr_naive_range"] = [min(fprs_naive), max(fprs_naive)]
@@ -290,14 +292,14 @@ def robustness() -> list[str]:
         out.append(f"| Jaccard {k.split('-')[0]}-0.95 (largest cluster: {100*v['counts']['largest_cluster_share_of_pairs']:.0f}% of pairs) | "
                    f"{v['counts']['components_scored']} | {f(v['methods']['b_longer_is_later'])} | {best:.3f} |")
     ts = e43["two_stage_bootstrap_0.5"]["b_longer_is_later"]
-    out.append(f"| Two-stage bootstrap: clusters, then pairs | {ts['clusters']} | {ts['macro_all_pairs']:.3f} ({ts['ci'][0]:.3f}-{ts['ci'][1]:.3f}) | - |")
+    out.append(f"| Two-stage bootstrap: clusters, then pairs | {ts['clusters']} | {ts['macro_all_pairs']:.3f} ({ts['ci'][0]:.3f}-{ts['ci'][1]:.3f}) | n/a |")
     am = e43["author_merged_0.5"]
     best = max(am["methods"][c]["macro"] for c in cues)
     out.append(f"| Clusters that share an author merged | {am['counts']['merged_units']} | {f(am['methods']['b_longer_is_later'])} | {best:.3f} |")
     sm = e44["summary"]
     for sc, lab in (("all", "all pairs"), ("within_group", "same submolt"), ("cross_group", "across submolts")):
         d, dt, ln = sm[f"{sc}.depth"], sm[f"{sc}.depth_ties_kept"], sm[f"{sc}.length"]
-        out.append(f"| Lineage, {lab}, 5 seeds (Kendall tau range) | - | {ln['min']:.3f} to {ln['max']:.3f} | "
+        out.append(f"| Lineage, {lab}, 5 seeds (Kendall tau range) | n/a | {ln['min']:.3f} to {ln['max']:.3f} | "
                    f"depth {d['min']:.3f} to {d['max']:.3f}; ties kept {dt['min']:.3f} to {dt['max']:.3f} |")
     e47, e48 = load("E47_hash64"), load("E48_order_invariance")
     if e47:
@@ -306,11 +308,11 @@ def robustness() -> list[str]:
         out.append(f"| 64-bit shingle hashes ({cd['pairs_64bit']:,} pairs) | {cd['counts_64bit']['components_scored']} | "
                    f"{f(cd['methods_64bit']['b_longer_is_later'])} | {best:.3f} |")
         la = e47["lineage"]["scopes"]["all"]
-        out.append(f"| Lineage, all pairs, 64-bit hashes (Kendall tau) | - | {la['length']['macro_tau']:.3f} | depth {la['depth']['macro_tau']:.3f} |")
+        out.append(f"| Lineage, all pairs, 64-bit hashes (Kendall tau) | n/a | {la['length']['macro_tau']:.3f} | depth {la['depth']['macro_tau']:.3f} |")
     if e48:
         dts = [v["all"]["depth_tau"] for v in e48["orders"].values()]
         lts = [v["all"]["length_tau"] for v in e48["orders"].values()]
-        out.append(f"| Lineage, all pairs, 6 input orders (Kendall tau range) | - | {min(lts):.3f} to {max(lts):.3f} | depth {min(dts):.3f} to {max(dts):.3f} |")
+        out.append(f"| Lineage, all pairs, 6 input orders (Kendall tau range) | n/a | {min(lts):.3f} to {max(lts):.3f} | depth {min(dts):.3f} to {max(dts):.3f} |")
     return out
 
 
@@ -357,7 +359,7 @@ def main() -> None:
           f"| Shingle containment | A's shingles are more fully contained in B | A has fewer distinct shingles | ties on {100*a['containment_ties_share_E31']:.1f}% of pairs |",
           f"| Insertion vs deletion | the diff A to B inserts more words than it deletes | A has fewer words | same prediction on {100*a['insdel_vs_token_count_agreement_non_ties_E32']:.0f}% of {a['non_tied_pairs_E32']:,} untied pairs |",
           f"| Extension | more of A survives as B's prefix and suffix | A has fewer words; coin flip if nothing shared | {a['extension_ties_E32']:,} of {a['pairs_scored_E32']:,} pairs tied |",
-          f"| Lineage root | A is the text most contained in the others | the shortest text is the root | root is shortest in {100*lin['moltbook_root_is_shortest_share']:.0f}% of clusters ({100*lin['collusion_wiki_root_is_shortest_share']:.0f}% on the wiki; E41-v2, all scope) |"]
+          f"| Lineage root | A is the text most contained in the others | the shortest text is the root | root is shortest in {lin['moltbook_root_is_shortest_counts'][0]} of {lin['moltbook_root_is_shortest_counts'][1]} clusters ({100*lin['moltbook_root_is_shortest_share']:.0f}%; wiki {lin['collusion_wiki_root_is_shortest_counts'][0]} of {lin['collusion_wiki_root_is_shortest_counts'][1]}, {100*lin['collusion_wiki_root_is_shortest_share']:.0f}%; E41-v2, all scope) |"]
     t2 = ["| Exp. | Type | Pre-registered claim | Outcome | Key number |", "|---|---|---|---|---|"] + \
          [f"| {r['exp']} | {r['type']} | {r['claim']} | {r['outcome']} | {r['key']} |" for r in res["ledger"]]
     t3 = robustness()

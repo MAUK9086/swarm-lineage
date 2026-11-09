@@ -1,7 +1,7 @@
 {
   "experiment": "T01_report_numbers",
-  "run_at": "2026-11-09 14:50 IST",
-  "git_hash": "5ed65e5-dirty",
+  "run_at": "2026-11-09 15:11 IST",
+  "git_hash": "8c02e5b-dirty",
   "seed": 42,
   "params": {
     "inputs": "results/*.json only"
@@ -159,8 +159,16 @@
         "depth_drop_share": 0.6622460220991011
       },
       "moltbook_root_is_shortest_share": 0.5398773006134969,
+      "moltbook_root_is_shortest_counts": [
+        264,
+        489
+      ],
       "moltbook_within_share_of_edges": 0.9503461540348657,
       "collusion_wiki_root_is_shortest_share": 0.8739946380697051,
+      "collusion_wiki_root_is_shortest_counts": [
+        326,
+        373
+      ],
       "collusion_wiki_within_share_of_edges": 0.9364613010446344,
       "E41v2_rows": {
         "moltbook.all": {

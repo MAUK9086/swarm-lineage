@@ -286,7 +286,7 @@ def fig_leak_monitor() -> None:
     b.set_xlim(0.4, 1.02)
     b.set_ylim(y[-1] - 0.5, y[0] + 1.1)
     b.set_xlabel("AUROC (95% CI where available)", color=TEXT2)
-    b.set_title("B. Metadata monitor under fairer comparisons", loc="left", fontsize=9, color=TEXT)
+    b.set_title("B. Metadata monitor, fairer comparisons", loc="left", fontsize=9, color=TEXT)
     style(b, "x")
     fig.tight_layout()
     save(fig, "R4_leak_monitor.png")

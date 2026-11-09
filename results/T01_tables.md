@@ -13,7 +13,7 @@ Cues
 | Shingle containment | A's shingles are more fully contained in B | A has fewer distinct shingles | ties on 52.1% of pairs |
 | Insertion vs deletion | the diff A to B inserts more words than it deletes | A has fewer words | same prediction on 100% of 1,216 untied pairs |
 | Extension | more of A survives as B's prefix and suffix | A has fewer words; coin flip if nothing shared | 870 of 1,767 pairs tied |
-| Lineage root | A is the text most contained in the others | the shortest text is the root | root is shortest in 54% of clusters (87% on the wiki; E41-v2, all scope) |
+| Lineage root | A is the text most contained in the others | the shortest text is the root | root is shortest in 264 of 489 clusters (54%; wiki 326 of 373, 87%; E41-v2, all scope) |
 
 Ledger
 
@@ -53,14 +53,14 @@ Robustness
 | Jaccard 0.6-0.95 (largest cluster: 95% of pairs) | 360 | 0.504 (0.456-0.549) | 0.520 |
 | Jaccard 0.7-0.95 (largest cluster: 97% of pairs) | 237 | 0.536 (0.484-0.592) | 0.494 |
 | Jaccard 0.8-0.95 (largest cluster: 84% of pairs) | 92 | 0.551 (0.465-0.637) | 0.538 |
-| Two-stage bootstrap: clusters, then pairs | 547 | 0.493 (0.456-0.527) | - |
+| Two-stage bootstrap: clusters, then pairs | 547 | 0.493 (0.456-0.527) | n/a |
 | Clusters that share an author merged | 113 | 0.507 (0.423-0.585) | 0.522 |
-| Lineage, all pairs, 5 seeds (Kendall tau range) | - | 0.050 to 0.062 | depth 0.002 to 0.033; ties kept 0.016 to 0.038 |
-| Lineage, same submolt, 5 seeds (Kendall tau range) | - | 0.028 to 0.045 | depth 0.012 to 0.033; ties kept 0.017 to 0.034 |
-| Lineage, across submolts, 5 seeds (Kendall tau range) | - | 0.037 to 0.091 | depth 0.002 to 0.045; ties kept 0.014 to 0.077 |
+| Lineage, all pairs, 5 seeds (Kendall tau range) | n/a | 0.050 to 0.062 | depth 0.002 to 0.033; ties kept 0.016 to 0.038 |
+| Lineage, same submolt, 5 seeds (Kendall tau range) | n/a | 0.028 to 0.045 | depth 0.012 to 0.033; ties kept 0.017 to 0.034 |
+| Lineage, across submolts, 5 seeds (Kendall tau range) | n/a | 0.037 to 0.091 | depth 0.002 to 0.045; ties kept 0.014 to 0.077 |
 | 64-bit shingle hashes (8,361,829 pairs) | 547 | 0.496 (0.461-0.533) | 0.508 |
-| Lineage, all pairs, 64-bit hashes (Kendall tau) | - | 0.050 | depth 0.033 |
-| Lineage, all pairs, 6 input orders (Kendall tau range) | - | 0.046 to 0.059 | depth 0.007 to 0.037 |
+| Lineage, all pairs, 64-bit hashes (Kendall tau) | n/a | 0.050 | depth 0.033 |
+| Lineage, all pairs, 6 input orders (Kendall tau range) | n/a | 0.046 to 0.059 | depth 0.007 to 0.037 |
 
 Parents
 
