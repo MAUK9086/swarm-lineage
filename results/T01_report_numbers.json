@@ -1,7 +1,7 @@
 {
   "experiment": "T01_report_numbers",
-  "run_at": "2026-11-09 12:50 IST",
-  "git_hash": "d5afc5d-dirty",
+  "run_at": "2026-11-09 13:33 IST",
+  "git_hash": "e7a22b3-dirty",
   "seed": 42,
   "params": {
     "inputs": "results/*.json only"
@@ -338,103 +338,141 @@
         "exp": "E01-E02",
         "claim": "public Swarm Traces rows carry time",
         "outcome": "NO-GO",
-        "key": "0 of 189,579 rows timestamped"
+        "key": "0 of 189,579 rows timestamped",
+        "type": "gating"
       },
       {
         "exp": "E20",
         "claim": "collusion.wiki: >= 5,000 timed revisions and >= 200 pages with >= 5 revisions",
         "outcome": "GO",
-        "key": "14,591 revisions; 453 pages"
+        "key": "14,591 revisions; 453 pages",
+        "type": "gating"
       },
       {
         "exp": "E30",
         "claim": "Moltbook: >= 100k timed posts, >= 1,000 agents with >= 20 posts, >= 1% duplicates",
         "outcome": "GO",
-        "key": "3,602,713 posts; 23,513 agents; 9.35%"
+        "key": "3,602,713 posts; 23,513 agents; 9.35%",
+        "type": "gating"
       },
       {
         "exp": "E31",
         "claim": "containment beats length by >= 5 pts (pairs)",
         "outcome": "NO-GO",
-        "key": "0.590 vs 0.696"
+        "key": "0.590 vs 0.696",
+        "type": "confirmatory"
       },
       {
         "exp": "E32",
         "claim": "edit cue beats length by >= 5 pts (clusters)",
         "outcome": "NO-GO",
-        "key": "length 0.496; best cue 0.508"
+        "key": "length 0.496; best cue 0.508",
+        "type": "confirmatory"
       },
       {
         "exp": "E33",
         "claim": "owner handles link >= 100 multi-agent owners",
         "outcome": "NO-GO",
-        "key": "10 owners with >= 2 agents"
+        "key": "10 owners with >= 2 agents",
+        "type": "gating"
       },
       {
         "exp": "E34",
         "claim": "pair-level inflates by >= 5 pts",
         "outcome": "confirmed",
-        "key": "19.2 pts"
+        "key": "19.2 pts",
+        "type": "confirmatory"
       },
       {
         "exp": "E35",
         "claim": "naive FPR > 10% while cluster FPR <= 10%",
         "outcome": "confirmed",
-        "key": "86.3% vs 5.3%"
+        "key": "86.3% vs 5.3%",
+        "type": "confirmatory"
       },
       {
         "exp": "E37",
         "claim": "metadata monitor AUROC >= 0.75 (unmatched)",
         "outcome": "GO by rule, not adopted",
-        "key": "0.960; post count alone 0.948"
+        "key": "0.960; post count alone 0.948",
+        "type": "confirmatory"
       },
       {
         "exp": "E38",
         "claim": "matched monitor AUROC >= 0.75 and recall >= 0.30",
         "outcome": "NO-GO",
-        "key": "0.691, recall 0.077"
+        "key": "0.691, recall 0.077",
+        "type": "confirmatory"
       },
       {
         "exp": "E41",
         "claim": "tree depth orders time, beats length",
         "outcome": "GO, withdrawn (E41b)",
-        "key": "0.098 -> 0.033 after row shuffle"
+        "key": "0.098 -> 0.033 after row shuffle",
+        "type": "confirmatory"
       },
       {
         "exp": "E41b",
         "claim": "E41 survives a row shuffle (reading rule fixed before the check)",
         "outcome": "no: GO withdrawn",
-        "key": "depth 0.033 < length 0.050"
+        "key": "depth 0.033 < length 0.050",
+        "type": "check"
       },
       {
         "exp": "E36-v2",
         "claim": "row shuffle leaves estimates unchanged (Moltbook)",
         "outcome": "fail (cluster level)",
-        "key": "exact items pass; length 0.565 outside E32 CI"
+        "key": "exact items pass; length 0.565 outside E32 CI",
+        "type": "check"
       },
       {
         "exp": "E41-v2",
         "claim": "lineage signal in any scope (Moltbook); reproduces E41b",
         "outcome": "NO-GO; reproduced exactly",
-        "key": "all 0.033, within_group 0.020, cross_group 0.024"
+        "key": "all 0.033, within_group 0.020, cross_group 0.024",
+        "type": "confirmatory; scopes exploratory"
       },
       {
         "exp": "E42",
         "claim": "length above chance on every pair sample",
         "outcome": "unresolved; sample-dependent",
-        "key": "length 0.495-0.528 over 4 samples"
+        "key": "length 0.495-0.528 over 4 samples",
+        "type": "post-hoc"
       },
       {
         "exp": "Held-out (E36-v2)",
         "claim": "collusion.wiki: edit cue beats length by >= 5 pts",
         "outcome": "NO-GO",
-        "key": "length 0.892; best cue 0.889"
+        "key": "length 0.892; best cue 0.889",
+        "type": "confirmatory"
       },
       {
         "exp": "Held-out (E41-v2)",
         "claim": "collusion.wiki: tree depth beats length",
         "outcome": "NO-GO",
-        "key": "depth 0.694 vs length 0.764"
+        "key": "depth 0.694 vs length 0.764",
+        "type": "confirmatory"
+      },
+      {
+        "exp": "E43",
+        "claim": "no cue beats length; length CI includes 0.5 (Jaccard 0.6-0.8, two-stage, author-merged)",
+        "outcome": "robust",
+        "key": "length 0.496-0.551; 113 author-merged units",
+        "type": "robustness"
+      },
+      {
+        "exp": "E44",
+        "claim": "lineage NO-GO stable over 5 seeds; depth tau-b below length",
+        "outcome": "NO-GO stable; tau-b rule fails",
+        "key": "GO in 0 of 15 runs; tau-b below length in 13 of 15",
+        "type": "robustness"
+      },
+      {
+        "exp": "E45",
+        "claim": "< 0.1% of distinct shingles in a 32-bit hash collision",
+        "outcome": "not met",
+        "key": "0.60% of 25,612,365",
+        "type": "robustness"
       }
     ],
     "E42_across_seeds": {

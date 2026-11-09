@@ -225,7 +225,7 @@ def build(draft: Path, out: Path) -> None:
             num = re.findall(r"\d+", label)[0]
             if (REPO / path.replace(".png", ".pdf")).exists():
                 path = path.replace(".png", ".pdf")
-            width = r"0.82\textwidth" if "R1_pipeline" in path else r"\textwidth"
+            width = r"0.72\textwidth" if "R1_pipeline" in path else (r"0.9\textwidth" if ("R3_" in path or "R4_" in path) else r"\textwidth")
             tex.append(r"\begin{figure}[htbp]\centering" + "\n" + r"\includegraphics[width=" + width + "]{../" + path + "}\n"
                        + r"\caption{" + esc(cap.strip("*")) + "}\\label{fig:" + num + "}\n" + r"\end{figure}")
         elif "[insert " in s and " table]" in s:

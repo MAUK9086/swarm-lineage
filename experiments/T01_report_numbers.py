@@ -219,7 +219,58 @@ def ledger() -> list[dict[str, Any]]:
         rows.append({"exp": "Held-out (E41-v2)", "claim": "collusion.wiki: tree depth beats length",
                      "outcome": "NO-GO" if not c41["scopes"]["all"]["go_no_go"]["go"] else "GO",
                      "key": f"depth {ce['depth']['macro_tau']:.3f} vs length {ce['length']['macro_tau']:.3f}"})
+    e43, e44, e45 = load("E43_robustness"), load("E44_lineage_robustness"), load("E45_hash_collisions")
+    if e43:
+        lens = [v["methods"]["b_longer_is_later"]["macro"] for v in e43["thresholds"].values()]
+        rows.append({"exp": "E43", "claim": "no cue beats length; length CI includes 0.5 (Jaccard 0.6-0.8, two-stage, author-merged)",
+                     "outcome": "robust" if e43["robust_overall"] else "not robust",
+                     "key": f"length {min(lens):.3f}-{max(lens):.3f}; {e43['author_merged_0.5']['counts']['merged_units']} author-merged units"})
+    if e44:
+        sm = e44["summary"]
+        cells = [(s, sc) for s in e44["seeds"] for sc in ("all", "within_group", "cross_group")]
+        n_go = sum(e44["seeds"][s][sc]["e41v2_go_rule"] for s, sc in cells)
+        n_below = sum(e44["seeds"][s][sc]["depth_ties_kept_below_length"] for s, sc in cells)
+        rows.append({"exp": "E44", "claim": "lineage NO-GO stable over 5 seeds; depth tau-b below length",
+                     "outcome": "NO-GO stable; tau-b rule fails" if not sm["robust"] else "robust",
+                     "key": f"GO in {n_go} of {len(cells)} runs; tau-b below length in {n_below} of {len(cells)}"})
+    if e45:
+        rows.append({"exp": "E45", "claim": "< 0.1% of distinct shingles in a 32-bit hash collision",
+                     "outcome": "not met" if not e45["negligible_lt_0.1pct"] else "met",
+                     "key": f"{100*e45['share_of_distinct_shingles_in_a_collision']:.2f}% of {e45['distinct_shingles_64bit']:,}"})
+    kinds = {"E01-E02": "gating", "E20": "gating", "E30": "gating", "E33": "gating", "E41b": "check",
+             "E36-v2": "check", "E42": "post-hoc", "E43": "robustness", "E44": "robustness", "E45": "robustness",
+             "E41-v2": "confirmatory; scopes exploratory"}
+    for r in rows:
+        r["type"] = kinds.get(r["exp"], "confirmatory")
     return rows
+
+
+def robustness() -> list[str]:
+    """Rows of the robustness table (E43, E44)."""
+    e43, e44 = load("E43_robustness"), load("E44_lineage_robustness")
+    if not (e43 and e44):
+        return []
+
+    def f(m: dict[str, Any]) -> str:
+        return f"{m['macro']:.3f} ({m['ci_low']:.3f}-{m['ci_high']:.3f})"
+
+    cues = ("c_containment", "i_extension", "ii_insertion_vs_deletion")
+    out = ["| Variant (Moltbook) | Clusters | Length | Best other cue / tree depth |", "|---|---|---|---|"]
+    for k, v in e43["thresholds"].items():
+        best = max(v["methods"][c]["macro"] for c in cues)
+        out.append(f"| Jaccard {k.split('-')[0]}-0.95 (largest cluster: {100*v['counts']['largest_cluster_share_of_pairs']:.0f}% of pairs) | "
+                   f"{v['counts']['components_scored']} | {f(v['methods']['b_longer_is_later'])} | {best:.3f} |")
+    ts = e43["two_stage_bootstrap_0.5"]["b_longer_is_later"]
+    out.append(f"| Two-stage bootstrap: clusters, then pairs | {ts['clusters']} | {ts['macro_all_pairs']:.3f} ({ts['ci'][0]:.3f}-{ts['ci'][1]:.3f}) | - |")
+    am = e43["author_merged_0.5"]
+    best = max(am["methods"][c]["macro"] for c in cues)
+    out.append(f"| Clusters that share an author merged | {am['counts']['merged_units']} | {f(am['methods']['b_longer_is_later'])} | {best:.3f} |")
+    sm = e44["summary"]
+    for sc, lab in (("all", "all pairs"), ("within_group", "same submolt"), ("cross_group", "across submolts")):
+        d, dt, ln = sm[f"{sc}.depth"], sm[f"{sc}.depth_ties_kept"], sm[f"{sc}.length"]
+        out.append(f"| Lineage, {lab}, 5 seeds (Kendall tau range) | - | {ln['min']:.3f} to {ln['max']:.3f} | "
+                   f"depth {d['min']:.3f} to {d['max']:.3f}; ties kept {dt['min']:.3f} to {dt['max']:.3f} |")
+    return out
 
 
 def main() -> None:
@@ -238,9 +289,9 @@ def main() -> None:
     c = res["corpora"]
     t02 = load("T02_cluster_concentration")
     e32c = load("E32_copy_direction_v2")["counts"]
-    t1 = ["| Corpus | Role | Texts | Timestamped | Near-duplicate pairs | Clusters | Clusters scored (after template filter) |", "|---|---|---|---|---|---|---|",
-          f"| Moltbook (sample of {c['moltbook']['posts']:,} posts) | development | {c['moltbook']['sample']:,} posts | {100*c['moltbook']['timestamped_share']:.0f}% | {t02['pairs']:,} | {t02['clusters']:,} | {e32c['components_scored']:,} |",
-          f"| collusion.wiki export | held-out | {c['collusion_wiki']['revisions']:,} revisions of {c['collusion_wiki']['pages']:,} pages | {100*c['collusion_wiki']['timestamped_share']:.0f}% | {c['collusion_wiki']['pairs_scored_v2']:,} | {c['collusion_wiki']['components_v2']:,} | {c['collusion_wiki']['components_scored_v2']:,} |"]
+    t1 = ["| Corpus | Role | Texts | Timed | Pairs | Clusters | Scored clusters |", "|---|---|---|---|---|---|---|",
+          f"| Moltbook | development | {c['moltbook']['sample']:,} posts | {100*c['moltbook']['timestamped_share']:.0f}% | {t02['pairs']:,} | {t02['clusters']:,} | {e32c['components_scored']:,} |",
+          f"| collusion.wiki | held-out | {c['collusion_wiki']['revisions']:,} revisions of {c['collusion_wiki']['pages']:,} pages | {100*c['collusion_wiki']['timestamped_share']:.0f}% | {c['collusion_wiki']['pairs_scored_v2']:,} | {c['collusion_wiki']['components_v2']:,} | {c['collusion_wiki']['components_scored_v2']:,} |"]
     a = res["copy_cues"]["algebra"]
     e31 = load("E31_copy_direction_pilot")
     len_ties = e31["methods"]["b_longer_is_later"]["ties_broken_randomly"] / e31["counts"]["pairs_scored"]
@@ -251,10 +302,12 @@ def main() -> None:
           f"| Insertion vs deletion | the diff A to B inserts more words than it deletes | A has fewer words | same prediction on {100*a['insdel_vs_token_count_agreement_non_ties_E32']:.0f}% of {a['non_tied_pairs_E32']:,} untied pairs |",
           f"| Extension | more of A survives as B's prefix and suffix | A has fewer words; coin flip if nothing shared | {a['extension_ties_E32']:,} of {a['pairs_scored_E32']:,} pairs tied |",
           f"| Lineage root | A is the text most contained in the others | the shortest text is the root | root is shortest in {100*lin['moltbook_root_is_shortest_share']:.0f}% of clusters ({100*lin['collusion_wiki_root_is_shortest_share']:.0f}% on the wiki; E41-v2, all scope) |"]
-    t2 = ["| Exp. | Pre-registered claim | Outcome | Key number |", "|---|---|---|---|"] + \
-         [f"| {r['exp']} | {r['claim']} | {r['outcome']} | {r['key']} |" for r in res["ledger"]]
+    t2 = ["| Exp. | Type | Pre-registered claim | Outcome | Key number |", "|---|---|---|---|---|"] + \
+         [f"| {r['exp']} | {r['type']} | {r['claim']} | {r['outcome']} | {r['key']} |" for r in res["ledger"]]
+    t3 = robustness()
     (RESULTS_DIR / "T01_tables.md").write_text("Corpora\n\n" + "\n".join(x for x in t1 if x) + "\n\nCues\n\n" + "\n".join(tc)
-                                               + "\n\nLedger\n\n" + "\n".join(t2) + "\n", encoding="utf-8")
+                                               + "\n\nLedger\n\n" + "\n".join(t2)
+                                               + "\n\nRobustness\n\n" + "\n".join(t3) + "\n", encoding="utf-8")
     t1 = t1 + [""] + tc
     print(json.dumps({"E35_ratio": res["evaluation"]["E35"]["null_sd_over_wald_se"],
                       "within_share": res["copy_cues"]["within_group_share_of_pairs"],
