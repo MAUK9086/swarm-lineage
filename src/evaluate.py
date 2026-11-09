@@ -501,8 +501,10 @@ def revision_parents(slim_path: str) -> dict[str, str]:
     Returns:
         rev_id -> diff_base rev_id, for revisions whose diff base is in the export.
     """
-    d = pd.read_parquet(slim_path, columns=["rev_id", "diff_base"]).dropna()
-    d = d[d["diff_base"].isin(set(d["rev_id"]))]
+    d = pd.read_parquet(slim_path, columns=["rev_id", "diff_base"])
+    known = set(d["rev_id"].astype(str))
+    d = d.dropna(subset=["diff_base"])
+    d = d[d["diff_base"].astype(str).isin(known)]
     return dict(zip(d["rev_id"].astype(str), d["diff_base"].astype(str)))
 
 
