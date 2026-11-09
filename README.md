@@ -24,6 +24,8 @@ collusion.wiki export. Work for the Apart Swarm Alignment sprint (November 2026)
 `CHECKLIST.md` lists the evaluation checks we recommend for content-only forensic methods,
 each linked to the experiment that applies it. `DATA.md` describes every field and whether
 methods may see it.
+`FUTURE_WORK.md` lists what a conference version would need, candidate datasets with recorded
+copying, and related meta-evaluation work.
 
 Every experiment is pre-registered in `EXPERIMENT_LOG.md` (question, hypothesis and go/no-go
 rule written before the run; results and decision after).
