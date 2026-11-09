@@ -1536,8 +1536,29 @@ Global seed: 42.
 - Method: five row-shuffle seeds 101-105; all other seeds 42. Compare candidate partitions,
   lineage component membership, share of identical tree edges (by node hash pairs), macro
   tau for depth and length.
-- Code: experiments/E48_order_invariance.py @ (filled after run)
+- Code: experiments/E48_order_invariance.py @ 474e715
 - Params: configs/E41_lineage_v2.json; n_boot 1000.
+- Results: (results/E48_order_invariance.json; order 42 reproduces E41-v2 exactly)
+
+  | scope | lineage components | components identical to order 42 | tree edges shared with order 42 (Jaccard of edge sets) | depth tau (6 orders) | length tau (6 orders) | depth < length |
+  |---|---|---|---|---|---|---|
+  | all | 481-490 | 89.4% | 21.5-22.8% | 0.007-0.037 | 0.046-0.059 | 6 of 6 |
+  | within group | 446-455 | 88.5% | 20.2-21.5% | -0.001-0.036 | 0.017-0.037 | 5 of 6 |
+  | across groups | 74-76 | 93.4% | 47.5-54.2% | 0.008-0.031 | 0.041-0.091 | 6 of 6 |
+
+  Candidate partitions identical for all six orders (17 of 700 candidate groups capped in
+  each). E41-v2 GO rule met in 1 of 18 order x scope runs: order 104, within group, depth
+  0.036 (0.008-0.067) vs length 0.031. invariant_by_rule = false.
+- Interpretation: The LSH stage is invariant to input order, but the trees are not: with
+  many tied similarity weights in templated clusters, the spanning tree and the subsample of
+  capped groups depend on node order, and only about a fifth of tree edges survive a change
+  of input order. Under one of 18 orders, one scope passes the pre-registered rule, a rate
+  close to what chance would give; the other 17 do not. A single lineage run is therefore
+  not a stable result, and the NO-GO conclusion holds across orders rather than within any
+  one of them. Breaking ties by a stable content hash would make trees order-invariant;
+  this was not applied to the frozen pipeline.
+- Decision / next step: Report the order dependence of tree structure, the 1-of-18 pass
+  and the fix as a recommendation; do not claim invariance.
 
 ### E49 - LSH retrieval recall on a Moltbook subsample  (2026-11-09 14:30 IST)
 - Question: What share of truly eligible near-duplicate pairs does the banded LSH stage find?
@@ -1560,3 +1581,16 @@ Global seed: 42.
   0.5-0.6 band: E43 found the same results with lower bounds 0.6-0.8, where recall is
   0.91 or more.
 - Decision / next step: State the recall in the report's limitations and robustness text.
+
+### E50 - Revision-parent recovery under other input orders (collusion.wiki)  (2026-11-09 14:47 IST)
+- Question: E48 showed that tree structure depends on input order. Are E46's parent-recovery
+  results stable across input orders?
+- Hypothesis / expected: Within-page wiki histories have fewer exact ties than Moltbook
+  templates, so MST F1 varies little; length keeps orienting recovered links better.
+- Go / no-go criterion (pre-registered): stable if, over row-shuffle seeds 42 and 101-105,
+  the all-scope MST F1 stays within +/-0.05 of E46 and both E46 rule outcomes (structure GO,
+  direction NO-GO) are the same in every order. Otherwise report the range.
+- Method: E46 code (imported) with the row-shuffle seed varied; everything else as E46.
+  Executed by the author on the held-out wiki (same deviation as E46).
+- Code: experiments/E50_parent_recovery_orders.py @ (filled after run)
+- Params: seeds 42, 101-105; n_boot 1000.
