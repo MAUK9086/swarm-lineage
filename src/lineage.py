@@ -5,7 +5,8 @@ File structure:
     lsh_bucket_components  join all nodes that share any LSH band bucket (no pair listing)
     pairwise_overlap       intersections and set sizes for all pairs of a node set
     lineage_components     sample, verify edges (Jaccard window), split into connected pieces
-    build_tree             MST on 1 - Jaccard, containment root, hop depth, inferred rank
+    lineage_components_scoped  as above, with edges split by pair scope (all / within / cross group)
+    build_tree            MST on 1 - Jaccard, containment root, hop depth, inferred rank
     length_rank            baseline: shorter text earlier
 """
 
@@ -145,6 +146,65 @@ def lineage_components(cand: np.ndarray, flat: np.ndarray, offsets: np.ndarray, 
                             "jaccard": jac[np.ix_(idx, idx)], "edges": adj[np.ix_(idx, idx)]})
     counts["lineage_components"] = len(out)
     counts["nodes_in_lineage_components"] = int(sum(len(c["nodes"]) for c in out))
+    return out, counts
+
+
+def lineage_components_scoped(cand: np.ndarray, flat: np.ndarray, offsets: np.ndarray, cfg: dict[str, Any],
+                              node_groups: list[frozenset]) -> tuple[dict[str, list[dict[str, Any]]], dict[str, Any]]:
+    """lineage_components with edges split by pair scope; the all scope equals lineage_components.
+
+    Sampling, the Jaccard matrix and the random generator sequence are identical to
+    lineage_components; only the edge set differs per scope.
+
+    Args:
+        cand: Candidate component id per node.
+        flat: CSR shingle hashes.
+        offsets: CSR offsets.
+        cfg: Frozen config (jaccard_window, min_nodes, max_nodes, seed, pair_scopes).
+        node_groups: Set of group ids per node.
+
+    Returns:
+        (scope -> list of components, counts)
+    """
+    lo, hi = cfg["jaccard_window"]
+    rng = np.random.default_rng(cfg["seed"])
+    s = pd.Series(np.arange(len(cand))).groupby(cand)
+    groups = [g.to_numpy() for _, g in s if len(g) >= cfg["min_nodes"]]
+    scopes = cfg["pair_scopes"]
+    counts: dict[str, Any] = {"candidate_components_ge_min": len(groups), "candidate_components_capped": 0,
+                              "nodes_in_candidates_ge_min": int(sum(len(g) for g in groups))}
+    out: dict[str, list[dict[str, Any]]] = {sc: [] for sc in scopes}
+    edge_counts = {sc: 0 for sc in scopes}
+    for g in tqdm(groups, desc="verify components (scoped)", unit="comp"):
+        if len(g) > cfg["max_nodes"]:
+            g = np.sort(rng.choice(g, cfg["max_nodes"], replace=False))
+            counts["candidate_components_capped"] += 1
+        inter, sizes = pairwise_overlap(g, flat, offsets)
+        union = sizes[:, None] + sizes[None, :] - inter
+        jac = np.where(union > 0, inter / np.maximum(union, 1), 0.0)
+        np.fill_diagonal(jac, 0.0)
+        window = (jac >= lo) & (jac <= hi)
+        sets = [node_groups[v] for v in g]
+        n = len(g)
+        share = np.zeros((n, n), dtype=bool)
+        for i in range(n):
+            for j in range(i + 1, n):
+                if not sets[i].isdisjoint(sets[j]):
+                    share[i, j] = share[j, i] = True
+        adj_by = {"all": window, "within_group": window & share, "cross_group": window & ~share}
+        for sc in scopes:
+            adj = adj_by[sc]
+            edge_counts[sc] += int(np.triu(adj, 1).sum())
+            ncomp, lab = connected_components(coo_matrix(adj), directed=False)
+            for c in range(ncomp):
+                idx = np.flatnonzero(lab == c)
+                if len(idx) >= cfg["min_nodes"]:
+                    out[sc].append({"nodes": g[idx], "inter": inter[np.ix_(idx, idx)], "sizes": sizes[idx],
+                                    "jaccard": jac[np.ix_(idx, idx)], "edges": adj[np.ix_(idx, idx)]})
+    for sc in scopes:
+        counts[f"{sc}_verified_edges"] = edge_counts[sc]
+        counts[f"{sc}_lineage_components"] = len(out[sc])
+        counts[f"{sc}_nodes_in_lineage_components"] = int(sum(len(c["nodes"]) for c in out[sc]))
     return out, counts
 
 

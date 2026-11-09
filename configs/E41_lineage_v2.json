@@ -1,0 +1,30 @@
+{
+  "shingle_k_words": 5,
+  "num_perm": 128,
+  "lsh_threshold": 0.5,
+  "jaccard_window": [
+    0.5,
+    0.95
+  ],
+  "min_nodes": 5,
+  "max_nodes": 200,
+  "seed": 42,
+  "n_boot": 1000,
+  "n_null": 1000,
+  "node_key": "normalised text (whitespace collapsed, lower-cased)",
+  "node_time": "earliest post",
+  "tree": "minimum spanning tree on 1 - Jaccard over verified edges",
+  "root": "max mean containment C(node in other)",
+  "order": "hop depth from root, seeded random tie-break",
+  "baseline": "length (shorter earlier), seeded random tie-break",
+  "version": 2,
+  "row_shuffle": "pandas DataFrame.sample(frac=1, random_state=42), reset_index",
+  "row_shuffle_seed": 42,
+  "pair_scopes": [
+    "all",
+    "within_group",
+    "cross_group"
+  ],
+  "scope_rule": "edge within_group if the two nodes share any group_id; cross_group if none",
+  "primary_scope": "all"
+}

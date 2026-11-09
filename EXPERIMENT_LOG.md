@@ -1028,3 +1028,56 @@ Global seed: 42.
   permutation inside the script, under a new config hash. Neither script was changed here.
   The user's planned collusion.wiki run should not use E41 as it stands: the collusion
   adapter orders revisions by page and sequence, which is time order within each page.
+
+---
+
+### Amendment: frozen pipelines v2 (E36-v2, E41-v2)  (2026-11-09 09:46 IST)
+- Reason: (1) E41b showed a row-order leak: E41's result depended on the row order of
+  the standard table, which followed time in the stored Moltbook sample. (2) Corpora
+  differ structurally: on Moltbook group_id is a submolt (2,628 distinct in the 300k sample,
+  1 missing), on collusion.wiki it is a page, so copying within a group and copying across
+  groups are different phenomena and should be reported separately.
+- Changes, both scripts: (a) seeded row shuffle of the standard table before any
+  processing, using pandas DataFrame.sample(frac=1, random_state=42) followed by a reset
+  index (the same call as E41b); (b) a pair_scope option with values all, within_group and
+  cross_group; every run reports all three. The v1 scripts and configs stay frozen and
+  unchanged; v2 is new files that import v1's functions so shared logic stays identical.
+- E36-v2 scope rule: a scored pair is within_group if both docs have the same non-missing
+  group_id, cross_group otherwise (pairs with a missing group_id count as cross_group and
+  are counted). Pair finding runs once; each scope filters the scored pairs, then E31
+  pair-level scoring and the E32 component pipeline (components recomputed on that scope's
+  pairs) run per scope.
+- E41-v2 scope rule: applies to the verified edges that build lineage components. Each
+  collapsed node has the set of group_ids of its posts; an edge is within_group if the two
+  nodes share at least one group_id, cross_group if they share none; all keeps every edge.
+  Candidate components, node sampling and the Jaccard matrix are computed once; each scope
+  builds its own connected pieces, trees and evaluation, with tree and length random
+  generators re-seeded per scope exactly as in v1.
+- Pre-registered checks:
+  E36-v2 row-order independence (scope all vs E31 / E32). Exact match is NOT expected,
+  because the Bernoulli pair sample hashes row indices and the seeded tie-breaks and caps
+  follow pair order. Pass requires both: (i) quantities that do not depend on row order
+  match exactly: docs, docs with shingles, LSH band-sum bound, pair-generation path, and
+  both analytic exact-duplicate pair counts; (ii) sample-dependent estimates agree in
+  expectation: component-level macro accuracy for (a), (b), (i), (ii) inside E32's
+  component-bootstrap 95% CIs, and pair-level accuracy for (a), (b), (c) within 2
+  percentage points of E31 (pair-level CIs are too narrow to use; E35).
+  E41-v2 (scope all vs E41b): expected to reproduce E41b exactly, since the shuffle call
+  and all seeds are identical; the check passes if depth and length macro tau equal E41b's
+  to within 1e-9, and is reported as "in expectation" if they only fall inside E41b's CIs.
+  E41-v2 GO: the E41 rule (depth macro tau CI excludes 0 AND depth macro tau > length macro
+  tau), with scope all as primary; within_group and cross_group are secondary and
+  descriptive.
+- Expected: E36-v2 all passes (i) and (ii); within_group and cross_group component-level
+  accuracies near chance for all cues. E41-v2 all reproduces E41b (depth 0.033 below
+  length 0.050, NO-GO); within_group and cross_group near chance.
+- Code: experiments/E36_replication_v2.py, experiments/E41_lineage_v2.py,
+  src/lineage.py (new scoped function only) @ (filled after commit)
+- Config SHA-256 (LF enforced): configs/E36_pipeline_v2.json =
+  fe569c7fa2df1ee30a862fda44a7408d2a4d89fb10a9cd33b2778201375c32f7;
+  configs/E41_lineage_v2.json =
+  d315478469faf5999d69aa304c12975d09f0f8ef1d3bc6172d60cb26197254ba
+- Corpus: data/interim/moltbook_slim.parquet only.
+- Results:
+- Interpretation:
+- Decision / next step:

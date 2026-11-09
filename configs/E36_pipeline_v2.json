@@ -1,0 +1,27 @@
+{
+  "shingle_k_words": 5,
+  "num_perm": 128,
+  "lsh_threshold": 0.5,
+  "jaccard_window": [
+    0.5,
+    0.95
+  ],
+  "max_pairs": 20000000,
+  "memory_guard_pairs": 60000000,
+  "cap_per_component": 20,
+  "template_filter": true,
+  "n_boot": 1000,
+  "seed": 42,
+  "edit_cue_pair_sample": 200000,
+  "tokens": "lower-cased \\w+",
+  "diff": "difflib.SequenceMatcher autojunk=False",
+  "version": 2,
+  "row_shuffle": "pandas DataFrame.sample(frac=1, random_state=42), reset_index",
+  "row_shuffle_seed": 42,
+  "pair_scopes": [
+    "all",
+    "within_group",
+    "cross_group"
+  ],
+  "scope_rule": "within_group = both docs share a non-missing group_id; cross_group = otherwise"
+}
