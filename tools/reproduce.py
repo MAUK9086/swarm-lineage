@@ -33,6 +33,10 @@ CHECKS = [
     ("E43_robustness", "robust_overall", True, 0),
     ("E45_hash_collisions", "share_of_distinct_shingles_in_a_collision", 0.0060, 0.00005),
     ("E46_parent_recovery", "scopes.all.mst_tree.f1.macro", 0.699, 0.0005),
+    ("E46_parent_recovery", "scopes.all.go_no_go.b_direction.passes", False, 0),
+    ("E47_hash64", "conclusions_unchanged", True, 0),
+    ("E47_hash64", "copy_direction.pairs_jaccard_changed", 0, 0),
+    ("E49_lsh_recall", "bins.0.5-0.6.recall", 0.486, 0.0005),
 ]
 
 
@@ -46,8 +50,15 @@ def get(d: dict, path: str):
     Returns:
         The value.
     """
-    for k in path.split("."):
-        d = d[k]
+    parts = path.split(".")
+    while parts:
+        for n in range(len(parts), 0, -1):
+            key = ".".join(parts[:n])
+            if isinstance(d, dict) and key in d:
+                d, parts = d[key], parts[n:]
+                break
+        else:
+            raise KeyError(path)
     return d
 
 

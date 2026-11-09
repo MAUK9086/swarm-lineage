@@ -1,7 +1,7 @@
 {
   "experiment": "T01_report_numbers",
-  "run_at": "2026-11-09 14:34 IST",
-  "git_hash": "d9f175e-dirty",
+  "run_at": "2026-11-09 14:38 IST",
+  "git_hash": "7e4413b",
   "seed": 42,
   "params": {
     "inputs": "results/*.json only"

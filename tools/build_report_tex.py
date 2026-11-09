@@ -141,7 +141,8 @@ def table_tex(rows: list[list[str]], caption: str, label: str) -> str:
     n = len(rows[0])
     p = lambda w: r">{\raggedright\arraybackslash}p{" + w + "}"
     specs = {"tab:ledger": p("1.9cm") + p("1.8cm") + "L" + p("2.6cm") + "L",
-             "tab:robustness": "L" + p("1.3cm") + p("3.0cm") + "L"}
+             "tab:robustness": "L" + p("1.3cm") + p("3.0cm") + "L",
+             "tab:parents": p("3.6cm") + "LLLLL"}
     spec = specs.get(label, "L" * n)
     head = " & ".join(r"\textbf{" + _plain(c) + "}" for c in rows[0]) + r" \\"
     body = "\n".join(" & ".join(_plain(c) for c in r) + r" \\" for r in rows[1:])
@@ -228,7 +229,7 @@ def build(draft: Path, out: Path) -> None:
             num = re.findall(r"\d+", label)[0]
             if (REPO / path.replace(".png", ".pdf")).exists():
                 path = path.replace(".png", ".pdf")
-            width = r"0.72\textwidth" if "R1_pipeline" in path else (r"0.9\textwidth" if ("R3_" in path or "R4_" in path) else r"\textwidth")
+            width = r"0.72\textwidth" if "R1_pipeline" in path else (r"0.86\textwidth" if ("R3_" in path or "R4_" in path) else r"0.94\textwidth")
             tex.append(r"\begin{figure}[htbp]\centering" + "\n" + r"\includegraphics[width=" + width + "]{../" + path + "}\n"
                        + r"\caption{" + esc(cap.strip("*")) + "}\\label{fig:" + num + "}\n" + r"\end{figure}")
         elif "[insert " in s and " table]" in s:
