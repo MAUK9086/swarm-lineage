@@ -138,12 +138,13 @@ def s_title(prs) -> None:
     dark_bg(s)
     textbox(s, 0.9, 2.0, 11.5, 1.2, [("Counting Clusters, Not Pairs", 44, ON_DARK, True, HEAD)], anchor=MSO_ANCHOR.BOTTOM, name="title")
     textbox(s, 0.9, 3.3, 11.5, 0.6, [("Evaluating content-only forensics on agent-swarm text", 24, ON_DARK2, False, HEAD)], name="subtitle")
+    textbox(s, 0.9, 4.05, 11.5, 0.5, [("On agent text, copy-direction tools are easy to overrate: the cues add nothing beyond length, and pair-level scoring flatters them.", 15, ON_DARK2, False, BODY, True)], name="claim")
     textbox(s, 0.9, 5.0, 11.5, 1.2, [("Mohammad Ahmadullah Khan, independent researcher", 16, ON_DARK),
                                      ("Apart Research Swarm Alignment Sprint, Track 4: Multi-Agent Oversight and Control, November 2026", 14, ON_DARK2),
                                      (REPO_URL, 14, ON_DARK2)], name="byline")
     notes(s, "This project asks whether the text that agents copy from each other can tell us which copy came first, "
              "and how we should evaluate any tool that claims to do that. The short answer: the cues we tested add nothing "
-             "beyond text length, and the usual way of scoring them gives confident, wrong answers.")
+             "beyond text length, and scoring them per pair, as is standard in related fields, gives confident, wrong answers.")
 
 
 def s_question(prs, k: int) -> None:
@@ -152,7 +153,8 @@ def s_question(prs, k: int) -> None:
     textbox(s, 0.6, 1.75, 4.6, 4.8, [
         ("Swarm incidents leave text, not clocks. The public Swarm Traces release has no timestamps in any of its 189,579 rows.", 17, INK),
         ("Agents copy and lightly edit each other, so the evidence arrives as families of near-duplicates.", 17, INK),
-        ("We hid true time from every method, developed on 300,000 Moltbook posts, then ran the frozen rules on the collusion.wiki export. Every analysis had a go/no-go rule written before it ran.", 17, INK)],
+        ("We hid true time from the methods, developed on 300,000 Moltbook posts, then ran the frozen rules on the collusion.wiki export, with every rule pre-registered.", 17, INK),
+        ("Our claim: these tools are easy to overrate. The cues add nothing beyond length, and pair-level scoring, standard in related fields, makes chance look strong.", 17, INK, True)],
         name="context")
     image(s, FIG / "R1_pipeline.png", 5.5, 2.2, w=7.3, name="pipeline figure")
     number(s, k)
@@ -188,7 +190,7 @@ def s_inflation(prs, a: dict[str, Path], k: int) -> None:
     number(s, k)
     notes(s, "Left: as we allow more pairs per cluster, pair-level accuracy stays at chance until every pair is kept, then jumps to 0.70, "
              "with an interval 81 times narrower. Right: we shuffled the true times inside each cluster, which keeps the clusters and removes "
-             "any real order. A pair-pooled test still reported a significant effect in 86% of 1,000 draws; the cluster bootstrap in 5%.")
+             "any real order. A pair-pooled test still reported a significant effect in 86% of 1,000 draws; the cluster bootstrap in 5%. Pair-level benchmarks are standard for text reuse and code-clone detection, and shared duplicates are known to inflate results in language modelling and authorship verification; on agent text the effect is extreme.")
 
 
 def s_cues(prs, k: int) -> None:
@@ -197,8 +199,8 @@ def s_cues(prs, k: int) -> None:
     image(s, FIG / "R3_forest.png", 0.6, 1.55, w=8.6, name="forest figure")
     textbox(s, 9.6, 1.75, 3.2, 5.0, [
         ("Containment and insertion-versus-deletion are length comparisons in disguise.", 16, INK),
-        ("Length helps where texts grow: 0.94 of clusters within wiki pages, 0.66 across pages.", 16, INK),
-        ("On Moltbook it shows no stable advantage (0.495 to 0.565 over five pair samples).", 16, INK),
+        ("Length itself is right for 0.66 of clusters across wiki pages (0.94 within pages, which grow by successive saves).", 16, INK),
+        ("On Moltbook length shows no stable gain (0.495 to 0.565 over five pair samples).", 16, INK),
         ("Lineage trees order texts, but less well than length.", 16, INK)], name="takeaways")
     number(s, k)
     notes(s, "Each row is a corpus and scope, scored per cluster. Blue is length; grey markers are the other cues, which sit on top of it. "
