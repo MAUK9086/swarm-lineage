@@ -1614,3 +1614,26 @@ Global seed: 42.
   tools/reproduce.py (checks headline numbers against results and runs the tests).
 - E46 and E50 were run by the author on the held-out collusion.wiki data; stated in the
   report's protocol paragraph.
+
+### E51 - AI Village feasibility: how much agent-to-agent copying is there?  (2026-11-11 IST)
+- Question: Does the AI Village chat contain enough agent-to-agent reuse to build a copy
+  benchmark (the funding proposal's weeks 1-3 go/no-go), and is it concentrated like Moltbook?
+- Hypothesis / expected: Some edited reuse exists (agents see recent group chat), probably
+  concentrated in a few templates; unclear whether it clears the bar.
+- Go / no-go criterion (pre-registered, same as the funding proposal): GO if, pooled over
+  all five villages, there are at least 200 candidate copy events in at least 30 independent
+  clusters. A candidate copy event is an agent message with at least one EARLIER message by a
+  DIFFERENT agent with exact 5-word-shingle Jaccard in [0.5, 0.95] (edited reuse). Exact or
+  near-exact reuse (Jaccard > 0.95) is counted separately and not used for the bar. Clusters
+  are connected components of the reuse graph over unique normalised texts.
+- Method: chat_messages for the five villages (main, open-chat, swarm, saboteur-rpg,
+  game-jam); agent speakers only for both copy and source (human messages reported
+  separately); messages with fewer than 5 words have no shingles and are excluded. Candidate
+  pairs by MinHash/LSH (128 permutations, threshold 0.5, seed 42) over unique normalised
+  texts, then exact Jaccard. Also reported: largest cluster's share of events, time gap from
+  the most recent qualifying source (exposure through recent chat), events per village.
+  Exposure checks against computer_use_turns are a later step (stage 2), not part of this.
+- Data: data/raw/ai_village/ (gitignored; gated dataset, terms: no training, cite AI Digest /
+  AI Village, notify of publications). Results: aggregates only, no message text.
+- Code: experiments/E51_ai_village_feasibility.py @ (filled after run)
+- Params: Jaccard window [0.5, 0.95], shingle k = 5, seed 42.
