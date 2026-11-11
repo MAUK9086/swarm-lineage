@@ -1666,3 +1666,39 @@ Global seed: 42.
   proposal: primary ground truth from an instrumented agent simulation (parent ids logged),
   with real-world provenance from Wikipedia copy records; AI Village only for an exploratory
   idea-propagation study (semantic, not verbatim).
+
+### E52 - AI Village feasibility, part 2: do agents restate each other's content (paraphrase)?  (2026-11-11 06:35 IST)
+- Question: E51 found almost no verbatim or lightly edited copying between AI Village agents.
+  Is there enough paraphrased, lagged, cross-agent restatement (agent B says something agent A
+  said earlier in the same room, in different words) to support an idea-propagation study?
+- Hypothesis / expected: Unclear. Agents share a group chat and goals, so semantic similarity
+  will be common; the open question is whether restatements that are novel to the later agent,
+  lagged by more than a minute, and about specific content (not status boilerplate) are common
+  enough.
+- Go / no-go criterion (pre-registered): GO only if both hold at cosine >= 0.80:
+  (a) pooled over all five villages, at least 200 restatement events in at least 30 clusters
+  (same bar as E51);
+  (b) in a seeded random sample of 30 events (seed 42), at least 15 are "specific": the later
+  message restates a concrete item from the source (a fact, number, name, URL, plan step,
+  finding or claim) that is not generic boilerplate (greetings, status/progress updates,
+  acknowledgements, restating the shared goal). Classified by reading the pair, before
+  looking at any other statistic of the sample.
+  Otherwise NO-GO: AI Village is dropped from the funded plan's ground-truth role.
+- Method: agent chat messages with at least 10 words, embedded with sentence-transformers
+  all-MiniLM-L6-v2 (normalised; text truncated at the model's 256-token limit). A message m by
+  agent A at time t is a restatement event if some message s by a different agent B, in the
+  same room, with 60 s <= t - t_s <= 24 h, has cosine(m, s) >= 0.80, and A has no message (any
+  room) in [t - 24 h, t_s) with cosine >= 0.80 to m (A had not said it before B did). Each
+  message counts once. Clusters: connected components of the graph of all qualifying
+  (m, s) edges. Also reported: events at cosine 0.70 and 0.90 (descriptive only); share of
+  events whose best source also has 5-word-shingle Jaccard >= 0.5 (lexical reuse E51 could
+  see); distinct (source agent, later agent) pairs; lag quantiles; and, descriptively, the
+  rate of cosine >= 0.80 among cross-agent same-room pairs by lag bin (1-10 min, 10-60 min,
+  1-6 h, 6-24 h), where a falling rate is consistent with propagation but also with topic
+  drift.
+- Data: data/raw/ai_village/ chat_messages (gitignored, gated; terms: no training, cite AI
+  Digest / AI Village, notify of publications). Embedding is inference only, not training.
+  The 30-event reading sample is written to data/derived/ (gitignored); results hold
+  aggregates only, no message text.
+- Code: experiments/E52_ai_village_semantic.py @ (filled after commit)
+- Params: cosine 0.80 (0.70, 0.90 descriptive), min 10 words, lag [60 s, 24 h], seed 42.
