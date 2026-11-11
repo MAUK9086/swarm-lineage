@@ -1,0 +1,448 @@
+{
+ "experiment": "E52_ai_village_semantic",
+ "run_at": "2026-11-12 03:13 IST",
+ "git_hash": "4c8ef3b",
+ "seed": 42,
+ "params": {
+  "villages": [
+   "main-village",
+   "open-chat-village",
+   "swarm-village",
+   "saboteur-rpg-village",
+   "game-jam-village"
+  ],
+  "model": "sentence-transformers/all-MiniLM-L6-v2",
+  "main_cosine": 0.8,
+  "thresholds": [
+   0.7,
+   0.8,
+   0.9
+  ],
+  "min_words": 10,
+  "lag_window_s": [
+   60,
+   86400
+  ],
+  "sample_n": 30,
+  "specific_min": 15,
+  "go_events": 200,
+  "go_clusters": 30,
+  "data": "aidigestorg/ai-village chat_messages"
+ },
+ "results": {
+  "villages": {
+   "main-village": {
+    "messages_ge_10_words": 210582,
+    "agents": 58,
+    "rooms": 11,
+    "events_c0.70": 35457,
+    "edges_c0.70": 112835,
+    "clusters_c0.70": 6539,
+    "largest_cluster_event_share_c0.70": 0.044278985813802636,
+    "clusters_ge_5_events_c0.70": 439,
+    "events_c0.80": 9278,
+    "edges_c0.80": 21571,
+    "clusters_c0.80": 3332,
+    "largest_cluster_event_share_c0.80": 0.06531580081914205,
+    "clusters_ge_5_events_c0.80": 230,
+    "events_c0.90": 965,
+    "edges_c0.90": 2182,
+    "clusters_c0.90": 398,
+    "largest_cluster_event_share_c0.90": 0.0849740932642487,
+    "clusters_ge_5_events_c0.90": 26,
+    "best_source_lag_minutes": {
+     "p25": 3.722247304166667,
+     "median": 11.752733491666667,
+     "p75": 46.49272229583333
+    },
+    "share_events_lexical_jaccard_ge_0.5": 0.0008622547962923044,
+    "distinct_agent_pairs": 493,
+    "events_per_later_agent_top_share": 0.1903427462815262,
+    "lag_bin_rate_c0.80": {
+     "1-10 min": {
+      "pairs": 2979527,
+      "hits": 30208,
+      "rate": 0.010138521986879125
+     },
+     "10-60 min": {
+      "pairs": 13899175,
+      "hits": 28768,
+      "rate": 0.0020697631334233866
+     },
+     "1-6 h": {
+      "pairs": 30758798,
+      "hits": 5049,
+      "rate": 0.00016414815689481753
+     },
+     "6-24 h": {
+      "pairs": 40220532,
+      "hits": 7058,
+      "rate": 0.00017548251226512867
+     }
+    }
+   },
+   "open-chat-village": {
+    "messages_ge_10_words": 39274,
+    "agents": 23,
+    "rooms": 1,
+    "events_c0.70": 5492,
+    "edges_c0.70": 10880,
+    "clusters_c0.70": 2020,
+    "largest_cluster_event_share_c0.70": 0.0915877640203933,
+    "clusters_ge_5_events_c0.70": 122,
+    "events_c0.80": 852,
+    "edges_c0.80": 1254,
+    "clusters_c0.80": 556,
+    "largest_cluster_event_share_c0.80": 0.06924882629107981,
+    "clusters_ge_5_events_c0.80": 19,
+    "events_c0.90": 62,
+    "edges_c0.90": 115,
+    "clusters_c0.90": 38,
+    "largest_cluster_event_share_c0.90": 0.22580645161290322,
+    "clusters_ge_5_events_c0.90": 2,
+    "best_source_lag_minutes": {
+     "p25": 2.4673300958333333,
+     "median": 7.784945766666667,
+     "p75": 58.943330054166665
+    },
+    "share_events_lexical_jaccard_ge_0.5": 0.009389671361502348,
+    "distinct_agent_pairs": 214,
+    "events_per_later_agent_top_share": 0.20422535211267606,
+    "lag_bin_rate_c0.80": {
+     "1-10 min": {
+      "pairs": 573732,
+      "hits": 638,
+      "rate": 0.0011120174576283004
+     },
+     "10-60 min": {
+      "pairs": 2870975,
+      "hits": 383,
+      "rate": 0.00013340415712432188
+     },
+     "1-6 h": {
+      "pairs": 10049932,
+      "hits": 275,
+      "rate": 2.7363369224786794e-05
+     },
+     "6-24 h": {
+      "pairs": 12689265,
+      "hits": 236,
+      "rate": 1.8598397937153963e-05
+     }
+    }
+   },
+   "swarm-village": {
+    "messages_ge_10_words": 3824,
+    "agents": 133,
+    "rooms": 3,
+    "events_c0.70": 1087,
+    "edges_c0.70": 2513,
+    "clusters_c0.70": 198,
+    "largest_cluster_event_share_c0.70": 0.5979760809567617,
+    "clusters_ge_5_events_c0.70": 22,
+    "events_c0.80": 103,
+    "edges_c0.80": 115,
+    "clusters_c0.80": 71,
+    "largest_cluster_event_share_c0.80": 0.06796116504854369,
+    "clusters_ge_5_events_c0.80": 2,
+    "events_c0.90": 0,
+    "edges_c0.90": 0,
+    "clusters_c0.90": 0,
+    "best_source_lag_minutes": {
+     "p25": 2.891688283333333,
+     "median": 7.751550716666666,
+     "p75": 41.6168355
+    },
+    "share_events_lexical_jaccard_ge_0.5": 0.0,
+    "distinct_agent_pairs": 93,
+    "events_per_later_agent_top_share": 0.05825242718446602,
+    "lag_bin_rate_c0.80": {
+     "1-10 min": {
+      "pairs": 120667,
+      "hits": 59,
+      "rate": 0.0004889489255554542
+     },
+     "10-60 min": {
+      "pairs": 603719,
+      "hits": 37,
+      "rate": 6.128679070892253e-05
+     },
+     "1-6 h": {
+      "pairs": 2866637,
+      "hits": 23,
+      "rate": 8.023338846181083e-06
+     },
+     "6-24 h": {
+      "pairs": 3628228,
+      "hits": 2,
+      "rate": 5.512332742043774e-07
+     }
+    }
+   },
+   "saboteur-rpg-village": {
+    "messages_ge_10_words": 1592,
+    "agents": 6,
+    "rooms": 2,
+    "events_c0.70": 90,
+    "edges_c0.70": 111,
+    "clusters_c0.70": 49,
+    "largest_cluster_event_share_c0.70": 0.23333333333333334,
+    "clusters_ge_5_events_c0.70": 3,
+    "events_c0.80": 6,
+    "edges_c0.80": 6,
+    "clusters_c0.80": 6,
+    "largest_cluster_event_share_c0.80": 0.16666666666666666,
+    "clusters_ge_5_events_c0.80": 0,
+    "events_c0.90": 0,
+    "edges_c0.90": 0,
+    "clusters_c0.90": 0,
+    "best_source_lag_minutes": {
+     "p25": 1.8066093458333334,
+     "median": 5.779759074999999,
+     "p75": 9.371458329166666
+    },
+    "share_events_lexical_jaccard_ge_0.5": 0.0,
+    "distinct_agent_pairs": 5,
+    "events_per_later_agent_top_share": 0.3333333333333333,
+    "lag_bin_rate_c0.80": {
+     "1-10 min": {
+      "pairs": 12238,
+      "hits": 5,
+      "rate": 0.0004085634907664651
+     },
+     "10-60 min": {
+      "pairs": 57916,
+      "hits": 0,
+      "rate": 0.0
+     },
+     "1-6 h": {
+      "pairs": 213633,
+      "hits": 1,
+      "rate": 4.680924763496276e-06
+     },
+     "6-24 h": {
+      "pairs": 205600,
+      "hits": 0,
+      "rate": 0.0
+     }
+    }
+   },
+   "game-jam-village": {
+    "messages_ge_10_words": 834,
+    "agents": 6,
+    "rooms": 2,
+    "events_c0.70": 82,
+    "edges_c0.70": 100,
+    "clusters_c0.70": 55,
+    "largest_cluster_event_share_c0.70": 0.06097560975609756,
+    "clusters_ge_5_events_c0.70": 2,
+    "events_c0.80": 9,
+    "edges_c0.80": 9,
+    "clusters_c0.80": 9,
+    "largest_cluster_event_share_c0.80": 0.1111111111111111,
+    "clusters_ge_5_events_c0.80": 0,
+    "events_c0.90": 0,
+    "edges_c0.90": 0,
+    "clusters_c0.90": 0,
+    "best_source_lag_minutes": {
+     "p25": 1.9432315333333334,
+     "median": 5.637153166666667,
+     "p75": 27.587001583333333
+    },
+    "share_events_lexical_jaccard_ge_0.5": 0.0,
+    "distinct_agent_pairs": 6,
+    "events_per_later_agent_top_share": 0.5555555555555556,
+    "lag_bin_rate_c0.80": {
+     "1-10 min": {
+      "pairs": 1954,
+      "hits": 6,
+      "rate": 0.0030706243602865915
+     },
+     "10-60 min": {
+      "pairs": 9458,
+      "hits": 2,
+      "rate": 0.00021146119687037428
+     },
+     "1-6 h": {
+      "pairs": 29338,
+      "hits": 1,
+      "rate": 3.408548639989093e-05
+     },
+     "6-24 h": {
+      "pairs": 36488,
+      "hits": 0,
+      "rate": 0.0
+     }
+    }
+   }
+  },
+  "pooled": {
+   "events_c0.70": 42208,
+   "clusters_c0.70": 8861,
+   "events_c0.80": 10248,
+   "clusters_c0.80": 3974,
+   "events_c0.90": 1027,
+   "clusters_c0.90": 436
+  },
+  "go_a": true,
+  "sample_event_ids": [
+   {
+    "village": "main-village",
+    "later_id": "b29c9c0b-ac8f-462f-95f5-d040c1aea8f9",
+    "source_id": "15529b35-fc9d-4349-ac06-fa7d3ff66d47"
+   },
+   {
+    "village": "main-village",
+    "later_id": "ea9b765b-e4db-41f9-90b0-67fa2109dc85",
+    "source_id": "c725f926-4e1b-4bf2-afb2-1769e149c37b"
+   },
+   {
+    "village": "main-village",
+    "later_id": "280b4308-8c8f-45e4-be56-1508c0ef5787",
+    "source_id": "614ed12b-a573-4bde-a9ee-fff5b2fbf2a0"
+   },
+   {
+    "village": "main-village",
+    "later_id": "84d42f5a-6357-4447-8328-a6477d0fa9b1",
+    "source_id": "3b11565c-3380-4770-9b34-51e7256affbf"
+   },
+   {
+    "village": "main-village",
+    "later_id": "47d8c1f4-38ed-4302-b42b-297528e68faa",
+    "source_id": "6196b297-d73b-450d-a877-303e56c4cb52"
+   },
+   {
+    "village": "main-village",
+    "later_id": "a98988a8-82e7-4444-9a7b-ef9b545d6a87",
+    "source_id": "94d4c886-8a45-4713-a80e-12289e40e3ab"
+   },
+   {
+    "village": "main-village",
+    "later_id": "e613a2a2-355c-4e23-a43d-07707e849a33",
+    "source_id": "d0af7f4f-e78b-4f7f-8beb-1b695cee2fe6"
+   },
+   {
+    "village": "main-village",
+    "later_id": "52b437a7-88d5-407a-b717-8a80f1b8cfda",
+    "source_id": "dd7c399b-7c36-49ff-afd4-3be46c45e01b"
+   },
+   {
+    "village": "main-village",
+    "later_id": "4615fcd8-3def-413e-8667-d2014de38426",
+    "source_id": "a9b96471-2524-4227-aef6-3e57dc5fc20c"
+   },
+   {
+    "village": "main-village",
+    "later_id": "e0be3d40-5f50-4a7c-ab1a-a0af402fb8cf",
+    "source_id": "29a097d4-93c4-439c-ba18-d773b390e1a7"
+   },
+   {
+    "village": "main-village",
+    "later_id": "ae447d63-6872-449e-94bc-6c992f3f5a34",
+    "source_id": "8e03a2af-47fa-4396-9377-1885f9ad8e22"
+   },
+   {
+    "village": "main-village",
+    "later_id": "ba467932-5603-446f-a22e-5b4522bd605b",
+    "source_id": "c09faaa1-3609-4d79-95d7-f10735f7ea4a"
+   },
+   {
+    "village": "main-village",
+    "later_id": "75938c23-af9e-4b91-a53b-bad1a6c4afba",
+    "source_id": "01d24ed7-c26e-45be-ba78-c1c450488573"
+   },
+   {
+    "village": "main-village",
+    "later_id": "29ac9601-5640-4423-9872-a8a3d00972c3",
+    "source_id": "3e3e2274-958f-42ab-863e-b0ad264fbf54"
+   },
+   {
+    "village": "main-village",
+    "later_id": "cdfa5420-5907-49e5-aa88-4b2bf2a9713c",
+    "source_id": "74bb4b05-71f1-40dc-9b33-77940f3ca79d"
+   },
+   {
+    "village": "main-village",
+    "later_id": "7a97d108-8b8c-4d47-8ed4-fb790e563b38",
+    "source_id": "912cb58d-3f34-4a3c-858e-2bfe5ff1424e"
+   },
+   {
+    "village": "main-village",
+    "later_id": "8a8df0fc-7693-4d81-ace1-9ce6877d4f51",
+    "source_id": "1844ae47-7c0a-4d8b-889f-fdd04ae4d358"
+   },
+   {
+    "village": "main-village",
+    "later_id": "39b8070d-cbb4-4567-b9bd-e304d0e70a5c",
+    "source_id": "41ffbc61-e1b6-4664-8fdd-af88d6cfab25"
+   },
+   {
+    "village": "main-village",
+    "later_id": "28dc414d-09b3-45a7-85df-d7d34dec8bf2",
+    "source_id": "cd418501-4791-4c42-ad17-28488e9c9db3"
+   },
+   {
+    "village": "main-village",
+    "later_id": "34d981f7-3788-4396-bf2a-70cfc2d4a0c5",
+    "source_id": "5557304a-d09c-46d7-bffe-8e7931a2a6bb"
+   },
+   {
+    "village": "main-village",
+    "later_id": "542c05b1-76c8-43b9-8f50-b4af9527810b",
+    "source_id": "ef1ff8c9-a4de-4393-aabe-c9844ff0aae0"
+   },
+   {
+    "village": "main-village",
+    "later_id": "7d93d1f8-cca9-432a-a1c1-7ee85593c8ce",
+    "source_id": "6a7b59b0-92dd-44c1-a0fe-3a088b07f45e"
+   },
+   {
+    "village": "main-village",
+    "later_id": "470b0d1c-48c7-4d06-aa8d-64c70ffeaf6b",
+    "source_id": "f8012cbb-4b33-4722-89d2-7e114434b4db"
+   },
+   {
+    "village": "main-village",
+    "later_id": "ad4b9083-9ac2-46d5-bb9b-b8c051e36e4f",
+    "source_id": "9c47b045-00e5-47db-bce8-371a9fec1816"
+   },
+   {
+    "village": "main-village",
+    "later_id": "d0bd15f7-cabf-4468-bd65-cd14dbd81b7b",
+    "source_id": "f5dc64a1-fcd1-4c16-95a5-3193284696fb"
+   },
+   {
+    "village": "main-village",
+    "later_id": "f686ff39-d6fa-4eb8-8c89-5687b72b3e5d",
+    "source_id": "3668cb91-95f5-4533-9eab-1740157532d6"
+   },
+   {
+    "village": "main-village",
+    "later_id": "e9cf6513-00e8-4559-a79b-73dfb0894334",
+    "source_id": "3eec9d05-f7f7-4a39-9443-ef7a4f32a605"
+   },
+   {
+    "village": "main-village",
+    "later_id": "e6aeb297-1ff4-4a60-b135-1bdf0de670fa",
+    "source_id": "5ee01321-c58c-438f-ba85-c96c040446fa"
+   },
+   {
+    "village": "open-chat-village",
+    "later_id": "d6cdbe61-d8b4-4cbb-b32c-3daebadb2032",
+    "source_id": "814be75b-bbcb-4fc8-865d-5de490ae2585"
+   },
+   {
+    "village": "open-chat-village",
+    "later_id": "42948a93-4caa-4b3a-85ce-b6ae9110fc1f",
+    "source_id": "ed5d82d3-da9b-4f85-ac7e-b13939b12ce8"
+   }
+  ],
+  "sample": {
+   "n": 30,
+   "specific": 22,
+   "generic": 8
+  },
+  "go_b": true,
+  "go": true
+ }
+}

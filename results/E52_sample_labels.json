@@ -1,0 +1,246 @@
+{
+ "rule": "pre-registered in EXPERIMENT_LOG.md E52 (b); applied conservatively: shared deadlines, task names and waiting/status talk count as generic; a concrete item first reported in the source counts as specific",
+ "rater": "single rater, not blind to the hypothesis",
+ "labels": [
+  {
+   "k": 878,
+   "village": "main-village",
+   "later_id": "b29c9c0b-ac8f-462f-95f5-d040c1aea8f9",
+   "source_id": "15529b35-fc9d-4349-ac06-fa7d3ff66d47",
+   "label": "generic",
+   "note": ""
+  },
+  {
+   "k": 912,
+   "village": "main-village",
+   "later_id": "ea9b765b-e4db-41f9-90b0-67fa2109dc85",
+   "source_id": "c725f926-4e1b-4bf2-afb2-1769e149c37b",
+   "label": "specific",
+   "note": ""
+  },
+  {
+   "k": 963,
+   "village": "main-village",
+   "later_id": "280b4308-8c8f-45e4-be56-1508c0ef5787",
+   "source_id": "614ed12b-a573-4bde-a9ee-fff5b2fbf2a0",
+   "label": "specific",
+   "note": ""
+  },
+  {
+   "k": 1311,
+   "village": "main-village",
+   "later_id": "84d42f5a-6357-4447-8328-a6477d0fa9b1",
+   "source_id": "3b11565c-3380-4770-9b34-51e7256affbf",
+   "label": "specific",
+   "note": "acknowledgement that repeats a concrete item; item may come from a third message"
+  },
+  {
+   "k": 1869,
+   "village": "main-village",
+   "later_id": "47d8c1f4-38ed-4302-b42b-297528e68faa",
+   "source_id": "6196b297-d73b-450d-a877-303e56c4cb52",
+   "label": "generic",
+   "note": ""
+  },
+  {
+   "k": 2060,
+   "village": "main-village",
+   "later_id": "a98988a8-82e7-4444-9a7b-ef9b545d6a87",
+   "source_id": "94d4c886-8a45-4713-a80e-12289e40e3ab",
+   "label": "specific",
+   "note": "later agent is the subject of the fact (its own fix); direction doubtful"
+  },
+  {
+   "k": 3796,
+   "village": "main-village",
+   "later_id": "e613a2a2-355c-4e23-a43d-07707e849a33",
+   "source_id": "d0af7f4f-e78b-4f7f-8beb-1b695cee2fe6",
+   "label": "specific",
+   "note": ""
+  },
+  {
+   "k": 4122,
+   "village": "main-village",
+   "later_id": "52b437a7-88d5-407a-b717-8a80f1b8cfda",
+   "source_id": "dd7c399b-7c36-49ff-afd4-3be46c45e01b",
+   "label": "specific",
+   "note": ""
+  },
+  {
+   "k": 4426,
+   "village": "main-village",
+   "later_id": "4615fcd8-3def-413e-8667-d2014de38426",
+   "source_id": "a9b96471-2524-4227-aef6-3e57dc5fc20c",
+   "label": "specific",
+   "note": ""
+  },
+  {
+   "k": 4486,
+   "village": "main-village",
+   "later_id": "e0be3d40-5f50-4a7c-ab1a-a0af402fb8cf",
+   "source_id": "29a097d4-93c4-439c-ba18-d773b390e1a7",
+   "label": "specific",
+   "note": ""
+  },
+  {
+   "k": 4544,
+   "village": "main-village",
+   "later_id": "ae447d63-6872-449e-94bc-6c992f3f5a34",
+   "source_id": "8e03a2af-47fa-4396-9377-1885f9ad8e22",
+   "label": "specific",
+   "note": "later agent authored the post named in the source; direction doubtful"
+  },
+  {
+   "k": 4611,
+   "village": "main-village",
+   "later_id": "ba467932-5603-446f-a22e-5b4522bd605b",
+   "source_id": "c09faaa1-3609-4d79-95d7-f10735f7ea4a",
+   "label": "specific",
+   "note": ""
+  },
+  {
+   "k": 5123,
+   "village": "main-village",
+   "later_id": "75938c23-af9e-4b91-a53b-bad1a6c4afba",
+   "source_id": "01d24ed7-c26e-45be-ba78-c1c450488573",
+   "label": "generic",
+   "note": ""
+  },
+  {
+   "k": 5252,
+   "village": "main-village",
+   "later_id": "29ac9601-5640-4423-9872-a8a3d00972c3",
+   "source_id": "3e3e2274-958f-42ab-863e-b0ad264fbf54",
+   "label": "generic",
+   "note": ""
+  },
+  {
+   "k": 5385,
+   "village": "main-village",
+   "later_id": "cdfa5420-5907-49e5-aa88-4b2bf2a9713c",
+   "source_id": "74bb4b05-71f1-40dc-9b33-77940f3ca79d",
+   "label": "specific",
+   "note": ""
+  },
+  {
+   "k": 5589,
+   "village": "main-village",
+   "later_id": "7a97d108-8b8c-4d47-8ed4-fb790e563b38",
+   "source_id": "912cb58d-3f34-4a3c-858e-2bfe5ff1424e",
+   "label": "generic",
+   "note": ""
+  },
+  {
+   "k": 6595,
+   "village": "main-village",
+   "later_id": "8a8df0fc-7693-4d81-ace1-9ce6877d4f51",
+   "source_id": "1844ae47-7c0a-4d8b-889f-fdd04ae4d358",
+   "label": "specific",
+   "note": ""
+  },
+  {
+   "k": 6690,
+   "village": "main-village",
+   "later_id": "39b8070d-cbb4-4567-b9bd-e304d0e70a5c",
+   "source_id": "41ffbc61-e1b6-4664-8fdd-af88d6cfab25",
+   "label": "specific",
+   "note": ""
+  },
+  {
+   "k": 7131,
+   "village": "main-village",
+   "later_id": "28dc414d-09b3-45a7-85df-d7d34dec8bf2",
+   "source_id": "cd418501-4791-4c42-ad17-28488e9c9db3",
+   "label": "generic",
+   "note": ""
+  },
+  {
+   "k": 7341,
+   "village": "main-village",
+   "later_id": "34d981f7-3788-4396-bf2a-70cfc2d4a0c5",
+   "source_id": "5557304a-d09c-46d7-bffe-8e7931a2a6bb",
+   "label": "specific",
+   "note": ""
+  },
+  {
+   "k": 7527,
+   "village": "main-village",
+   "later_id": "542c05b1-76c8-43b9-8f50-b4af9527810b",
+   "source_id": "ef1ff8c9-a4de-4393-aabe-c9844ff0aae0",
+   "label": "specific",
+   "note": ""
+  },
+  {
+   "k": 7787,
+   "village": "main-village",
+   "later_id": "7d93d1f8-cca9-432a-a1c1-7ee85593c8ce",
+   "source_id": "6a7b59b0-92dd-44c1-a0fe-3a088b07f45e",
+   "label": "generic",
+   "note": ""
+  },
+  {
+   "k": 7909,
+   "village": "main-village",
+   "later_id": "470b0d1c-48c7-4d06-aa8d-64c70ffeaf6b",
+   "source_id": "f8012cbb-4b33-4722-89d2-7e114434b4db",
+   "label": "generic",
+   "note": ""
+  },
+  {
+   "k": 8005,
+   "village": "main-village",
+   "later_id": "ad4b9083-9ac2-46d5-bb9b-b8c051e36e4f",
+   "source_id": "9c47b045-00e5-47db-bce8-371a9fec1816",
+   "label": "specific",
+   "note": ""
+  },
+  {
+   "k": 8044,
+   "village": "main-village",
+   "later_id": "d0bd15f7-cabf-4468-bd65-cd14dbd81b7b",
+   "source_id": "f5dc64a1-fcd1-4c16-95a5-3193284696fb",
+   "label": "specific",
+   "note": ""
+  },
+  {
+   "k": 8430,
+   "village": "main-village",
+   "later_id": "f686ff39-d6fa-4eb8-8c89-5687b72b3e5d",
+   "source_id": "3668cb91-95f5-4533-9eab-1740157532d6",
+   "label": "specific",
+   "note": ""
+  },
+  {
+   "k": 8596,
+   "village": "main-village",
+   "later_id": "e9cf6513-00e8-4559-a79b-73dfb0894334",
+   "source_id": "3eec9d05-f7f7-4a39-9443-ef7a4f32a605",
+   "label": "specific",
+   "note": ""
+  },
+  {
+   "k": 8778,
+   "village": "main-village",
+   "later_id": "e6aeb297-1ff4-4a60-b135-1bdf0de670fa",
+   "source_id": "5ee01321-c58c-438f-ba85-c96c040446fa",
+   "label": "specific",
+   "note": ""
+  },
+  {
+   "k": 9491,
+   "village": "open-chat-village",
+   "later_id": "d6cdbe61-d8b4-4cbb-b32c-3daebadb2032",
+   "source_id": "814be75b-bbcb-4fc8-865d-5de490ae2585",
+   "label": "specific",
+   "note": ""
+  },
+  {
+   "k": 9980,
+   "village": "open-chat-village",
+   "later_id": "42948a93-4caa-4b3a-85ce-b6ae9110fc1f",
+   "source_id": "ed5d82d3-da9b-4f85-ac7e-b13939b12ce8",
+   "label": "specific",
+   "note": "later agent is the subject of the fact (its own inbox check); direction doubtful"
+  }
+ ]
+}

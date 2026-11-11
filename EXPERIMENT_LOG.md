@@ -1700,7 +1700,7 @@ Global seed: 42.
   Digest / AI Village, notify of publications). Embedding is inference only, not training.
   The 30-event reading sample is written to data/derived/ (gitignored); results hold
   aggregates only, no message text.
-- Code: experiments/E52_ai_village_semantic.py @ (filled after commit)
+- Code: experiments/E52_ai_village_semantic.py @ 7564714 (first run stopped: timestamp unit bug, see correction below E51; no result had been written)
 - Params: cosine 0.80 (0.70, 0.90 descriptive), min 10 words, lag [60 s, 24 h], seed 42.
 
 ### E53 - Wikipedia {{Copied}} records: are they usable ground truth for cross-page copying?  (2026-11-12 IST)
@@ -1783,3 +1783,33 @@ Corrected interpretation: the few cross-agent near-copies are mostly genuine lag
 (minutes apart), not simultaneous posts. The conclusion is unchanged: verbatim or lightly edited
 copying between agents is real but rare (about 50 cases in 265k agent messages), far too few
 for a copy benchmark.
+
+#### E52 results (2026-11-12; results/E52_ai_village_semantic.json, results/E52_sample_labels.json)
+
+  | village | messages >= 10 words | agents | events c>=0.70 | events c>=0.80 | clusters c>=0.80 | largest cluster share | events c>=0.90 | lexical (J>=0.5) share | agent pairs |
+  |---|---|---|---|---|---|---|---|---|---|
+  | main | 210,582 | 58 | 35,457 | 9,278 | 3,332 | 6.5% | 965 | 0.09% | 493 |
+  | open-chat | 39,274 | 23 | 5,492 | 852 | 556 | 6.9% | 62 | 0.9% | 214 |
+  | swarm | 3,824 | 133 | 1,087 | 103 | 71 | 6.8% | 0 | 0% | 93 |
+  | saboteur-rpg | 1,592 | 6 | 90 | 6 | 6 | 16.7% | 0 | 0% | 5 |
+  | game-jam | 834 | 6 | 82 | 9 | 9 | 11.1% | 0 | 0% | 6 |
+  | pooled | | | 42,208 | 10,248 | 3,974 | | 1,027 | | |
+
+  Lag from best source (main): median 11.8 min (p25 3.7, p75 46.5). Rate of cosine >= 0.80 among
+  cross-agent same-room pairs, main-village: 1-10 min 1.01%, 10-60 min 0.21%, 1-6 h 0.016%,
+  6-24 h 0.018% (descriptive; consistent with propagation, also with topic drift).
+  (a) >= 200 events in >= 30 clusters: MET (10,248 in 3,974).
+  (b) Reading sample: 22 of 30 specific (bar 15): MET. Single rater, not blind. Generic cases were
+  waiting/status messages and repeated milestone templates. In 3 of the 22 specific cases the
+  later agent is itself the subject or author of the restated fact (its own fix, post, or inbox
+  check), so the earlier message was not the origin: time order did not give the direction.
+  Overall GO: MET.
+- Interpretation: Agents in AI Village do pass specific content to each other, at scale, but in
+  paraphrase: fewer than 1% of restatement events would be visible to the 5-word-shingle
+  method used in the sprint and E51. Events are spread over thousands of small clusters (largest
+  under 7% in the large villages), unlike the template-dominated Moltbook pairs. Time order is
+  not a reliable stand-in for influence even here (3 of 22 specific cases run the other way).
+- Decision / next step: AI Village is usable as a real-agent test set for idea-level
+  propagation (candidate events, exposure from the shared room, time order), but not as ground
+  truth for who influenced whom. Ground truth must come from an environment where influence can
+  be tested counterfactually. Funding plan revised accordingly (docs, not committed).
