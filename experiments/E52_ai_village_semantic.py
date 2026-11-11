@@ -71,7 +71,7 @@ def load_village(v: str) -> pd.DataFrame:
             if r.get("speaker_type") == "agent" and r.get("agent_speaker_id") and len(text.split()) >= MIN_WORDS:
                 rows.append((str(r["id"]), text, r["agent_speaker_id"], str(r.get("room_id")), r["created_at"]))
     df = pd.DataFrame(rows, columns=["id", "text", "speaker", "room", "t"])
-    df["t_ns"] = pd.to_datetime(df["t"], utc=True, format="mixed").astype("int64")
+    df["t_ns"] = pd.to_datetime(df["t"], utc=True, format="mixed").dt.as_unit("ns").astype("int64")
     return df.drop(columns="t").sort_values(["t_ns", "id"], kind="stable").reset_index(drop=True)
 
 

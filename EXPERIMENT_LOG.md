@@ -1754,3 +1754,19 @@ Global seed: 42.
   only as a filtered subset whose destination edit is verified to contain source text, with the
   filter's own error rate measured by hand on a sample; the filter must not use the cues being
   evaluated (length, containment direction), or the benchmark becomes circular.
+
+#### Correction (2026-11-12): timestamp unit bug in E51 and E52
+pandas 3 parses these timestamps as datetime64[us], so `.astype("int64")` gave microseconds,
+while E51 and E52 treat the integers as nanoseconds. Found while profiling E52's slow run (no
+E52 result had been written; that run was stopped). Effects:
+- E51 event counts, clusters, exact-reuse counts and the NO-GO are unaffected (they depend only
+  on time order).
+- E51 time gaps were 1000x too small: the logged medians "0.14 s (main), 0.86 s (open-chat)"
+  are really about 140 s and 860 s. The exploratory diagnostic's "within 2 s" and "more than
+  60 s" cut-offs were really 2,000 s and 60,000 s, so the statement that cross-agent pairs are
+  mostly simultaneous posts is withdrawn.
+- E52 as first run used windows of about 1,000 days instead of 24 h and 16.7 h instead of 60 s.
+Fix: `.dt.as_unit("ns")` before the integer cast in both scripts. E51 is re-run with the fix and
+with the diagnostic written into the script (descriptive outputs only, fields `diag_*`); E52 is
+re-run unchanged otherwise. Corrected numbers are added below each entry; the original rows
+stay for the record.

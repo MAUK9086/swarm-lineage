@@ -67,7 +67,7 @@ def load_village(v: str) -> tuple[pd.DataFrame, dict[str, int]]:
             else:
                 counts["human_messages"] += 1
     df = pd.DataFrame(rows, columns=["text", "speaker", "t"])
-    df["t_ns"] = pd.to_datetime(df["t"], utc=True, errors="coerce", format="mixed").astype("int64")
+    df["t_ns"] = pd.to_datetime(df["t"], utc=True, errors="coerce", format="mixed").dt.as_unit("ns").astype("int64")
     df = df.drop(columns="t")
     counts["agents"] = int(df["speaker"].nunique())
     return df, counts
@@ -125,6 +125,22 @@ def profile(v: str) -> dict[str, Any]:
     out["candidate_pairs"] = int(len(jac))
     out["edited_pairs_0.5_0.95"] = int(len(near))
     out["near_exact_pairs_gt_0.95"] = int((jac["jaccard"] > HI).sum())
+
+    # descriptive diagnostic (added after the first run): who is on each side of an edited pair,
+    # and how far apart the two texts were first posted when their first posters differ
+    a_arr, b_arr = near["i"].to_numpy(), near["j"].to_numpy()
+    first_sp = [m[0][1] for m in msgs]
+    first_t = np.array([m[0][0] for m in msgs], dtype=np.int64)
+    single = np.array([len({sp for _, sp in m}) == 1 for m in msgs])
+    same = np.array([single[a] and single[b] and first_sp[a] == first_sp[b] for a, b in zip(a_arr, b_arr)], dtype=bool)
+    cross = np.array([first_sp[a] != first_sp[b] for a, b in zip(a_arr, b_arr)], dtype=bool)
+    out["diag_same_single_agent_pair_share"] = float(same.mean()) if len(same) else None
+    out["diag_cross_first_poster_pairs"] = int(cross.sum())
+    if cross.any():
+        g_s = np.abs(first_t[a_arr[cross]] - first_t[b_arr[cross]]) / 1e9
+        out["diag_cross_gap_seconds"] = {"median": float(np.median(g_s)), "share_le_2s": float((g_s <= 2).mean()),
+                                         "share_le_60s": float((g_s <= 60).mean()),
+                                         "share_gt_1h": float((g_s > 3600).mean())}
 
     # message-level edited-reuse events: earlier message by another agent in a linked text
     gap: dict[tuple[int, int], int] = {}
