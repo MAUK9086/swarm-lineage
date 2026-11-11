@@ -1727,5 +1727,30 @@ Global seed: 42.
   separately and excluded from (b).
 - Data: Wikipedia API, CC BY-SA text kept under data/raw/wiki_copied/ (gitignored); results
   hold counts and page/revision ids only.
-- Code: experiments/E53_wiki_copied_feasibility.py
+- Code: experiments/E53_wiki_copied_feasibility.py @ 5e19fb6
 - Params: sample 400 pages, 60 records, containment threshold 0.5, min 50 added words, seed 42.
+- Results: (results/E53_wiki_copied_feasibility.json)
+
+  | quantity | value |
+  |---|---|
+  | pages transcluding {{Copied}} (incl. 3 redirects) | 22,148 |
+  | sampled pages / parsed records | 400 / 463 |
+  | records with from_oldid / with destination revision | 304 / 339 |
+  | resolvable records (both) | 268 (57.9%) |
+  | implied resolvable total (0.67 per page x 22,148) | about 14,800 |
+  | (a) GO | MET |
+  | checked records: ok / added text < 50 words / missing revision | 46 / 13 / 1 |
+  | ok records with containment >= 0.5 | 29 of 46 (63.0%) |
+  | containment p25 / median / p75 | 0.31 / 0.75 / 0.97 |
+  | (b) GO (>= 70%) | NOT MET |
+
+  Overall GO: NOT MET.
+- Interpretation: The records exist at scale and most give exact revisions, but taken at face
+  value they are not clean ground truth: in about a third of checked records the destination
+  edit's added text has little 5-word overlap with the named source revision. Causes are not
+  separated here (rewritten text, wrong or approximate revision ids, or the crude line-level
+  diff and markup stripping). The median record is a near-verbatim copy.
+- Decision / next step: Do not use {{Copied}} records as labels without verification. If used,
+  only as a filtered subset whose destination edit is verified to contain source text, with the
+  filter's own error rate measured by hand on a sample; the filter must not use the cues being
+  evaluated (length, containment direction), or the benchmark becomes circular.

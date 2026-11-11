@@ -1,0 +1,510 @@
+{
+  "experiment": "E53_wiki_copied_feasibility",
+  "run_at": "2026-11-12 02:50 IST",
+  "git_hash": "5e19fb6",
+  "seed": 42,
+  "params": {
+    "n_pages": 400,
+    "n_check": 60,
+    "containment_min": 0.5,
+    "min_added_words": 50,
+    "shingle_k": 5,
+    "api": "https://en.wikipedia.org/w/api.php"
+  },
+  "results": {
+    "transcluding_pages": 22148,
+    "template_names": 4,
+    "sample_pages": 400,
+    "sample_pages_without_parsed_record": 1,
+    "records": 463,
+    "records_with_from_oldid": 304,
+    "records_with_to_rev": 339,
+    "resolvable_records": 268,
+    "resolvable_share": 0.5788336933045356,
+    "resolvable_per_page": 0.67,
+    "implied_resolvable_total": 14839.160000000002,
+    "go_a": true,
+    "checked": 60,
+    "check_status": {
+      "ok": 46,
+      "short": 13,
+      "missing": 1
+    },
+    "contained_ge_0.5": 29,
+    "contained_share_of_ok": 0.6304347826086957,
+    "containment_quantiles": {
+      "p25": 0.3094645080946451,
+      "median": 0.7450389790241514,
+      "p75": 0.9732304079361979
+    },
+    "checks": [
+      {
+        "page": "Talk:Audie Murphy",
+        "from_oldid": 592722967,
+        "to_rev": 592832911,
+        "status": "ok",
+        "added_words": 2087,
+        "containment": 0.8951574988246357
+      },
+      {
+        "page": "Talk:Baldness",
+        "from_oldid": 572619307,
+        "to_rev": 573853487,
+        "status": "ok",
+        "added_words": 2053,
+        "containment": 0.9887585532746823
+      },
+      {
+        "page": "Talk:Apotropaic magic",
+        "from_oldid": 421032777,
+        "to_rev": 421032342,
+        "status": "ok",
+        "added_words": 192,
+        "containment": 0.0
+      },
+      {
+        "page": "Talk:Alawi dynasty",
+        "from_oldid": 1219509494,
+        "to_rev": 1228046633,
+        "status": "ok",
+        "added_words": 5447,
+        "containment": 0.9754448398576513
+      },
+      {
+        "page": "Talk:Addicted (Enrique Iglesias song)",
+        "from_oldid": 516640278,
+        "to_rev": 518655858,
+        "status": "ok",
+        "added_words": 152,
+        "containment": 0.3287671232876712
+      },
+      {
+        "page": "Talk:1986 Allsvenskan",
+        "from_oldid": 458799378,
+        "to_rev": 464193040,
+        "status": "ok",
+        "added_words": 121,
+        "containment": 0.5172413793103449
+      },
+      {
+        "page": "Module talk:Arguments",
+        "from_oldid": 696500078,
+        "to_rev": 4236992,
+        "status": "short",
+        "added_words": 4
+      },
+      {
+        "page": "Talk:American Experience season 8",
+        "from_oldid": 629440686,
+        "to_rev": 630314012,
+        "status": "ok",
+        "added_words": 98,
+        "containment": 0.5421686746987951
+      },
+      {
+        "page": "Talk:2019–20 Australian region cyclone season",
+        "from_oldid": 1031411048,
+        "to_rev": 1032900843,
+        "status": "ok",
+        "added_words": 125,
+        "containment": 0.9256198347107438
+      },
+      {
+        "page": "Talk:Ace of Diamond season 1",
+        "from_oldid": 931346906,
+        "to_rev": 932326260,
+        "status": "short",
+        "added_words": 1
+      },
+      {
+        "page": "Talk:8th Missouri Infantry Regiment (Confederate)",
+        "from_oldid": 971602237,
+        "to_rev": 971903648,
+        "status": "ok",
+        "added_words": 699,
+        "containment": 1.0
+      },
+      {
+        "page": "Talk:Coat of arms of Russia",
+        "from_oldid": 449831159,
+        "to_rev": 459386340,
+        "status": "ok",
+        "added_words": 1669,
+        "containment": 0.16514875531268974
+      },
+      {
+        "page": "Talk:Colombian Americans",
+        "from_oldid": 770029709,
+        "to_rev": 773702863,
+        "status": "ok",
+        "added_words": 771,
+        "containment": 0.3371212121212121
+      },
+      {
+        "page": "Talk:Canada Deposit Insurance Corporation",
+        "from_oldid": 953982129,
+        "to_rev": 967247752,
+        "status": "ok",
+        "added_words": 69,
+        "containment": 0.30303030303030304
+      },
+      {
+        "page": "Talk:Blue Train Races",
+        "from_oldid": 587365699,
+        "to_rev": 588544069,
+        "status": "ok",
+        "added_words": 273,
+        "containment": 1.0
+      },
+      {
+        "page": "Talk:Bonanza season 5",
+        "from_oldid": 1175078736,
+        "to_rev": 1175352211,
+        "status": "ok",
+        "added_words": 412,
+        "containment": 0.9665871121718377
+      },
+      {
+        "page": "Talk:Character limit",
+        "from_oldid": 1213702355,
+        "to_rev": 1213725091,
+        "status": "short",
+        "added_words": 0
+      },
+      {
+        "page": "Talk:Exploration of Mars",
+        "from_oldid": 318545461,
+        "to_rev": 460612070,
+        "status": "ok",
+        "added_words": 53,
+        "containment": 0.0
+      },
+      {
+        "page": "Talk:Emotional intelligence",
+        "from_oldid": 688907935,
+        "to_rev": 695962221,
+        "status": "ok",
+        "added_words": 1559,
+        "containment": 0.13730743469524448
+      },
+      {
+        "page": "Talk:Grease 2",
+        "from_oldid": 1285077111,
+        "to_rev": 1285077439,
+        "status": "ok",
+        "added_words": 76,
+        "containment": 1.0
+      },
+      {
+        "page": "Talk:Galesburg station",
+        "from_oldid": 850965139,
+        "to_rev": 851415313,
+        "status": "ok",
+        "added_words": 526,
+        "containment": 0.8272727272727273
+      },
+      {
+        "page": "Talk:Erwin Rommel",
+        "from_oldid": 717174441,
+        "to_rev": 717176554,
+        "status": "short",
+        "added_words": 26
+      },
+      {
+        "page": "Talk:Elon (disambiguation)",
+        "from_oldid": 1256209050,
+        "to_rev": 1260985506,
+        "status": "ok",
+        "added_words": 135,
+        "containment": 0.8739495798319328
+      },
+      {
+        "page": "Talk:French criminal law",
+        "from_oldid": 1050634283,
+        "to_rev": 1050634283,
+        "status": "short",
+        "added_words": 0
+      },
+      {
+        "page": "Talk:Levinson & Link",
+        "from_oldid": 473820516,
+        "to_rev": 473820799,
+        "status": "ok",
+        "added_words": 203,
+        "containment": 0.824390243902439
+      },
+      {
+        "page": "Talk:List of BAMMA events",
+        "from_oldid": 490029362,
+        "to_rev": 491284690,
+        "status": "ok",
+        "added_words": 492,
+        "containment": 0.9226069246435845
+      },
+      {
+        "page": "Talk:Mamamoo discography",
+        "from_oldid": 723280311,
+        "to_rev": 723320997,
+        "status": "ok",
+        "added_words": 925,
+        "containment": 0.6379746835443038
+      },
+      {
+        "page": "Talk:List of shipwrecks in December 1865",
+        "from_oldid": 860395428,
+        "to_rev": 860554192,
+        "status": "ok",
+        "added_words": 192,
+        "containment": 0.3422818791946309
+      },
+      {
+        "page": "Talk:List of shipwrecks in July 1821",
+        "from_oldid": 876848491,
+        "to_rev": 876948279,
+        "status": "ok",
+        "added_words": 146,
+        "containment": 0.33
+      },
+      {
+        "page": "Talk:List of shipwrecks in October 1822",
+        "from_oldid": 876848583,
+        "to_rev": 877081375,
+        "status": "ok",
+        "added_words": 177,
+        "containment": 0.42105263157894735
+      },
+      {
+        "page": "Talk:List of shipwrecks in September 1828",
+        "from_oldid": 876849219,
+        "to_rev": 878030004,
+        "status": "ok",
+        "added_words": 144,
+        "containment": 0.24509803921568626
+      },
+      {
+        "page": "Talk:List of shipwrecks in August 1857",
+        "from_oldid": 911095663,
+        "to_rev": 911114205,
+        "status": "ok",
+        "added_words": 131,
+        "containment": 0.0875
+      },
+      {
+        "page": "Talk:List of shipwrecks in May 1871",
+        "from_oldid": 997466240,
+        "to_rev": 997581104,
+        "status": "ok",
+        "added_words": 56,
+        "containment": 0.5818181818181818
+      },
+      {
+        "page": "Talk:List of Music Bank Chart winners (2009)",
+        "from_oldid": 1022739408,
+        "to_rev": 1022741067,
+        "status": "ok",
+        "added_words": 699,
+        "containment": 0.5269058295964125
+      },
+      {
+        "page": "Talk:Political history of France",
+        "from_oldid": 636838270,
+        "to_rev": 636853112,
+        "status": "ok",
+        "added_words": 7827,
+        "containment": 0.9970125990388362
+      },
+      {
+        "page": "Talk:New Album Demos",
+        "from_oldid": 203880821,
+        "to_rev": 203932706,
+        "status": "ok",
+        "added_words": 705,
+        "containment": 0.06330935251798561
+      },
+      {
+        "page": "Talk:Myakka fine sand",
+        "from_oldid": 703137167,
+        "to_rev": 703140219,
+        "status": "short",
+        "added_words": 0
+      },
+      {
+        "page": "Talk:President of the Regional Council (Italy)",
+        "from_oldid": 602427213,
+        "to_rev": 608933494,
+        "status": "ok",
+        "added_words": 130,
+        "containment": 0.9351851851851852
+      },
+      {
+        "page": "Talk:Monday Motivation",
+        "from_oldid": 892243746,
+        "to_rev": 897297621,
+        "status": "ok",
+        "added_words": 88,
+        "containment": 1.0
+      },
+      {
+        "page": "Talk:Monday Motivation",
+        "from_oldid": 1105547189,
+        "to_rev": 1107640405,
+        "status": "ok",
+        "added_words": 105,
+        "containment": 0.8811881188118812
+      },
+      {
+        "page": "Talk:Mexibús Line 2",
+        "from_oldid": 1061781825,
+        "to_rev": 1061781967,
+        "status": "ok",
+        "added_words": 694,
+        "containment": 0.0624
+      },
+      {
+        "page": "Talk:Pre-20th-century municipal history of Quebec",
+        "from_oldid": 1298066906,
+        "to_rev": 1299665932,
+        "status": "ok",
+        "added_words": 10781,
+        "containment": 0.997779422649889
+      },
+      {
+        "page": "Talk:SimCity (1989 video game)",
+        "from_oldid": 517512805,
+        "to_rev": 519640427,
+        "status": "ok",
+        "added_words": 111,
+        "containment": 1.0
+      },
+      {
+        "page": "Talk:SimCity (1989 video game)",
+        "from_oldid": 519814885,
+        "to_rev": 519819118,
+        "status": "short",
+        "added_words": 22
+      },
+      {
+        "page": "Talk:Space: Above and Beyond",
+        "from_oldid": 776184629,
+        "to_rev": 780856248,
+        "status": "ok",
+        "added_words": 1558,
+        "containment": 0.0
+      },
+      {
+        "page": "Talk:Sport in Taiwan",
+        "from_oldid": 922338393,
+        "to_rev": 922501129,
+        "status": "short",
+        "added_words": 0
+      },
+      {
+        "page": "Talk:Rana (cancelled film)",
+        "from_oldid": 844115734,
+        "to_rev": 841652144,
+        "status": "short",
+        "added_words": 0
+      },
+      {
+        "page": "Talk:Sam Gichuru",
+        "from_oldid": 524932554,
+        "to_rev": 525298703,
+        "status": "ok",
+        "added_words": 203,
+        "containment": 0.8930041152263375
+      },
+      {
+        "page": "Talk:Rommel myth",
+        "from_oldid": 717174441,
+        "to_rev": 717176554,
+        "status": "short",
+        "added_words": 26
+      },
+      {
+        "page": "Talk:Sylhet region",
+        "from_oldid": 975644988,
+        "to_rev": 975786278,
+        "status": "ok",
+        "added_words": 1993,
+        "containment": 0.6656877141458639
+      },
+      {
+        "page": "Talk:Shipping of the Midland Railway",
+        "from_oldid": 877254400,
+        "to_rev": 880092516,
+        "status": "ok",
+        "added_words": 962,
+        "containment": 1.0
+      },
+      {
+        "page": "Talk:River Arts District",
+        "from_oldid": 884433946,
+        "to_rev": 884433946,
+        "status": "short",
+        "added_words": 0
+      },
+      {
+        "page": "Talk:Romance linguistics",
+        "from_oldid": 940829103,
+        "to_rev": 940987667,
+        "status": "ok",
+        "added_words": 7717,
+        "containment": 0.9881506559458316
+      },
+      {
+        "page": "Talk:Slim Jxmmi (American rapper)",
+        "from_oldid": 1191228911,
+        "to_rev": 1191715843,
+        "status": "missing"
+      },
+      {
+        "page": "Talk:Wiz Khalifa",
+        "from_oldid": 758055988,
+        "to_rev": 765770416,
+        "status": "short",
+        "added_words": 5
+      },
+      {
+        "page": "Talk:Tom Clancy's",
+        "from_oldid": 649314188,
+        "to_rev": 649316044,
+        "status": "ok",
+        "added_words": 433,
+        "containment": 0.927860696517413
+      },
+      {
+        "page": "Talk:Timeline of investigations into Donald Trump and Russia (January–June 2019)",
+        "from_oldid": 871025599,
+        "to_rev": 935674040,
+        "status": "ok",
+        "added_words": 66,
+        "containment": 0.0
+      },
+      {
+        "page": "Talk:Tropical Storm Koguma (2021)",
+        "from_oldid": 1028192053,
+        "to_rev": 1028194371,
+        "status": "ok",
+        "added_words": 129,
+        "containment": 1.0
+      },
+      {
+        "page": "Talk:Tanya X. Short",
+        "from_oldid": 1087585239,
+        "to_rev": 1109780177,
+        "status": "ok",
+        "added_words": 427,
+        "containment": 0.016166281755196306
+      },
+      {
+        "page": "Template talk:Ted Stevens series",
+        "from_oldid": 1099480388,
+        "to_rev": 1150847171,
+        "status": "short",
+        "added_words": 0
+      }
+    ],
+    "go_b": false,
+    "go": false
+  }
+}
