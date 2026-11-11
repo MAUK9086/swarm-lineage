@@ -1642,7 +1642,7 @@ Global seed: 42.
 
   | village | agent messages | agents | edited pairs (0.5-0.95) | edited-reuse events | clusters | exact-reuse events |
   |---|---|---|---|---|---|---|
-  | main | 219,465 | 37 | 4,549 | 41 | 30 | 157 |
+  | main | 219,454 | 58 | 4,549 | 41 | 30 | 157 |
   | open-chat | 39,721 | 23 | 337 | 13 | 10 | 21 |
   | swarm | 3,848 | 133 | 5 | 0 | 0 | 0 |
   | saboteur-rpg | 1,592 | 6 | 0 | 0 | 0 | 0 |
