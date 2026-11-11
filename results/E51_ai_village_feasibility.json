@@ -1,0 +1,144 @@
+{
+  "experiment": "E51_ai_village_feasibility",
+  "run_at": "2026-11-11 10:41 IST",
+  "git_hash": "6d46c90",
+  "seed": 42,
+  "params": {
+    "villages": [
+      "main-village",
+      "open-chat-village",
+      "swarm-village",
+      "saboteur-rpg-village",
+      "game-jam-village"
+    ],
+    "jaccard_window": [
+      0.5,
+      0.95
+    ],
+    "shingle_k": 5,
+    "max_pairs": 20000000,
+    "go_events": 200,
+    "go_clusters": 30,
+    "data": "aidigestorg/ai-village chat_messages"
+  },
+  "results": {
+    "villages": {
+      "main-village": {
+        "messages": 229493,
+        "agent_messages": 219454,
+        "human_messages": 10039,
+        "agents": 58,
+        "unique_texts": 212762,
+        "unique_texts_with_shingles": 212759,
+        "agent_messages_with_shingles": 219442,
+        "exact_reuse_events": 157,
+        "band_pair_upper_bound": 37098,
+        "pair_sampling_rate": 1.0,
+        "candidate_pairs": 8130,
+        "edited_pairs_0.5_0.95": 4549,
+        "near_exact_pairs_gt_0.95": 376,
+        "edited_reuse_events": 41,
+        "clusters_with_events": 30,
+        "largest_cluster_event_share": 0.0975609756097561,
+        "clusters_with_ge_5_events": 0,
+        "gap_hours": {
+          "median": 0.00003819728333333333,
+          "p25": 9.280566944444444e-6,
+          "p75": 0.00019658320861111112,
+          "share_le_1h": 0.975609756097561,
+          "share_le_24h": 1.0
+        }
+      },
+      "open-chat-village": {
+        "messages": 54677,
+        "agent_messages": 39721,
+        "human_messages": 14956,
+        "agents": 23,
+        "unique_texts": 39379,
+        "unique_texts_with_shingles": 39374,
+        "agent_messages_with_shingles": 39705,
+        "exact_reuse_events": 21,
+        "band_pair_upper_bound": 3279,
+        "pair_sampling_rate": 1.0,
+        "candidate_pairs": 503,
+        "edited_pairs_0.5_0.95": 337,
+        "near_exact_pairs_gt_0.95": 17,
+        "edited_reuse_events": 13,
+        "clusters_with_events": 10,
+        "largest_cluster_event_share": 0.15384615384615385,
+        "clusters_with_ge_5_events": 0,
+        "gap_hours": {
+          "median": 0.0002392687425,
+          "p25": 0.00005524930722222222,
+          "p75": 0.0004347521622222222,
+          "share_le_1h": 1.0,
+          "share_le_24h": 1.0
+        }
+      },
+      "swarm-village": {
+        "messages": 3853,
+        "agent_messages": 3848,
+        "human_messages": 5,
+        "agents": 133,
+        "unique_texts": 3685,
+        "unique_texts_with_shingles": 3685,
+        "agent_messages_with_shingles": 3848,
+        "exact_reuse_events": 0,
+        "band_pair_upper_bound": 18,
+        "pair_sampling_rate": 1.0,
+        "candidate_pairs": 6,
+        "edited_pairs_0.5_0.95": 5,
+        "near_exact_pairs_gt_0.95": 0,
+        "edited_reuse_events": 0,
+        "clusters_with_events": 0,
+        "largest_cluster_event_share": null,
+        "clusters_with_ge_5_events": 0
+      },
+      "saboteur-rpg-village": {
+        "messages": 1592,
+        "agent_messages": 1592,
+        "human_messages": 0,
+        "agents": 6,
+        "unique_texts": 1592,
+        "unique_texts_with_shingles": 1592,
+        "agent_messages_with_shingles": 1592,
+        "exact_reuse_events": 0,
+        "band_pair_upper_bound": 0,
+        "pair_sampling_rate": 1.0,
+        "candidate_pairs": 0,
+        "edited_pairs_0.5_0.95": 0,
+        "near_exact_pairs_gt_0.95": 0,
+        "edited_reuse_events": 0,
+        "clusters_with_events": 0,
+        "largest_cluster_event_share": null,
+        "clusters_with_ge_5_events": 0
+      },
+      "game-jam-village": {
+        "messages": 874,
+        "agent_messages": 838,
+        "human_messages": 36,
+        "agents": 6,
+        "unique_texts": 838,
+        "unique_texts_with_shingles": 838,
+        "agent_messages_with_shingles": 838,
+        "exact_reuse_events": 0,
+        "band_pair_upper_bound": 0,
+        "pair_sampling_rate": 1.0,
+        "candidate_pairs": 0,
+        "edited_pairs_0.5_0.95": 0,
+        "near_exact_pairs_gt_0.95": 0,
+        "edited_reuse_events": 0,
+        "clusters_with_events": 0,
+        "largest_cluster_event_share": null,
+        "clusters_with_ge_5_events": 0
+      }
+    },
+    "pooled": {
+      "edited_reuse_events": 54,
+      "clusters_with_events": 40,
+      "exact_reuse_events": 178,
+      "agent_messages": 265453
+    },
+    "go": false
+  }
+}

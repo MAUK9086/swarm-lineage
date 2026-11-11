@@ -1635,5 +1635,34 @@ Global seed: 42.
   Exposure checks against computer_use_turns are a later step (stage 2), not part of this.
 - Data: data/raw/ai_village/ (gitignored; gated dataset, terms: no training, cite AI Digest /
   AI Village, notify of publications). Results: aggregates only, no message text.
-- Code: experiments/E51_ai_village_feasibility.py @ (filled after run)
+- Code: experiments/E51_ai_village_feasibility.py @ 6d46c90 (first run crashed on an empty event list in
+  swarm-village before any result was saved; guard added, no logic changed)
 - Params: Jaccard window [0.5, 0.95], shingle k = 5, seed 42.
+- Results: (results/E51_ai_village_feasibility.json)
+
+  | village | agent messages | agents | edited pairs (0.5-0.95) | edited-reuse events | clusters | exact-reuse events |
+  |---|---|---|---|---|---|---|
+  | main | 219,465 | 37 | 4,549 | 41 | 30 | 157 |
+  | open-chat | 39,721 | 23 | 337 | 13 | 10 | 21 |
+  | swarm | 3,848 | 133 | 5 | 0 | 0 | 0 |
+  | saboteur-rpg | 1,592 | 6 | 0 | 0 | 0 | 0 |
+  | game-jam | 838 | 6 | 0 | 0 | 0 | 0 |
+  | pooled | 265,453 | | | 54 | 40 | 178 |
+
+  Median gap to the most recent qualifying source: 0.14 s (main), 0.86 s (open-chat).
+  GO criterion (>= 200 events in >= 30 clusters): NOT MET (54 events).
+- Exploratory diagnostic (not pre-registered, run after the result): of the 4,549 edited pairs in
+  main-village, 99.2% have the same single agent on both sides (agents re-posting edited
+  versions of their own messages); 38 pairs cross agents, 87% of them first posted within
+  2 seconds of each other (simultaneous posts, not reading and copying) and 13% more than 60 s
+  apart. Open-chat: 95.8% same-agent; 14 cross-agent pairs, 71% within 2 s.
+- Interpretation: AI Village agents rarely reuse each other's wording. Near-duplicate text in
+  the chat is almost entirely self-repetition, and the few cross-agent matches are mostly
+  simultaneous posts. Verbatim or lightly edited agent-to-agent copying, the basis of the
+  proposed benchmark, is too rare here (on the order of ten plausible events). Influence
+  between agents in the Village, if present, would be paraphrase or idea-level, which 5-word
+  shingles do not measure.
+- Decision / next step: Do not build the copy benchmark on AI Village chat. Revise the funding
+  proposal: primary ground truth from an instrumented agent simulation (parent ids logged),
+  with real-world provenance from Wikipedia copy records; AI Village only for an exploratory
+  idea-propagation study (semantic, not verbatim).
