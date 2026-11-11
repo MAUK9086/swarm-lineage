@@ -141,7 +141,7 @@ def profile(v: str) -> dict[str, Any]:
                             gap[key] = d
                         break
     out["edited_reuse_events"] = len(gap)
-    if len(near):
+    if len(near) and len(gap):
         comp = union_find(near["i"].to_numpy(), near["j"].to_numpy())
         comp_of = dict(zip(near["i"].to_numpy(), comp)) | dict(zip(near["j"].to_numpy(), comp))
         ev_comp = pd.Series([comp_of[y] for y, _ in gap])
