@@ -1702,3 +1702,30 @@ Global seed: 42.
   aggregates only, no message text.
 - Code: experiments/E52_ai_village_semantic.py @ (filled after commit)
 - Params: cosine 0.80 (0.70, 0.90 descriptive), min 10 words, lag [60 s, 24 h], seed 42.
+
+### E53 - Wikipedia {{Copied}} records: are they usable ground truth for cross-page copying?  (2026-11-12 IST)
+- Question: Wikipedia's attribution policy asks editors who copy text between articles to tag
+  both talk pages with {{Copied}}, naming source page, destination page and, optionally, the
+  source revision (from_oldid) and the destination edit (to_diff). 22,147 pages transclude
+  the template (API count, 2026-11-11). How many records resolve to exact revisions, and does
+  the destination edit really contain text from the source revision?
+- Hypothesis / expected: A majority of records carry revision ids; most resolvable edits
+  contain substantial source text, with some failures (rewritten text, split/merge
+  boilerplate, wrong ids).
+- Go / no-go criterion (pre-registered): GO as a ground-truth source for the funded plan if
+  (a) in a seeded random sample of 400 transcluding pages, at least 50% of template records
+  give both from_oldid and to_diff (or to_oldid), and the implied total over all 22,147
+  pages is at least 5,000 resolvable records; and (b) in a seeded random sample of 60
+  resolvable records, at least 70% of destination edits have 5-word-shingle containment
+  >= 0.5 of the added text in the source revision text.
+- Method: list all transcluding pages via the MediaWiki API (list=embeddedin); sample 400
+  (seed 42); fetch current wikitext; parse every {{Copied}} template (aliases included,
+  numbered parameter sets counted as separate records). For (b): fetch the to_diff edit's
+  added text (action=compare against its parent) and the source revision text, strip markup
+  crudely (templates, refs, links to their labels), compute containment of the added text's
+  5-word shingles in the source. Records with added text under 50 words are counted
+  separately and excluded from (b).
+- Data: Wikipedia API, CC BY-SA text kept under data/raw/wiki_copied/ (gitignored); results
+  hold counts and page/revision ids only.
+- Code: experiments/E53_wiki_copied_feasibility.py
+- Params: sample 400 pages, 60 records, containment threshold 0.5, min 50 added words, seed 42.
