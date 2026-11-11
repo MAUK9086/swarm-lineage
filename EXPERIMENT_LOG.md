@@ -1770,3 +1770,16 @@ Fix: `.dt.as_unit("ns")` before the integer cast in both scripts. E51 is re-run 
 with the diagnostic written into the script (descriptive outputs only, fields `diag_*`); E52 is
 re-run unchanged otherwise. Corrected numbers are added below each entry; the original rows
 stay for the record.
+
+#### E51 corrected re-run (2026-11-12, after the unit fix; results/E51_ai_village_feasibility.json)
+All counts are identical to the first run (events 54, clusters 40, exact-reuse 178, GO NOT MET).
+Corrected time gaps from each event to its most recent qualifying source: median 138 s
+(p25 33 s, p75 708 s) in main-village; 861 s (199 s, 1,565 s) in open-chat.
+Diagnostic, now computed in the script (`diag_*`): same single agent on both sides of an edited
+pair 99.2% (main), 95.8% (open-chat), unchanged. Pairs whose texts were first posted by different
+agents: 38 (main) and 14 (open-chat). Their first-post gap: median 123 s and 939 s; within 2 s:
+2.6% and 0%; within 60 s: 37% and 14%; over 1 h: 13% and 29%.
+Corrected interpretation: the few cross-agent near-copies are mostly genuine lagged reuse
+(minutes apart), not simultaneous posts. The conclusion is unchanged: verbatim or lightly edited
+copying between agents is real but rare (about 50 cases in 265k agent messages), far too few
+for a copy benchmark.
