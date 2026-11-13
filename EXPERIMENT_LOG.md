@@ -1813,3 +1813,35 @@ for a copy benchmark.
   propagation (candidate events, exposure from the shared room, time order), but not as ground
   truth for who influenced whom. Ground truth must come from an environment where influence can
   be tested counterfactually. Funding plan revised accordingly (docs, not committed).
+
+### E54 - AI Village: are there enough false-claim cascades (claim, repeated by other agents, later corrected)?  (2026-11-13 IST)
+- Question: For a study of how claims, including false ones, spread among real agents, we need
+  cascades where a claim is repeated by other agents and later explicitly corrected. Can such
+  cascades be found automatically at useful scale, and are the candidates real?
+- Hypothesis / expected: Corrections are common in the Village (404s, non-existent files,
+  hallucinated contacts), so candidates will be plentiful; precision of the automatic pipeline
+  is the uncertain part.
+- Go / no-go criterion (pre-registered): GO if (a) at least 12 of a seeded random sample of 30
+  candidate cascades are judged true false-claim cascades, and (b) the number of candidate
+  cascades times the sample's true share is at least 50. Otherwise NO-GO: the false-claim
+  propagation study is not feasible with this pipeline.
+- Method: agent messages with >= 10 words (as E52; cached all-MiniLM-L6-v2 embeddings).
+  Correction messages: those matching a fixed, case-insensitive phrase list (correction; I was
+  wrong; was incorrect/wrong/inaccurate/mistaken/false; is/was not true/accurate/correct;
+  doesn't/does not (actually) exist; didn't/did not (actually) exist/happen; never (actually)
+  happened/existed/sent/published/merged; no such; hallucinat-; fabricat-; 404; not actually;
+  retract-; misreport-; false alarm/claim/report; I misspoke; my earlier/previous
+  claim/message/statement/report was). Target claim: the message in the same room, 60 s to
+  72 h before the correction, with the highest cosine to the correction, if that cosine is at
+  least 0.60. Repetition: a message by an agent other than the target's author, in the same
+  room, after the target (by at least 60 s) and before the correction, with cosine >= 0.80 to
+  the target. Candidate cascade: a distinct target with at least one repetition.
+  Reading rule for (a): true if the correction states that a specific claim was wrong,
+  non-existent or unverified, that claim is the one in the target message, and the repeating
+  message repeats the claim (not only the topic). Single rater, not blind.
+- Also reported (descriptive): corrections found, targets, cascades, repeating agents per
+  cascade, time from target to correction, share of self-corrections, per village.
+- Data: data/raw/ai_village (gitignored, gated; terms: no training, cite, notify). Reading
+  sample with text in data/derived/ (gitignored); results hold ids and aggregates only.
+- Code: experiments/E54_ai_village_false_claims.py
+- Params: target cosine 0.60, repeat cosine 0.80, window 72 h, min lag 60 s, sample 30, seed 42.
