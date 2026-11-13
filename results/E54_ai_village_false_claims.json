@@ -1,0 +1,298 @@
+{
+ "experiment": "E54_ai_village_false_claims",
+ "run_at": "2026-11-13 22:43 IST",
+ "git_hash": "791b804",
+ "seed": 42,
+ "params": {
+  "phrases": [
+   "\\bcorrection\\b",
+   "\\bi was wrong\\b",
+   "\\bwas (?:incorrect|wrong|inaccurate|mistaken|false)\\b",
+   "\\b(?:is|was) not (?:true|accurate|correct)\\b",
+   "\\bdoes(?:n't|n\u2019t| not) (?:actually )?exist\\b",
+   "\\bdid(?:n't|n\u2019t| not) (?:actually )?(?:exist|happen)\\b",
+   "\\bnever (?:actually )?(?:happened|existed|sent|published|merged)\\b",
+   "\\bno such\\b",
+   "hallucinat",
+   "fabricat",
+   "\\b404\\b",
+   "\\bnot actually\\b",
+   "\\bretract",
+   "\\bmisreport",
+   "\\bfalse (?:alarm|claim|report)\\b",
+   "\\bi misspoke\\b",
+   "\\bmy (?:earlier|previous) (?:claim|message|statement|report) was\\b"
+  ],
+  "target_cosine": 0.6,
+  "repeat_cosine": 0.8,
+  "window_h": 72,
+  "min_lag_s": 60,
+  "sample_n": 30,
+  "true_min": 12,
+  "go_total": 50,
+  "embeddings": "E52 cache"
+ },
+ "results": {
+  "villages": {
+   "main-village": {
+    "messages_ge_10_words": 210582,
+    "corrections": 10563,
+    "targets": 7442,
+    "candidate_cascades": 362,
+    "repeating_agents_per_cascade": {
+     "median": 1.0,
+     "max": 5,
+     "share_ge_2": 0.20994475138121546
+    },
+    "self_correction_share": 0.45027624309392267,
+    "hours_target_to_correction": {
+     "p25": 0.10437459625,
+     "median": 0.3146303475,
+     "p75": 4.405179981944444
+    }
+   },
+   "open-chat-village": {
+    "messages_ge_10_words": 39274,
+    "corrections": 1838,
+    "targets": 1145,
+    "candidate_cascades": 34,
+    "repeating_agents_per_cascade": {
+     "median": 1.0,
+     "max": 2,
+     "share_ge_2": 0.08823529411764706
+    },
+    "self_correction_share": 0.29411764705882354,
+    "hours_target_to_correction": {
+     "p25": 0.2950664240972222,
+     "median": 3.063243081527778,
+     "p75": 19.272126516180556
+    }
+   },
+   "swarm-village": {
+    "messages_ge_10_words": 3824,
+    "corrections": 97,
+    "targets": 90,
+    "candidate_cascades": 4,
+    "repeating_agents_per_cascade": {
+     "median": 1.0,
+     "max": 4,
+     "share_ge_2": 0.25
+    },
+    "self_correction_share": 0.25,
+    "hours_target_to_correction": {
+     "p25": 0.144159621875,
+     "median": 0.22245740819444443,
+     "p75": 0.3373779197222222
+    }
+   },
+   "saboteur-rpg-village": {
+    "messages_ge_10_words": 1592,
+    "corrections": 45,
+    "targets": 21,
+    "candidate_cascades": 0
+   },
+   "game-jam-village": {
+    "messages_ge_10_words": 834,
+    "corrections": 22,
+    "targets": 10,
+    "candidate_cascades": 0
+   }
+  },
+  "pooled": {
+   "corrections": 12565,
+   "targets": 8708,
+   "candidate_cascades": 400
+  },
+  "sample_ids": [
+   {
+    "village": "main-village",
+    "target_id": "3d676bd6-feba-436c-a854-b4aba7e40bcb",
+    "repeat_id": "3a10677f-182a-463b-9f16-ac44a2507f25",
+    "correction_id": "1e44703c-6406-46bd-b8f3-706c08f45498"
+   },
+   {
+    "village": "main-village",
+    "target_id": "ca755199-c0f7-4696-aa3b-d0cb31332ac3",
+    "repeat_id": "c93cafe3-7954-4206-9bf8-7ea4d05ea558",
+    "correction_id": "74e7e2e1-4483-4442-9f8b-ec9bb671a82d"
+   },
+   {
+    "village": "main-village",
+    "target_id": "48e6c42a-9a20-43e0-a2f7-2bdef4352085",
+    "repeat_id": "13eb70f5-8e22-4039-b19d-8cb0bfc0958a",
+    "correction_id": "a0aadf98-ccb8-4395-81d6-6c44b9427351"
+   },
+   {
+    "village": "main-village",
+    "target_id": "206b40f8-2d6a-4381-a286-ef91ec4b596e",
+    "repeat_id": "edb7cf5a-7671-480b-8bae-1082b411401e",
+    "correction_id": "883f4fa9-45c5-46c0-b848-f41a737f2180"
+   },
+   {
+    "village": "main-village",
+    "target_id": "3883d330-ab62-4803-9e37-a5c5e7148c64",
+    "repeat_id": "ab7bdb7a-ee42-4e0b-9d05-f66fb1b69000",
+    "correction_id": "d3ef377a-3257-4a44-a816-c6a810e658e6"
+   },
+   {
+    "village": "main-village",
+    "target_id": "07eedd47-7de0-4d12-af64-ee55b64b3f2c",
+    "repeat_id": "53a43a38-56ea-4437-9481-a1a4a2acc74d",
+    "correction_id": "c10f31c0-2a7f-4462-84f8-39995f6a4017"
+   },
+   {
+    "village": "main-village",
+    "target_id": "3aedac6e-6647-4cb4-8917-b285170bddaf",
+    "repeat_id": "4df921ae-83c4-408f-b599-396d6144055c",
+    "correction_id": "5ba4dc44-a67f-447a-992b-01311e6766d9"
+   },
+   {
+    "village": "main-village",
+    "target_id": "ad65f8f7-9e64-4c9d-aa68-b6fe74b8ffd8",
+    "repeat_id": "b85305f9-f6fe-4203-ba2f-f75edb7695b5",
+    "correction_id": "50ab0961-2ac1-4690-927e-f03014d78ae5"
+   },
+   {
+    "village": "main-village",
+    "target_id": "3d4385db-0648-4cdc-8046-aac913c69292",
+    "repeat_id": "1200eefc-5b0f-4f0d-836a-ba1f86075675",
+    "correction_id": "09e44773-319e-4973-9e44-5ef6cde6c561"
+   },
+   {
+    "village": "main-village",
+    "target_id": "bdd904a4-f586-4460-a476-42fdd5cf3cf9",
+    "repeat_id": "76a5311d-9e39-4cb6-93aa-d03aafa540e0",
+    "correction_id": "8276cbb9-cca5-4459-b208-d32213202ef8"
+   },
+   {
+    "village": "main-village",
+    "target_id": "5f8b8596-b2a1-407e-9c4b-35c0d6ab49e5",
+    "repeat_id": "e255b8c1-428b-44f6-91d6-19a2b0c46c53",
+    "correction_id": "8f84ecf2-130c-47a7-9d14-7d07f0cdb7d2"
+   },
+   {
+    "village": "main-village",
+    "target_id": "46ef8863-c4a0-44b0-a201-61fdd1dc0719",
+    "repeat_id": "4b77739c-d2f2-4adf-ab55-4cf187e2ea5f",
+    "correction_id": "64543d15-0717-4ac2-9fa6-93a12105e85c"
+   },
+   {
+    "village": "main-village",
+    "target_id": "dc7a286e-5982-4cdc-9fa9-fd5046e4052c",
+    "repeat_id": "19eccdbe-d9ce-4ac6-b5c9-38bb7277f9f9",
+    "correction_id": "3edcaf33-59ab-47b2-adbd-be2720407bb7"
+   },
+   {
+    "village": "main-village",
+    "target_id": "6ce90695-055a-40d3-a3bc-8cf4fe0693c7",
+    "repeat_id": "76e779aa-1bc6-4fcc-aed9-5c982dc31da7",
+    "correction_id": "7210fa39-8cbb-43e8-816b-ca754e47aa94"
+   },
+   {
+    "village": "main-village",
+    "target_id": "a0e8b74b-15dc-434c-8b19-8cbc978d0859",
+    "repeat_id": "ed2cd9c0-c13a-459c-9ea1-8e675fe93a3a",
+    "correction_id": "b6bba494-ce2e-40b6-a528-eee7bdc7477c"
+   },
+   {
+    "village": "main-village",
+    "target_id": "8668b4ed-9cbe-48bc-b42f-16d2e33619d4",
+    "repeat_id": "f51cc3d5-1187-4151-be8f-292fad003d25",
+    "correction_id": "7acd8ac1-1f8e-4c5a-92c2-8639181f5bc4"
+   },
+   {
+    "village": "main-village",
+    "target_id": "7d2a0749-13be-456c-9ee9-3175e34819e9",
+    "repeat_id": "7c246e1a-82db-4a48-a3a0-fabdcf052562",
+    "correction_id": "bde6d762-a2f7-4211-a95d-267297537e54"
+   },
+   {
+    "village": "main-village",
+    "target_id": "9c011b63-7f57-48ee-9142-a363fa838bba",
+    "repeat_id": "75612869-6ba5-4681-8328-c5e6c23d3a23",
+    "correction_id": "bb08c83b-36ea-4bcc-95b0-c3ce7a14ebd2"
+   },
+   {
+    "village": "main-village",
+    "target_id": "b0e299b3-0fe8-41ff-81b4-f99ace69b85a",
+    "repeat_id": "5fc44543-9355-44e1-9428-5f834f31dd0b",
+    "correction_id": "2e912bf9-2cdb-457f-869d-dc726ebab74a"
+   },
+   {
+    "village": "main-village",
+    "target_id": "24160964-a12b-44a7-b1a3-5eea0c771bac",
+    "repeat_id": "424e488e-b5de-4d29-9d39-ce67a40c523f",
+    "correction_id": "57174dd5-e1b9-46f1-ab68-680acfaf440e"
+   },
+   {
+    "village": "main-village",
+    "target_id": "986bf65d-730e-42cb-a6f3-5f124d78e71a",
+    "repeat_id": "26ace0dd-1334-4a6e-996b-44c6561b07c1",
+    "correction_id": "f1d551e0-2fcb-4403-a896-20f98b713b4b"
+   },
+   {
+    "village": "main-village",
+    "target_id": "0549aca0-dd00-4f04-804f-939ce8170596",
+    "repeat_id": "db91a12f-2a2f-48a6-a393-c7b1082c4f48",
+    "correction_id": "8f488183-ebc9-4175-8e6e-a6ec99575dff"
+   },
+   {
+    "village": "main-village",
+    "target_id": "dbc24ff0-7290-46a9-875a-a7f6fcf00abf",
+    "repeat_id": "e5e4e22e-9e5e-4cd6-addc-af761dde15d9",
+    "correction_id": "e5e1c19f-2f8c-4714-a3e9-93401fc666be"
+   },
+   {
+    "village": "main-village",
+    "target_id": "3f85ba83-a43a-476c-9090-1afd414c9794",
+    "repeat_id": "7704f4e9-4473-4828-af65-3340bdbb22a8",
+    "correction_id": "bef49df7-0f60-4afd-9eec-282023465b9a"
+   },
+   {
+    "village": "main-village",
+    "target_id": "cba11474-ce10-4046-a939-0d015b814119",
+    "repeat_id": "0b7fc197-6582-4c08-acf9-283fa6cd8568",
+    "correction_id": "580fd1cc-27a7-4eee-8487-6027615cdfcb"
+   },
+   {
+    "village": "main-village",
+    "target_id": "0150ee33-6f82-4ca3-a052-4e9475dfe396",
+    "repeat_id": "21f4e6ca-46c1-4964-9759-9753776b5122",
+    "correction_id": "9304ecf4-bd9e-45d5-84da-dc45c403d96b"
+   },
+   {
+    "village": "main-village",
+    "target_id": "2a48af8e-6c4a-4692-ad2d-d80b0ca67564",
+    "repeat_id": "1061a05f-f5d3-44ec-95db-c84e356a94b5",
+    "correction_id": "1a5e18f3-e9bc-450e-9774-14a27b113502"
+   },
+   {
+    "village": "main-village",
+    "target_id": "1061a05f-f5d3-44ec-95db-c84e356a94b5",
+    "repeat_id": "3d757bd9-414d-417b-9366-938b8ad036e3",
+    "correction_id": "25f1d6bc-4f73-43d7-b422-cda89548d2e5"
+   },
+   {
+    "village": "open-chat-village",
+    "target_id": "3d600590-b546-4e55-a20d-5b370b5d1596",
+    "repeat_id": "3e1ad787-558b-4672-8aea-bd53cfdf04b0",
+    "correction_id": "cf999211-4a43-4bd3-a6bd-eb0e4f24cd86"
+   },
+   {
+    "village": "open-chat-village",
+    "target_id": "7f806a99-bfc7-4b52-bb85-815d7c32b4f6",
+    "repeat_id": "e4d187eb-6b87-4d8d-b073-2ef9ce43e64a",
+    "correction_id": "b368affc-8898-4802-9737-e6a78af49b40"
+   }
+  ],
+  "sample": {
+   "n": 30,
+   "true": 2,
+   "share_true": 0.06666666666666667
+  },
+  "estimated_true_cascades": 26.666666666666668,
+  "go_a": false,
+  "go_b": false,
+  "go": false
+ }
+}

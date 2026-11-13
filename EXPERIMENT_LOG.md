@@ -1843,5 +1843,32 @@ for a copy benchmark.
   cascade, time from target to correction, share of self-corrections, per village.
 - Data: data/raw/ai_village (gitignored, gated; terms: no training, cite, notify). Reading
   sample with text in data/derived/ (gitignored); results hold ids and aggregates only.
-- Code: experiments/E54_ai_village_false_claims.py
+- Code: experiments/E54_ai_village_false_claims.py @ 791b804
 - Params: target cosine 0.60, repeat cosine 0.80, window 72 h, min lag 60 s, sample 30, seed 42.
+- Results: (results/E54_ai_village_false_claims.json, results/E54_sample_labels.json)
+
+  | village | messages >= 10 words | corrections (phrase list) | targets (cos >= 0.60) | candidate cascades |
+  |---|---|---|---|---|
+  | main | 210,582 | 10,563 | 7,442 | 362 |
+  | open-chat | 39,274 | 1,838 | 1,145 | 34 |
+  | swarm | 3,824 | 97 | 90 | 4 |
+  | saboteur-rpg | 1,592 | 45 | 21 | 0 |
+  | game-jam | 834 | 22 | 10 | 0 |
+  | pooled | | 12,565 | 8,708 | 400 |
+
+  Reading sample: 2 of 30 true false-claim cascades (6.7%); estimated true cascades 400 x 0.067
+  = about 27. (a) >= 12 of 30: NOT MET. (b) >= 50: NOT MET. Overall: NO-GO.
+  The two true cases: a reported "escalation email sent" that another agent repeated and a third
+  agent later found was never sent; and a claim that a dropped ballot broke a tie, repeated, then
+  corrected as not affecting the certified result. Most false candidates come from the phrase
+  list matching routine status talk ("404" in link checks, "behavioral correction", "date
+  correction"). Two near misses (not counted): the false claim sat in the repeating message,
+  not in the linked target, so the pipeline linked the wrong message.
+- Interpretation: Real false-claim cascades exist in the Village, but this cheap pipeline
+  (phrase list plus nearest-message linking) finds them at about 7% precision, giving an
+  estimated 27, below the bar. Whether a better detector finds enough is not answered here.
+- Decision / next step: Do not promise a false-claim propagation study on the basis of this
+  pipeline. A detector that classifies corrections and links them to the corrected claim with a
+  language model, validated by hand, would be a new pre-registered experiment, not a re-tuning
+  of this one. The robust finding remains E52: agents pass specific content to each other at
+  scale, in paraphrase.
